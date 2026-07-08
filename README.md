@@ -159,7 +159,7 @@ Phoenix| Legacy
 ---
 
 📂 Project Structure
-
+```
 Vireon-Imperial-Archive/
 
 ├── index.html
@@ -199,7 +199,7 @@ Vireon-Imperial-Archive/
         ├── clouds.svg
         ├── dragon.svg
         └── phoenix.svg
-
+```
 ---
 
 ⚙️ Configuration
