@@ -1700,3 +1700,510 @@ body::after {
 
 
 }
+
+
+
+
+/* ==========================================================================
+   IMPERIAL ASSET INTEGRATION
+   ========================================================================== */
+
+
+
+/* =========================
+   BACKGROUND DECORATIONS
+========================= */
+
+
+.imperial-background {
+
+
+    position:
+        fixed;
+
+
+    inset:
+        0;
+
+
+    overflow:
+        hidden;
+
+
+    pointer-events:
+        none;
+
+
+    z-index:
+        -10;
+
+
+}
+
+
+
+.cloud-layer {
+
+
+    position:
+        absolute;
+
+
+    width:
+        120%;
+
+
+    max-width:
+        none;
+
+
+    top:
+        5%;
+
+
+    left:
+        -10%;
+
+
+    opacity:
+        0.22;
+
+
+    animation:
+        cloudDrift 50s linear infinite;
+
+
+}
+
+
+
+
+
+.dragon-layer {
+
+
+    position:
+        absolute;
+
+
+    width:
+        900px;
+
+
+    height:
+        900px;
+
+
+    right:
+        -260px;
+
+
+    top:
+        80px;
+
+
+    opacity:
+        0.10;
+
+
+    animation:
+        dragonFloat 12s ease-in-out infinite;
+
+
+}
+
+
+
+
+
+@keyframes cloudDrift {
+
+
+    from {
+
+        transform:
+            translateX(0);
+
+    }
+
+
+    to {
+
+        transform:
+            translateX(-120px);
+
+    }
+
+
+}
+
+
+
+
+
+
+
+@keyframes dragonFloat {
+
+
+    0%,
+    100% {
+
+
+        transform:
+            translateY(0)
+            rotate(0deg);
+
+
+    }
+
+
+    50% {
+
+
+        transform:
+            translateY(-25px)
+            rotate(2deg);
+
+
+    }
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   PROFILE SEAL SYSTEM
+========================= */
+
+
+.imperial-seal {
+
+
+    position:
+        relative;
+
+
+    width:
+        200px;
+
+
+    height:
+        200px;
+
+
+    margin:
+        auto;
+
+
+}
+
+
+
+
+.profile-seal-decoration {
+
+
+    position:
+        absolute;
+
+
+    inset:
+        -15px;
+
+
+    width:
+        230px;
+
+
+    height:
+        230px;
+
+
+    opacity:
+        0.55;
+
+
+    animation:
+        sealRotate 40s linear infinite;
+
+
+}
+
+
+
+
+
+@keyframes sealRotate {
+
+
+    from {
+
+        transform:
+            rotate(0deg);
+
+    }
+
+
+    to {
+
+        transform:
+            rotate(360deg);
+
+    }
+
+
+}
+
+
+
+
+
+.seal-frame {
+
+
+    position:
+        relative;
+
+
+    z-index:
+        2;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   FOOTER IMPERIAL MARK
+========================= */
+
+
+.imperial-footer {
+
+
+    position:
+        relative;
+
+
+    text-align:
+        center;
+
+
+    padding:
+        100px 20px 60px;
+
+
+    overflow:
+        hidden;
+
+
+}
+
+
+
+
+
+.footer-seal {
+
+
+    display:
+        flex;
+
+
+    justify-content:
+        center;
+
+
+    align-items:
+        center;
+
+
+    width:
+        80px;
+
+
+    height:
+        80px;
+
+
+    margin:
+        auto;
+
+
+    border:
+        2px solid var(--crimson);
+
+
+    color:
+        var(--crimson);
+
+
+    font-size:
+        3rem;
+
+
+    font-family:
+        var(--font-seal);
+
+
+    transform:
+        rotate(-8deg);
+
+
+}
+
+
+
+
+
+.phoenix-layer {
+
+
+    position:
+        absolute;
+
+
+    width:
+        420px;
+
+
+    left:
+        50%;
+
+
+    bottom:
+        -160px;
+
+
+    transform:
+        translateX(-50%);
+
+
+    opacity:
+        0.12;
+
+
+    pointer-events:
+        none;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   ARCHIVE POLISH
+========================= */
+
+
+.archive-wrapper {
+
+
+    position:
+        relative;
+
+
+}
+
+
+
+
+
+.card {
+
+
+    backdrop-filter:
+        none;
+
+
+}
+
+
+
+.card,
+.social-card {
+
+
+    border-image:
+
+
+        linear-gradient(
+            45deg,
+            transparent,
+            var(--gold),
+            transparent
+        )
+        1;
+
+
+}
+
+
+
+
+
+
+
+/* =========================
+   RESPONSIVE DECORATIONS
+========================= */
+
+
+@media(max-width:700px){
+
+
+    .dragon-layer {
+
+
+        width:
+            550px;
+
+
+        right:
+            -220px;
+
+
+        opacity:
+            0.08;
+
+
+    }
+
+
+
+    .cloud-layer {
+
+
+        width:
+            180%;
+
+
+    }
+
+
+
+    .phoenix-layer {
+
+
+        width:
+            300px;
+
+
+    }
+
+
+}
