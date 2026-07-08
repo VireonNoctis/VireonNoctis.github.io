@@ -1,0 +1,50 @@
+/* ==========================================================================
+   VIREON IMPERIAL TYPOGRAPHY SYSTEM
+   ========================================================================== */
+
+
+/* Chinese Calligraphy */
+
+@import url(
+    "https://fonts.googleapis.com/css2?family=Zhi+Mang+Xing&display=swap"
+);
+
+
+
+/* Imperial Serif */
+
+@import url(
+    "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap"
+);
+
+
+
+/* Clean Archive Text */
+
+@import url(
+    "https://fonts.googleapis.com/css2?family=Noto+Serif:wght@400;500;700&display=swap"
+);
+
+
+
+
+
+:root {
+
+
+    --font-seal:
+        "Zhi Mang Xing",
+        cursive;
+
+
+    --font-title:
+        "Playfair Display",
+        serif;
+
+
+    --font-body:
+        "Noto Serif",
+        serif;
+
+
+}
