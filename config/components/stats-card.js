@@ -1,141 +1,50 @@
+// components/stats-card.js
 class StatsCard {
+  static render({ github, anilist, lastfm }) {
+    const container = document.querySelector("#stats-card");
+    if (!container) return;
 
+    const githubRepos = github?.repositories ?? 0;
+    const githubFollowers = github?.followers ?? 0;
+    const githubFollowing = github?.following ?? 0;
 
-    static render({
-        github,
-        anilist,
-        lastfm
-    }) {
+    const animeTotal = anilist?.anime?.total ?? 0;
+    const animeEpisodes = anilist?.anime?.episodes ?? 0;
+    const mangaTotal = anilist?.manga?.total ?? 0;
+    const mangaChapters = anilist?.manga?.chapters ?? 0;
+    const mangaVolumes = anilist?.manga?.volumes ?? 0;
 
+    const scrobbles = lastfm?.scrobbles ?? 0;
 
-        const container =
-            document.querySelector(
-                "#stats-card"
-            );
+    container.innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-box">
+          <h4>GitHub</h4>
+          <p>Repositories: ${githubRepos}</p>
+          <p>Followers: ${githubFollowers}</p>
+          <p>Following: ${githubFollowing}</p>
+        </div>
 
+        <div class="stat-box">
+          <h4>AniList — Anime</h4>
+          <p>Total: ${animeTotal}</p>
+          <p>Episodes: ${animeEpisodes}</p>
+        </div>
 
-        if (!container) {
-            return;
-        }
+        <div class="stat-box">
+          <h4>AniList — Manga</h4>
+          <p>Total: ${mangaTotal}</p>
+          <p>Chapters: ${mangaChapters}</p>
+          <p>Volumes: ${mangaVolumes}</p>
+        </div>
 
-
-
-        container.innerHTML = `
-
-
-            <div class="stats-grid">
-
-
-                <div class="stat-box">
-
-                    <h4>
-                        GitHub
-                    </h4>
-
-                    <p>
-                        Repositories:
-                        ${github?.repositories ?? 0}
-                    </p>
-
-                    <p>
-                        Followers:
-                        ${github?.followers ?? 0}
-                    </p>
-
-                    <p>
-                        Following:
-                        ${github?.following ?? 0}
-                    </p>
-
-                </div>
-
-
-
-
-
-                <div class="stat-box">
-
-                    <h4>
-                        Anime
-                    </h4>
-
-                    <p>
-                        Total:
-                        ${anilist?.anime.total ?? 0}
-                    </p>
-
-                    <p>
-                        Episodes:
-                        ${anilist?.anime.episodes ?? 0}
-                    </p>
-
-                    <p>
-                        Hours:
-                        ${Math.floor(
-                            (anilist?.anime.minutes ?? 0) / 60
-                        )}
-                    </p>
-
-                </div>
-
-
-
-
-
-                <div class="stat-box">
-
-                    <h4>
-                        Manga
-                    </h4>
-
-
-                    <p>
-                        Total:
-                        ${anilist?.manga.total ?? 0}
-                    </p>
-
-
-                    <p>
-                        Chapters:
-                        ${anilist?.manga.chapters ?? 0}
-                    </p>
-
-
-                    <p>
-                        Volumes:
-                        ${anilist?.manga.volumes ?? 0}
-                    </p>
-
-                </div>
-
-
-
-
-
-                <div class="stat-box">
-
-                    <h4>
-                        Last.fm
-                    </h4>
-
-
-                    <p>
-                        Scrobbles:
-                        ${lastfm?.scrobbles ?? 0}
-                    </p>
-
-                </div>
-
-
-
-            </div>
-
-
-        `;
-
-    }
-
+        <div class="stat-box">
+          <h4>Last.fm</h4>
+          <p>Scrobbles: ${scrobbles}</p>
+        </div>
+      </div>
+    `;
+  }
 }
-
 
 export default StatsCard;
