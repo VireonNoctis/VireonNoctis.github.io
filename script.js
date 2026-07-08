@@ -6,32 +6,41 @@ import SocialLinks from "./components/social-links.js";
 import GitHubCard from "./components/github-card.js";
 import AniListCard from "./components/anilist-card.js";
 import LastFMCard from "./components/lastfm-card.js";
-
+import StatsCard from "./components/stats-card.js";
 
 
 async function loadProfile() {
 
 
-    document.querySelector("#profile-name")
-        .textContent =
+    document.querySelector(
+        "#profile-name"
+    ).textContent =
         CONFIG.profile.name;
 
 
-    document.querySelector("#profile-title")
-        .textContent =
+
+    document.querySelector(
+        "#profile-title"
+    ).textContent =
         CONFIG.profile.title;
 
 
-    document.querySelector("#profile-description")
-        .textContent =
+
+    document.querySelector(
+        "#profile-description"
+    ).textContent =
         CONFIG.profile.description;
 
 
-    document.querySelector("#profile-avatar")
-        .src =
+
+    document.querySelector(
+        "#profile-avatar"
+    ).src =
         CONFIG.profile.avatar;
 
+
 }
+
 
 
 
@@ -44,6 +53,7 @@ async function loadData() {
     );
 
 
+
     const [
 
         github,
@@ -54,9 +64,12 @@ async function loadData() {
 
     ] = await Promise.all([
 
+
         GitHub.getProfile(),
 
+
         AniList.getProfile(),
+
 
         LastFM.getStats()
 
@@ -64,34 +77,59 @@ async function loadData() {
 
 
 
-    console.log(
-        "GitHub:",
+
+
+    console.log({
+        github,
+        anilist,
+        lastfm
+    });
+
+
+
+
+
+    SocialLinks.render();
+
+
+
+
+
+    StatsCard.render({
+
+        github,
+
+        anilist,
+
+        lastfm
+
+    });
+
+
+
+
+
+    GitHubCard.render(
         github
     );
 
 
-    console.log(
-        "AniList:",
+
+
+
+    AniListCard.render(
         anilist
     );
 
 
-    console.log(
-        "LastFM:",
+
+
+
+    LastFMCard.render(
         lastfm
     );
 
 
-
-    /*
-        Components will use these
-        results later:
-
-        GitHub Card
-        AniList Archive
-        LastFM Music Bureau
-
-    */
 
 }
 
@@ -108,9 +146,11 @@ async function init() {
     await loadData();
 
 
+
     console.log(
         "帝國檔案 initialized."
     );
+
 
 }
 
