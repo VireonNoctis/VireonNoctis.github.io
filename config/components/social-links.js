@@ -4,7 +4,7 @@ import CONFIG from "../config.js";
 class SocialLinks {
 
 
-    static render() {
+    static render(socials = CONFIG.socials) {
 
 
         const container =
@@ -13,70 +13,53 @@ class SocialLinks {
             );
 
 
+
         if (!container) {
+
             return;
+
         }
 
 
 
-        container.innerHTML = "";
 
 
+        container.innerHTML = socials
+            .map(
+                social => `
 
-        CONFIG.socials.forEach(
-            social => {
+                <a
+                    class="social-card"
+                    href="${social.url}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
 
-
-                const link =
-                    document.createElement(
-                        "a"
-                    );
-
-
-                link.className =
-                    "social-card";
-
-
-                link.href =
-                    social.url;
-
-
-                link.target =
-                    "_blank";
-
-
-
-                link.rel =
-                    "noopener noreferrer";
-
-
-
-                link.innerHTML = `
 
                     <img
-                        src="assets/icons/${social.icon}.svg"
+                        src="${CONFIG.assets.icons}${social.icon}.svg"
                         alt="${social.name}"
                     >
+
 
                     <span>
                         ${social.name}
                     </span>
 
-                `;
+
+                </a>
+
+                `
+            )
+            .join("");
 
 
-
-                container.appendChild(
-                    link
-                );
-
-            }
-        );
 
     }
 
 
 }
+
 
 
 export default SocialLinks;
