@@ -9,34 +9,71 @@ import LastFMCard from "./components/lastfm-card.js";
 import StatsCard from "./components/stats-card.js";
 
 
-async function loadProfile() {
 
 
-    document.querySelector(
-        "#profile-name"
-    ).textContent =
-        CONFIG.profile.name;
+function loadProfile() {
+
+
+    const avatar =
+        document.querySelector(
+            "#profile-avatar"
+        );
+
+
+    const name =
+        document.querySelector(
+            "#profile-name"
+        );
+
+
+    const title =
+        document.querySelector(
+            "#profile-title"
+        );
+
+
+    const description =
+        document.querySelector(
+            "#profile-description"
+        );
 
 
 
-    document.querySelector(
-        "#profile-title"
-    ).textContent =
-        CONFIG.profile.title;
+
+    if (avatar) {
+
+        avatar.src =
+            CONFIG.profile.avatar;
+
+    }
 
 
 
-    document.querySelector(
-        "#profile-description"
-    ).textContent =
-        CONFIG.profile.description;
+    if (name) {
+
+        name.textContent =
+            CONFIG.profile.name;
+
+    }
 
 
 
-    document.querySelector(
-        "#profile-avatar"
-    ).src =
-        CONFIG.profile.avatar;
+    if (title) {
+
+        title.textContent =
+            CONFIG.profile.title;
+
+    }
+
+
+
+    if (description) {
+
+        description.textContent =
+            CONFIG.profile.description;
+
+    }
+
 
 
 }
@@ -45,51 +82,84 @@ async function loadProfile() {
 
 
 
-async function loadData() {
 
 
-    console.log(
-        "Loading Imperial Archive..."
+
+async function safeFetch(callback) {
+
+
+    try {
+
+
+        return await callback();
+
+
+    } catch(error) {
+
+
+        console.error(
+            "API Error:",
+            error
+        );
+
+
+        return null;
+
+
+    }
+
+
+}
+
+
+
+
+
+
+
+
+async function loadSocials() {
+
+
+    SocialLinks.render(
+        CONFIG.socials
     );
 
 
-
-    const [
-
-        github,
-
-        anilist,
-
-        lastfm
-
-    ] = await Promise.all([
-
-
-        GitHub.getProfile(),
-
-
-        AniList.getProfile(),
-
-
-        LastFM.getStats()
-
-    ]);
+}
 
 
 
 
 
-    console.log({
-        github,
-        anilist,
-        lastfm
-    });
 
 
 
+async function loadStats() {
 
 
-    SocialLinks.render();
+    const github =
+        await safeFetch(
+            () =>
+                GitHub.getProfile()
+        );
+
+
+
+    const anilist =
+        await safeFetch(
+            () =>
+                AniList.getProfile()
+        );
+
+
+
+    const lastfm =
+        await safeFetch(
+            () =>
+                LastFM.getStats()
+        );
+
 
 
 
@@ -109,29 +179,109 @@ async function loadData() {
 
 
 
-    GitHubCard.render(
-        github
-    );
+
+    if (github) {
+
+
+        GitHubCard.render(
+            github
+        );
+
+
+    }
 
 
 
 
 
-    AniListCard.render(
-        anilist
-    );
+
+    if (anilist) {
+
+
+        AniListCard.render(
+            anilist
+        );
+
+
+    }
 
 
 
 
 
-    LastFMCard.render(
-        lastfm
-    );
+
+    if (lastfm) {
+
+
+        LastFMCard.render(
+            lastfm
+        );
+
+
+    }
 
 
 
 }
+
+
+
+
+
+
+
+
+function setupTheme() {
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--gold",
+            CONFIG.theme.colors.gold
+        );
+
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--crimson",
+            CONFIG.theme.colors.crimson
+        );
+
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--jade",
+            CONFIG.theme.colors.jade
+        );
+
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--ink",
+            CONFIG.theme.colors.ink
+        );
+
+
+
+    document.documentElement
+        .style
+        .setProperty(
+            "--paper",
+            CONFIG.theme.colors.paper
+        );
+
+
+}
+
+
+
 
 
 
@@ -140,19 +290,41 @@ async function loadData() {
 async function init() {
 
 
-    await loadProfile();
+
+    console.log(
+        "Initializing Imperial Archive..."
+    );
 
 
-    await loadData();
+
+    setupTheme();
+
+
+
+    loadProfile();
+
+
+
+    await loadSocials();
+
+
+
+    await loadStats();
+
 
 
 
     console.log(
-        "帝國檔案 initialized."
+        "帝國檔案 ready."
     );
 
 
+
 }
+
+
+
+
 
 
 
