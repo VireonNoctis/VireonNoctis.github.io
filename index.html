@@ -1,357 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vireon | Imperial Archive</title>
 
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <title>
-        Vireon | Imperial Archive
-    </title>
-
-
-
-    <!-- Favicon -->
-
-    <link
-        rel="icon"
-        type="image/x-icon"
-        href="assets/favicon.ico"
-    >
-
-
-
-
-    <!-- Imperial Fonts -->
-
-    <link
-        rel="stylesheet"
-        href="fonts/fonts.css"
-    >
-
-
-
-
-    <!-- Main Theme -->
-
-    <link
-        rel="stylesheet"
-        href="style.css"
-    >
-
-
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="stylesheet" href="fonts/fonts.css">
+  <link rel="stylesheet" href="style.css">
 </head>
-
-
-
 <body>
+  <div class="imperial-background">
+    <img src="assets/decorations/clouds.svg" class="cloud-layer" alt="">
+    <img src="assets/decorations/dragon.svg" class="dragon-layer" alt="">
+  </div>
 
+  <main class="imperial-container">
+    <section class="profile-section">
+      <div class="imperial-seal">
+        <img src="assets/decorations/seal.svg" class="profile-seal-decoration" alt="">
+        <div class="seal-frame">
+          <img id="profile-avatar" src="assets/avatar.png" alt="Vireon">
+        </div>
+      </div>
 
+      <h1 id="profile-name">Vireon</h1>
+      <h2 id="profile-title">Imperial Archive</h2>
+      <p id="profile-description">Developer • Reader • Creator</p>
+    </section>
 
-    <!-- Imperial Background Layer -->
+    <div class="archive-wrapper">
+      <section class="archive-section">
+        <h3>帝國連結</h3>
+        <div id="social-links" class="card-grid"></div>
+      </section>
 
-    <div class="imperial-background">
+      <section class="archive-section">
+        <h3>功績記錄</h3>
+        <div id="stats-card" class="card"></div>
+      </section>
 
+      <section class="archive-section">
+        <h3>天命紀錄</h3>
+        <div id="github-card" class="card"></div>
+      </section>
 
-        <img
-            src="assets/decorations/clouds.svg"
-            class="cloud-layer"
-            alt=""
-        >
+      <section class="archive-section">
+        <h3>藏書閣</h3>
+        <div id="anilist-card" class="card"></div>
+      </section>
 
+      <section class="archive-section">
+        <h3>樂府</h3>
+        <div id="lastfm-card" class="card"></div>
+      </section>
 
-
-        <img
-            src="assets/decorations/dragon.svg"
-            class="dragon-layer"
-            alt=""
-        >
-
-
+      <section class="archive-section">
+        <h3>功績碑</h3>
+        <div id="projects" class="card-grid"></div>
+      </section>
     </div>
-
-
-
-
-
-
-
-    <main class="imperial-container">
-
-
-
-        <!-- Profile -->
-
-
-        <section class="profile-section">
-
-
-
-            <div class="imperial-seal">
-
-
-                <img
-                    src="assets/decorations/seal.svg"
-                    class="profile-seal-decoration"
-                    alt=""
-                >
-
-
-
-                <div class="seal-frame">
-
-
-                    <img
-                        id="profile-avatar"
-                        src="assets/avatar.png"
-                        alt="Vireon"
-                    >
-
-
-                </div>
-
-
-
-            </div>
-
-
-
-
-
-
-
-            <h1 id="profile-name">
-                Vireon
-            </h1>
-
-
-
-
-
-            <h2 id="profile-title">
-                Imperial Archive
-            </h2>
-
-
-
-
-
-            <p id="profile-description">
-                Developer • Reader • Creator
-            </p>
-
-
-
-
-        </section>
-
-
-
-
-
-
-
-
-        <div class="archive-wrapper">
-
-
-
-
-
-            <section class="archive-section">
-
-
-                <h3>
-                    帝國連結
-                </h3>
-
-
-                <div
-                    id="social-links"
-                    class="card-grid"
-                ></div>
-
-
-            </section>
-
-
-
-
-
-
-
-
-            <section class="archive-section">
-
-
-                <h3>
-                    功績記錄
-                </h3>
-
-
-                <div
-                    id="stats-card"
-                    class="card"
-                ></div>
-
-
-            </section>
-
-
-
-
-
-
-
-
-            <section class="archive-section">
-
-
-                <h3>
-                    天命紀錄
-                </h3>
-
-
-                <div
-                    id="github-card"
-                    class="card"
-                ></div>
-
-
-            </section>
-
-
-
-
-
-
-
-
-            <section class="archive-section">
-
-
-                <h3>
-                    藏書閣
-                </h3>
-
-
-                <div
-                    id="anilist-card"
-                    class="card"
-                ></div>
-
-
-            </section>
-
-
-
-
-
-
-
-
-            <section class="archive-section">
-
-
-                <h3>
-                    樂府
-                </h3>
-
-
-                <div
-                    id="lastfm-card"
-                    class="card"
-                ></div>
-
-
-            </section>
-
-
-
-
-
-
-
-
-            <section class="archive-section">
-
-
-                <h3>
-                    功績碑
-                </h3>
-
-
-                <div
-                    id="projects"
-                    class="card-grid"
-                ></div>
-
-
-            </section>
-
-
-
-
-
-
-        </div>
-
-
-
-
-    </main>
-
-
-
-
-
-
-
-
-    <footer class="imperial-footer">
-
-
-        <img
-            src="assets/decorations/phoenix.svg"
-            class="phoenix-layer"
-            alt=""
-        >
-
-
-
-        <div class="footer-seal">
-
-            帝
-
-        </div>
-
-
-
-        <p>
-            Vireon Imperial Archive
-        </p>
-
-
-
-    </footer>
-
-
-
-
-
-
-
-    <script
-        type="module"
-        src="script.js">
-    </script>
-
-
-
+  </main>
+
+  <footer class="imperial-footer">
+    <img src="assets/decorations/phoenix.svg" class="phoenix-layer" alt="">
+    <div class="footer-seal">帝</div>
+    <p>Vireon Imperial Archive</p>
+  </footer>
+
+  <script type="module" src="script.js"></script>
 </body>
-
-
 </html>
