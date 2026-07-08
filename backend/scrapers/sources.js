@@ -1,7 +1,7 @@
 const SOURCES = {
-    anilist: {
-        profile: "https://anilist.co/user/",
-        user: "https://anilist.co/user/{username}/"
+    anilist:{
+        graphql:"https://graphql.anilist.co",
+        profile:"https://anilist.co/user/"
     }
 };
 
