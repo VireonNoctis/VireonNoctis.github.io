@@ -1,1 +1,47 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
 
+<circle
+    cx="100"
+    cy="100"
+    r="82"
+    stroke="#D4AF37"
+    stroke-width="4"
+/>
+
+
+<circle
+    cx="100"
+    cy="100"
+    r="68"
+    stroke="#8B0000"
+    stroke-width="3"
+/>
+
+
+<path
+    d="M70 60V140H130V60"
+    stroke="#D4AF37"
+    stroke-width="5"
+/>
+
+
+<path
+    d="M80 90H120M80 110H120"
+    stroke="#D4AF37"
+    stroke-width="5"
+/>
+
+
+<text
+    x="100"
+    y="125"
+    text-anchor="middle"
+    fill="#D4AF37"
+    font-size="55"
+    font-family="serif"
+>
+帝
+</text>
+
+
+</svg>
