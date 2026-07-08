@@ -1,7 +1,7 @@
 import API from "./api.js";
 import Cache from "./cache.js";
 import CONFIG from "../config.js";
-
+import AniListScraper from "./scrapers/anilist-scraper.js";
 
 class AniList {
 
@@ -104,9 +104,12 @@ class AniList {
 
 
         if (!data?.data?.User) {
-            return null;
-        }
 
+    return await AniListScraper.getProfile(
+        CONFIG.anilist.username
+    );
+
+}
 
 
         const user = data.data.User;
