@@ -2,11 +2,11 @@ import CONFIG from "./config.js";
 import GitHub from "./backend/github.js";
 import AniList from "./backend/anilist.js";
 import LastFM from "./backend/lastfm.js";
-import SocialLinks from "./components/social-links.js";
-import GitHubCard from "./components/github-card.js";
-import AniListCard from "./components/anilist-card.js";
-import LastFMCard from "./components/lastfm-card.js";
-import StatsCard from "./components/stats-card.js";
+import SocialLinks from "./config/components/social-links.js";
+import GitHubCard from "./config/components/github-card.js";
+import AniListCard from "./config/components/anilist-card.js";
+import LastFMCard from "./config/components/lastfm-card.js";
+import StatsCard from "./config/components/stats-card.js";
 
 
 
