@@ -25,24 +25,10 @@ const CONFIG = {
 
 
     assets: {
-
-
-        favicon:
-            "assets/favicon.ico",
-
-
-        icons:
-            "assets/icons/",
-
-
-        decorations:
-            "assets/decorations/"
-
-    },
-
-
-
-
+    icons: "config/icons/",
+    decorations: "config/assets/decorations/",
+    favicon: "config/assets/favicon.ico"
+}
 
 
 
