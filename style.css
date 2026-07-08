@@ -1735,11 +1735,16 @@ body::after {
 
 
     z-index:
-        -10;
+        0;
 
 
 }
 
+
+.imperial-container,
+.imperial-footer {
+    z-index: 2;
+}
 
 
 .cloud-layer {
@@ -2206,4 +2211,32 @@ body::after {
     }
 
 
+}
+
+
+
+body {
+    position: relative;
+    min-height: 100vh;
+}
+
+
+.imperial-container,
+.imperial-footer {
+    position: relative;
+    z-index: 5;
+}
+
+
+.social-card,
+.card,
+a {
+    position: relative;
+    z-index: 10;
+}
+
+
+.social-card {
+    pointer-events: auto;
+    cursor: pointer;
 }
