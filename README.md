@@ -140,14 +140,14 @@ Ancient Paper| "#D8C7A5"
 Decorations
 
 Custom SVG ornaments:
-
+```
 assets/
 └── decorations/
     ├── seal.svg
     ├── clouds.svg
     ├── dragon.svg
     └── phoenix.svg
-
+```
 Symbolism:
 
 Symbol| Meaning
