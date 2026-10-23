@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vireon Noctis mark">
+  <rect width="64" height="64" rx="13" fill="#0b0e13"/>
+  <path d="M10 15h8l14 34 14-34h8L35 53h-6L10 15Z" fill="#e5ebf0"/>
+  <path d="M42 10h12v2H42zM52 10h2v12h-2z" fill="#9db8d0"/>
+  <path d="M10 56h44" stroke="#526476" stroke-width="1"/>
+</svg>
