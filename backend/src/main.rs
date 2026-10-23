@@ -14,26 +14,42 @@ async fn site() -> Json<Value> {
     }))
 }
 async fn archive() -> Json<Value> {
-    let client = match reqwest::Client::builder().timeout(Duration::from_secs(8)).user_agent("VireonNoctisSite/1.0").build() {
-        Ok(c) => c,
+    let client = match reqwest::Client::builder()
+        .timeout(Duration::from_secs(8))
+        .user_agent("VireonNoctisSite/1.0")
+        .build()
+    {
+        Ok(client) => client,
         Err(_) => return Json(json!({"status":"partial","sources":{}})),
     };
-    let github = client.get("https://api.github.com/users/VireonNoctis").send().await.ok().filter(|r| r.status().is_success()).and_then(|r| futuresless_json(r));
-    let anilist_body = json!({"query":"query { User(name: \"Vireon\") { name avatar { large } siteUrl statistics { anime { count episodesWatched minutesWatched meanScore } manga { count chaptersRead volumesRead meanScore } } } }"});
-    let anilist = client.post("https://graphql.anilist.co").json(&anilist_body).send().await.ok().filter(|r| r.status().is_success()).and_then(|r| futuresless_json(r));
-    let lunar = client.get("https://api.lunarx.to/api/animes/profile?username=vvvx").send().await.ok().filter(|r| r.status().is_success()).and_then(|r| futuresless_json(r));
+
+    let github = match client.get("https://api.github.com/users/VireonNoctis").send().await {
+        Ok(response) if response.status().is_success() => response.json::<Value>().await.ok(),
+        _ => None,
+    };
+    let anilist_body = json!({
+        "query": "query { User(name: \\"Vireon\\") { name avatar { large } siteUrl statistics { anime { count episodesWatched minutesWatched meanScore } manga { count chaptersRead volumesRead meanScore } } } }"
+    });
+    let anilist = match client.post("https://graphql.anilist.co").json(&anilist_body).send().await {
+        Ok(response) if response.status().is_success() => response.json::<Value>().await.ok(),
+        _ => None,
+    };
+    let lunar = match client.get("https://api.lunarx.to/api/animes/profile?username=vvvx").send().await {
+        Ok(response) if response.status().is_success() => response.json::<Value>().await.ok(),
+        _ => None,
+    };
     Json(json!({
-        "status":"partial",
+        "status": "partial",
         "sources": {
             "github": github,
             "anilist": anilist,
             "lunar_x": lunar,
-            "lastfm": {"configured": env::var("LASTFM_API_KEY").is_ok(), "note":"Last.fm requires LASTFM_API_KEY"}
+            "lastfm": {
+                "configured": env::var("LASTFM_API_KEY").is_ok(),
+                "note": "Last.fm requires LASTFM_API_KEY"
+            }
         }
     }))
-}
-async fn futuresless_json(response: reqwest::Response) -> Option<Value> {
-    response.json::<Value>().await.ok()
 }
 #[tokio::main]
 async fn main() {
