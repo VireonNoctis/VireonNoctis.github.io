@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Software, anime, music, and the projects behind them.",
   applicationName: "Vireon Noctis",
   authors: [{ name: "Vireon Noctis", url: "https://github.com/VireonNoctis" }],
-  keywords: ["Vireon Noctis", "developer", "creative studio", "AniList", "LunarAnime"],
+  keywords: ["Vireon Noctis", "developer", "creative studio", "AniList", "Lunar X"],
   openGraph: {
     type: "website",
     url: "https://vireonnoctis.github.io/",
