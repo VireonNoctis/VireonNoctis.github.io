@@ -20,9 +20,9 @@ npm run lint
 npm run build
 ```
 
-## Lunar X profile metadata
+## External profile links
 
-The site requests public profile fields from `https://api.lunarx.to/api/animes/profile?username=ariskitty` and links to [Lunar X profile ariskitty](https://lunarx.to/profile/ariskitty). The browser displays all returned fields when the public API permits cross-origin requests. API errors are shown as a status rather than fabricated metadata.
+The Lunar X and Discord sections link directly to their respective profiles. The website does not fetch or display Lunar X profile metadata or Discord activity counts.
 
 ## Rust API
 
