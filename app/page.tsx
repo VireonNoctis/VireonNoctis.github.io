@@ -66,8 +66,8 @@ export default function Home() {
       })
       .then((payload: unknown) => {
         const root = payload && typeof payload === "object" ? payload as Record<string, unknown> : null;
-        const data = root && root.data && typeof root.data === "object" ? root.data as Record<string, unknown> : root;
-        if (!data || Object.keys(data).length === 0) throw new Error("Empty profile response");
+        const data = root?.data && typeof root.data === "object" && !Array.isArray(root.data) ? root.data as Record<string, unknown> : null;
+        if (!data || Object.keys(data).length === 0) throw new Error("Lunar X returned no profile data");
         setLunarProfile(data);
         setLunarProfileStatus("ready");
       })
@@ -111,7 +111,7 @@ export default function Home() {
           <h3>Presence, not surveillance.</h3><p className="signal-intro">Discord does not publicly expose a user's lifetime message count, server-by-server activity, or private presence through a profile link. Those numbers should never be guessed.</p>
           <div className="discord-profile-line"><span className="micro-label">DISCORD USER ID</span><strong>1419744000977403994</strong><a href="https://discord.com/users/1419744000977403994" target="_blank" rel="noreferrer">OPEN PROFILE <ArrowUpRight size={13}/></a></div>
           <div className="discord-metrics"><div><span>MESSAGES SENT</span><strong>Not public</strong><small>Requires an opted-in bot or server analytics</small></div><div><span>SERVER ACTIVITY</span><strong>Not public</strong><small>Visible only to authorized systems</small></div></div>
-          <div className="discord-note"><span className="pulse-ring"/><p>For future counts, Lemegeton can record message totals from the moment tracking is enabled, with clear server-level permissions and retention controls. It cannot reconstruct messages it never logged.</p></div>
+          <div className="discord-note"><span className="pulse-ring"/><p>Lemegeton is a community bot, not a source for retroactive platform-wide message totals. This page only displays activity metrics when a connected service explicitly exposes them; private or unavailable statistics are never estimated.</p></div>
         </motion.section>
       </div><div className="archive-note"><span className="note-index">NOTE 03.1</span><p>Currently in orbit: worldbuilding, interface systems, dark fantasy, and finding the right track for the right hour.</p><span className="note-symbol">✳</span></div></section>
     <section className="contact section-shell section-space" id="contact"><div className="section-topline"><IndexLabel n="04 / 04" label="OPEN CHANNEL"/><Eyebrow>EVERY GOOD THING STARTS SOMEWHERE</Eyebrow></div><div className="contact-main"><motion.h2 initial="hidden" whileInView="show" viewport={{once:true}} variants={motionRise}>Have a good<br/><em>reason to talk?</em></motion.h2><motion.a className="contact-circle" href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer" aria-label="Open GitHub profile" whileTap={{scale:.94}}><ArrowUpRight size={31}/><span>START<br/>HERE</span></motion.a></div><p className="contact-copy">Ideas, collaborations, questions, or a conversation about something worth making. The channel is open.</p><div className="social-list">{socials.map((s,i)=><motion.a key={s.name} href={s.href} target="_blank" rel="noreferrer" initial={{opacity:0,x:-16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.07}}><span className="social-number">0{i+1}</span><img className="social-logo" src={"/brands/"+s.logo+".svg"} alt="" width="22" height="22"/><strong>{s.name}</strong><span className="social-handle">{s.handle}</span><ArrowUpRight size={17}/></motion.a>)}</div></section>
