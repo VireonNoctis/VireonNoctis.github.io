@@ -28,7 +28,7 @@ async fn archive() -> Json<Value> {
         _ => None,
     };
     let anilist_body = json!({
-        "query": "query { User(name: \\"Vireon\\") { name avatar { large } siteUrl statistics { anime { count episodesWatched minutesWatched meanScore } manga { count chaptersRead volumesRead meanScore } } } }"
+        "query": "query { User(name: \"Vireon\") { name avatar { large } siteUrl statistics { anime { count episodesWatched minutesWatched meanScore } manga { count chaptersRead volumesRead meanScore } } } }"
     });
     let anilist = match client.post("https://graphql.anilist.co").json(&anilist_body).send().await {
         Ok(response) if response.status().is_success() => response.json::<Value>().await.ok(),
