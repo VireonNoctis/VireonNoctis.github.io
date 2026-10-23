@@ -32,8 +32,6 @@ export default function Home() {
   const [menu, setMenu] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
   const [live, setLive] = useState<Live>({});
-  const [lunarProfile, setLunarProfile] = useState<Record<string, unknown> | null>(null);
-  const [lunarProfileStatus, setLunarProfileStatus] = useState<"loading" | "ready" | "unavailable">("loading");
   const [year, setYear] = useState("2026");
   useEffect(() => {
     setYear(String(new Date().getFullYear()));
@@ -64,21 +62,6 @@ export default function Home() {
       } catch { /* Last.fm is non-blocking. */ }
     }
     void load();
-    fetch("https://api.lunarx.to/api/animes/profile?username=ariskitty", { signal: controller.signal, headers: { Accept: "application/json", Authorization: LUNAR_X_API_TOKEN } })
-      .then(async response => {
-        if (!response.ok) throw new Error("Lunar X profile request failed");
-        return response.json();
-      })
-      .then((payload: unknown) => {
-        const root = payload && typeof payload === "object" ? payload as Record<string, unknown> : null;
-        const data = root?.data && typeof root.data === "object" && !Array.isArray(root.data) ? root.data as Record<string, unknown> : null;
-        if (!data || Object.keys(data).length === 0) throw new Error("Lunar X returned no profile data");
-        setLunarProfile(data);
-        setLunarProfileStatus("ready");
-      })
-      .catch(error => {
-        if (error?.name !== "AbortError") setLunarProfileStatus("unavailable");
-      });
     return () => controller.abort();
   }, []);
   const motionRise = reduce ? {} : rise;
@@ -112,15 +95,14 @@ export default function Home() {
           <a className="signal-footer-link" href="https://last.fm/user/reasfeetadmirer" target="_blank" rel="noreferrer">OPEN LISTENING HISTORY <ArrowUpRight size={14}/></a>
         </motion.section>
         <motion.section className="signal-panel discord-detail" initial={reduce?false:{opacity:0,y:24}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.12}} transition={{duration:.8,delay:.2}}>
-          <div className="signal-panel-head"><div><img src="/brands/discord.svg" alt="" width="20" height="20"/><span className="micro-label">DISCORD / COMMUNITY SIGNAL</span></div><span className="signal-live signal-private"><i/> PROFILE LINKED</span></div>
-          <h3>Presence, not surveillance.</h3><p className="signal-intro">Discord does not publicly expose a user's lifetime message count, server-by-server activity, or private presence through a profile link. Those numbers should never be guessed.</p>
-          <div className="discord-profile-line"><span className="micro-label">DISCORD USER ID</span><strong>1419744000977403994</strong><a href="https://discord.com/users/1419744000977403994" target="_blank" rel="noreferrer">OPEN PROFILE <ArrowUpRight size={13}/></a></div>
-          <div className="discord-metrics"><div><span>MESSAGES SENT</span><strong>Not public</strong><small>Requires an opted-in bot or server analytics</small></div><div><span>SERVER ACTIVITY</span><strong>Not public</strong><small>Visible only to authorized systems</small></div></div>
-          <div className="discord-note"><span className="pulse-ring"/><p>Lemegeton is a community bot, not a source for retroactive platform-wide message totals. This page only displays activity metrics when a connected service explicitly exposes them; private or unavailable statistics are never estimated.</p></div>
+          <div className="signal-panel-head"><div><img src="/brands/discord.svg" alt="" width="20" height="20"/><span className="micro-label">DISCORD / COMMUNITY</span></div></div>
+          <h3>Find me on Discord.</h3>
+          <p className="signal-intro">Open the Discord profile directly.</p>
+          <a className="signal-footer-link" href="https://discord.com/users/1419744000977403994" target="_blank" rel="noreferrer">OPEN DISCORD PROFILE <ArrowUpRight size={14}/></a>
         </motion.section>
       </div><div className="archive-note"><span className="note-index">NOTE 03.1</span><p>Currently in orbit: worldbuilding, interface systems, dark fantasy, and finding the right track for the right hour.</p><span className="note-symbol">✳</span></div></section>
     <section className="contact section-shell section-space" id="contact"><div className="section-topline"><IndexLabel n="04 / 04" label="OPEN CHANNEL"/><Eyebrow>EVERY GOOD THING STARTS SOMEWHERE</Eyebrow></div><div className="contact-main"><motion.h2 initial="hidden" whileInView="show" viewport={{once:true}} variants={motionRise}>Have a good<br/><em>reason to talk?</em></motion.h2><motion.a className="contact-circle" href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer" aria-label="Open GitHub profile" whileTap={{scale:.94}}><ArrowUpRight size={31}/><span>START<br/>HERE</span></motion.a></div><p className="contact-copy">Ideas, collaborations, questions, or a conversation about something worth making. The channel is open.</p><div className="social-list">{socials.map((s,i)=><motion.a key={s.name} href={s.href} target="_blank" rel="noreferrer" initial={{opacity:0,x:-16}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{delay:i*.07}}><span className="social-number">0{i+1}</span><img className="social-logo" src={"/brands/"+s.logo+".svg"} alt="" width="22" height="22"/><strong>{s.name}</strong><span className="social-handle">{s.handle}</span><ArrowUpRight size={17}/></motion.a>)}</div></section>
-    <section className="lunar-profile section-shell section-space" id="lunar-profile"><div className="section-topline"><IndexLabel n="LIVE / LUNAR X" label="PUBLIC PROFILE METADATA"/><Eyebrow>API RESPONSE / ARISKITTY</Eyebrow></div><div className="work-heading"><h2>Lunar X,<br/><em>in full detail.</em></h2><p>Public profile fields returned by Lunar X’s profile API. Values are shown as received, with nested objects expanded for inspection.</p></div><div className="lunar-profile-card"><div className="lunar-profile-head"><div><span className="micro-label">PROFILE</span><h3>ariskitty</h3><a href="https://lunarx.to/profile/ariskitty" target="_blank" rel="noreferrer">OPEN LUNAR X PROFILE <ArrowUpRight size={14}/></a></div><span className={"signal-live " + (lunarProfileStatus === "ready" ? "" : "signal-private")}><i/>{lunarProfileStatus === "ready" ? "LIVE RESPONSE" : lunarProfileStatus === "loading" ? "FETCHING PROFILE" : "API UNAVAILABLE"}</span></div>{lunarProfileStatus === "loading" && <p className="lunar-profile-message">Requesting public profile metadata…</p>}{lunarProfileStatus === "unavailable" && <p className="lunar-profile-message">The profile API did not return a readable response from this browser. The profile link remains available; this can be caused by API downtime or browser cross-origin restrictions.</p>}{lunarProfile && <div className="lunar-metadata-grid">{Object.entries(lunarProfile).map(([key,value])=><div className="lunar-metadata-item" key={key}><span>{key.replaceAll("_"," ").replace(/([A-Z])/g," $1").toUpperCase()}</span>{value !== null && typeof value === "object" ? <pre>{JSON.stringify(value,null,2)}</pre> : <strong>{value === null || value === "" ? "—" : typeof value === "boolean" ? (value ? "Yes" : "No") : String(value)}</strong>}</div>)}</div>}</div></section>
+    <section className="lunar-profile section-shell section-space" id="lunar-profile"><div className="section-topline"><IndexLabel n="LIVE / LUNAR X" label="PROFILE REDIRECTION"/><Eyebrow>OPEN PROFILE</Eyebrow></div><div className="work-heading"><h2>Lunar X,<br/><em>over there.</em></h2><p>Visit the Lunar X profile directly.</p></div><a className="signal-footer-link" href="https://lunarx.to/profile/ariskitty" target="_blank" rel="noreferrer">OPEN LUNAR X PROFILE <ArrowUpRight size={14}/></a></section>
     <footer className="site-footer"><a className="footer-mark" href="#top" aria-label="Vireon Noctis, back to top"><img className="footer-wordmark" src="/brands/vireon-wordmark.svg" alt="Vireon Noctis" width="180" height="35"/></a><p>MADE IN THE QUIET HOURS.<br/><span>KEPT IN MOTION.</span></p><span className="footer-year">© {year} VIREON NOCTIS</span><a className="back-top" href="#top">BACK TO THE BEGINNING <ArrowUpRight size={14}/></a></footer>
   </main>;
 }
