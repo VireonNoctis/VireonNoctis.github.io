@@ -22,7 +22,7 @@ npm run build
 
 ## Lunar X profile metadata
 
-The site requests public profile fields from `https://api.lunarx.to/api/animes/profile?username=vvvx` and links to [Lunar X profile vvvx](https://lunarx.to/profile/vvvx). The browser displays all returned fields when the public API permits cross-origin requests. API errors are shown as a status rather than fabricated metadata.
+The site requests public profile fields from `https://api.lunarx.to/api/animes/profile?username=ariskitty` and links to [Lunar X profile ariskitty](https://lunarx.to/profile/ariskitty). The browser displays all returned fields when the public API permits cross-origin requests. API errors are shown as a status rather than fabricated metadata.
 
 ## Rust API
 
