@@ -8,6 +8,9 @@ type Repo = { name: string; description: string | null; html_url: string; starga
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
 type GenreItem = { genre: string; count: number };
 type Live = { repos?: number; followers?: number; anime?: number; manga?: number; scrobbles?: number; track?: string; artist?: string; playing?: boolean; animeEpisodes?: number; animeMinutes?: number; animeScore?: number; mangaChapters?: number; mangaVolumes?: number; mangaScore?: number; animeGenres?: GenreItem[]; mangaGenres?: GenreItem[]; topArtists?: RankedItem[]; topTracks?: RankedItem[] };
+// Fill this placeholder with the Lunar X API token when ready. Do not commit a real secret to a public repository.
+const LUNAR_X_API_TOKEN = "PASTE_LUNAR_X_API_TOKEN_HERE";
+
 const socials = [
   { name: "GitHub", logo: "github", handle: "@VireonNoctis", href: "https://github.com/VireonNoctis" },
   { name: "AniList", logo: "anilist", handle: "Vireon", href: "https://anilist.co/user/Vireon" },
@@ -59,7 +62,7 @@ export default function Home() {
       } catch { /* Last.fm is non-blocking. */ }
     }
     void load();
-    fetch("https://api.lunarx.to/api/animes/profile?username=vvvx", { signal: controller.signal, headers: { Accept: "application/json" } })
+    fetch("https://api.lunarx.to/api/animes/profile?username=vvvx", { signal: controller.signal, headers: { Accept: "application/json", Authorization: `Bearer ${LUNAR_X_API_TOKEN}` } })
       .then(async response => {
         if (!response.ok) throw new Error("Lunar X profile request failed");
         return response.json();
