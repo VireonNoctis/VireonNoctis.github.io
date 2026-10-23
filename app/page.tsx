@@ -9,7 +9,7 @@ type RankedItem = { name: string; count?: number; playcount?: number; url?: stri
 type GenreItem = { genre: string; count: number };
 type Live = { repos?: number; followers?: number; anime?: number; manga?: number; scrobbles?: number; track?: string; artist?: string; playing?: boolean; animeEpisodes?: number; animeMinutes?: number; animeScore?: number; mangaChapters?: number; mangaVolumes?: number; mangaScore?: number; animeGenres?: GenreItem[]; mangaGenres?: GenreItem[]; topArtists?: RankedItem[]; topTracks?: RankedItem[] };
 // Fill this placeholder with the Lunar X API token when ready. Do not commit a real secret to a public repository.
-const LUNAR_X_API_TOKEN = "eyJzdWIiOiI2NTk1YzVmNy1iMWFiLTQyM2YtOTFjZS0zZDk2NzU3OTA0YTMiLCJleHAiOjE3OTUzNzQ1ODMsImlhdCI6MTc5Mjc4MjU4Mywicm9sZSI6ImRldmVsb3BlciJ9";
+const LUNAR_X_API_TOKEN = eyJzdWIiOiI2NTk1YzVmNy1iMWFiLTQyM2YtOTFjZS0zZDk2NzU3OTA0YTMiLCJleHAiOjE3OTUzNzQ1ODMsImlhdCI6MTc5Mjc4MjU4Mywicm9sZSI6ImRldmVsb3BlciJ9;
 
 const socials = [
   { name: "GitHub", logo: "github", handle: "@VireonNoctis", href: "https://github.com/VireonNoctis" },
