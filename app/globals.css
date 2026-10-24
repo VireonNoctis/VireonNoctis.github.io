@@ -601,3 +601,95 @@ button, [role="button"], a { overflow-wrap: anywhere; }
   .editorial-index-top,
   .editorial-index-bottom { font-size: 7px; letter-spacing: .04em; }
 }
+
+
+/* VIREON — literal paper S: it falls in from above and lands in the wordmark */
+main {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+.hero-art.editorial-index {
+  overflow: visible;
+}
+.editorial-index-word {
+  overflow: visible;
+}
+.editorial-index-word > .editorial-index-noctis {
+  display: block;
+  text-align: center;
+  white-space: nowrap;
+}
+.editorial-index-paper {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  vertical-align: -.04em;
+  flex: none;
+  width: .62em;
+  height: .91em;
+  margin-left: .035em;
+  background: #f5f0e5;
+  color: #111820;
+  border: 1px solid rgba(22, 31, 42, .18);
+  clip-path: polygon(0 0, 72% 0, 100% 19%, 100% 100%, 0 100%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .36);
+  transform: rotate(-2deg);
+  transform-origin: 50% 75%;
+  animation: paper-s-fly-in 1.85s cubic-bezier(.18, .74, .25, 1) .22s both;
+  will-change: transform;
+}
+.editorial-index-paper::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 28%;
+  height: 19%;
+  background: linear-gradient(135deg, #ded8ca 0 48%, #fffaf0 51% 100%);
+  border-left: 1px solid rgba(22, 31, 42, .16);
+  border-bottom: 1px solid rgba(22, 31, 42, .16);
+}
+.editorial-index-paper-s {
+  display: block;
+  font-family: "Segoe Print", "Comic Sans MS", cursive;
+  font-size: .72em;
+  line-height: 1;
+  font-style: italic;
+  font-weight: 700;
+  color: #151b24;
+  transform: rotate(-7deg) translateY(-.02em);
+  text-shadow: .02em .02em 0 rgba(21, 27, 36, .12);
+}
+@keyframes paper-s-fly-in {
+  0% {
+    transform: translate3d(5vw, -112vh, 0) rotate(38deg);
+  }
+  58% {
+    transform: translate3d(2vw, -37vh, 0) rotate(17deg);
+  }
+  74% {
+    transform: translate3d(0, .14em, 0) rotate(-11deg);
+  }
+  84% {
+    transform: translate3d(0, -.08em, 0) rotate(4deg);
+  }
+  93% {
+    transform: translate3d(0, .025em, 0) rotate(-4deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(-2deg);
+  }
+}
+@media (max-width: 760px) {
+  .editorial-index-paper {
+    width: .61em;
+    height: .9em;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .editorial-index-paper {
+    animation: none;
+    transform: rotate(-2deg);
+    will-change: auto;
+  }
+}
