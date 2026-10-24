@@ -14,11 +14,20 @@ export const metadata: Metadata = {
     title: "Vireon Noctis — An Independent Digital World",
     description: "Software, anime, music, and things made with intent.",
     siteName: "Vireon Noctis",
+    images: [
+      {
+        url: "/vireon-preview.svg",
+        width: 1200,
+        height: 630,
+        alt: "Vireon Noctis — Software, Stories, Sound",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vireon Noctis",
-    description: "Software, stories, sound.",
+    title: "Vireon Noctis — Software, Stories, Sound",
+    description: "An independent digital world for software, anime, music, and creative projects.",
+    images: ["/vireon-preview.svg"],
   },
   icons: { icon: "/vireon-mark.svg" },
 };
