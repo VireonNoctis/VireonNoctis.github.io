@@ -121,7 +121,9 @@ function findArtwork(trackInfo, recentTrack) {
     ...(Array.isArray(trackInfo?.album?.image) ? trackInfo.album.image : []),
     ...(Array.isArray(recentTrack?.image) ? recentTrack.image : [])
   ];
-  for (const image of images) {
+  // Last.fm commonly orders artwork from smallest to largest; prefer the
+  // highest-resolution available image for Discord's right-side thumbnail.
+  for (const image of images.reverse()) {
     const value = typeof image === "string" ? image : image?.["#text"];
     try {
       const url = new URL(String(value || ""));
@@ -246,6 +248,7 @@ const embed = {
   color: 0xD51007,
   footer: { text: "Last.fm • Vireon" }
 };
+// Discord renders thumbnail artwork on the right side of the embed.
 if (artwork) embed.thumbnail = { url: artwork };
 
 await sendWebhook({
