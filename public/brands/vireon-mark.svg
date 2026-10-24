@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vireon Noctis mark">
-  <rect width="64" height="64" rx="13" fill="#0b0e13"/>
-  <path d="M10 15h8l14 34 14-34h8L35 53h-6L10 15Z" fill="#e5ebf0"/>
-  <path d="M42 10h12v2H42zM52 10h2v12h-2z" fill="#9db8d0"/>
-  <path d="M10 56h44" stroke="#526476" stroke-width="1"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vireon mark">
+  <defs><linearGradient id="mark-bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#151e29"/><stop offset="1" stop-color="#080b10"/></linearGradient><linearGradient id="mark-v" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fbfdff"/><stop offset=".55" stop-color="#c6dced"/><stop offset="1" stop-color="#7f9db9"/></linearGradient><linearGradient id="mark-gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff0c8"/><stop offset="1" stop-color="#b48d4b"/></linearGradient></defs>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="url(#mark-bg)" stroke="#819bb7" stroke-opacity=".55"/>
+  <path d="M10 20H17L31.5 48 46 20H53L34.5 54H28.5Z" fill="url(#mark-v)"/><path d="M20 11 24 17 32 7 40 17 44 11 41.5 21H22.5Z" fill="url(#mark-gold)" stroke="#b58f51" stroke-width=".55" stroke-linejoin="round"/><path d="M10 57H54" stroke="#d3b77f" stroke-opacity=".5"/>
 </svg>
