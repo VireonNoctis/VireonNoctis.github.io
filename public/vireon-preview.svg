@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#050914"/><stop offset=".55" stop-color="#0a1630"/><stop offset="1" stop-color="#03060d"/></linearGradient>
+  <radialGradient id="glow"><stop stop-color="#527fe8" stop-opacity=".35"/><stop offset="1" stop-color="#527fe8" stop-opacity="0"/></radialGradient>
+  <linearGradient id="ice" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset=".45" stop-color="#c8e2ff"/><stop offset="1" stop-color="#628cff"/></linearGradient>
+  <pattern id="stars" width="97" height="83" patternUnits="userSpaceOnUse"><circle cx="13" cy="19" r="1" fill="#dceaff" opacity=".55"/><circle cx="73" cy="61" r=".8" fill="#7ea8ff" opacity=".7"/><path d="M46 8v7M42.5 11.5h7" stroke="#bcd6ff" stroke-width=".7" opacity=".55"/></pattern>
+</defs>
+<rect width="1200" height="630" fill="url(#bg)"/><rect width="1200" height="630" fill="url(#glow)"/><rect width="1200" height="630" fill="url(#stars)"/>
+<path d="M790 -80L1130 270 900 630M1040 -40L700 630M1200 120L800 520" fill="none" stroke="#82aaff" stroke-opacity=".12" stroke-width="1"/>
+<rect x="34" y="34" width="1132" height="562" rx="20" fill="none" stroke="#9dbdff" stroke-opacity=".35"/>
+<path d="M78 116H250M950 514H1120" stroke="#86aaff" stroke-opacity=".55"/>
+<circle cx="920" cy="255" r="220" fill="url(#glow)"/>
+<g transform="translate(870 278)" fill="none" stroke="url(#ice)" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M0 -175V175M-175 0H175M-124 -124L124 124M124 -124L-124 124" stroke-width="1.5" opacity=".55"/>
+  <path d="M0 -115L23 -23 115 0 23 23 0 115 -23 23 -115 0 -23 -23Z" stroke-width="2.5"/>
+  <path d="M0 -65L12 -12 65 0 12 12 0 65 -12 12 -65 0 -12 -12Z" fill="#b9d7ff" fill-opacity=".1" stroke-width="1.5"/>
+  <circle r="8" fill="#fff" stroke="none"/>
+</g>
+<g fill="url(#ice)" font-family="Georgia, 'Times New Roman', serif">
+  <text x="92" y="260" font-size="94" letter-spacing="5">VIREON</text>
+  <text x="101" y="322" font-size="31" letter-spacing="15">NOCTIS</text>
+</g>
+<path d="M95 352H560" stroke="#a7c6ff" stroke-opacity=".75"/>
+<path d="M95 352l7 -4v8zM560 352l-7 -4v8z" fill="#d7e7ff"/>
+<text x="96" y="405" fill="#e4edff" font-family="Arial, Helvetica, sans-serif" font-size="21" letter-spacing="4">SOFTWARE  ·  STORIES  ·  SOUND</text>
+<text x="96" y="454" fill="#9db3d8" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="1.2">An independent digital world, built with intent.</text>
+<g transform="translate(96 520)"><rect width="160" height="36" rx="18" fill="#d8e8ff" fill-opacity=".08" stroke="#9fc1ff" stroke-opacity=".55"/><text x="80" y="23" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" letter-spacing="2" fill="#d9e8ff">EXPLORE VIREON</text></g>
+<text x="1104" y="552" text-anchor="end" fill="#8ea8d9" font-family="Arial, Helvetica, sans-serif" font-size="14" letter-spacing="2">VIREONNOCTIS.GITHUB.IO</text>
+</svg>
