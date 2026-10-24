@@ -440,3 +440,28 @@ button, [role="button"], a { overflow-wrap: anywhere; }
   .stack-site-top { gap: 14px; }
   .stack-status { white-space: normal; line-height: 1.5; }
 }
+
+
+/* VIREON — Spotify now-playing integrated with Last.fm */
+.archive-brandmarks{display:flex;align-items:center;gap:8px;flex:none}
+.archive-brandmarks img{display:block;width:22px;height:22px;object-fit:contain}
+.spotify-track{display:grid;grid-template-columns:58px minmax(0,1fr) auto;align-items:center;gap:13px;margin:2px 0 20px;padding:12px;border:1px solid rgba(169,201,232,.16);background:rgba(255,255,255,.018);min-width:0}
+.spotify-track>img{display:block;width:58px;height:58px;object-fit:cover;border:1px solid rgba(169,201,232,.18);background:#111820}
+.spotify-track>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+.spotify-track .micro-label{font:8px var(--mono);letter-spacing:.09em;color:#82e6a4}
+.spotify-track strong{font:500 13px 'Satoshi',sans-serif;color:#e4eaf2;overflow-wrap:anywhere}
+.spotify-track small{font:9px/1.65 var(--mono);color:#8998aa;overflow-wrap:anywhere}
+.spotify-track>a{display:grid;place-items:center;width:30px;height:30px;color:#82e6a4;border:1px solid rgba(130,230,164,.24);transition:background .2s,color .2s}
+.spotify-track>a:hover{background:#82e6a4;color:#0b1018}
+.archive-actions{display:flex;align-items:center;flex-wrap:wrap;gap:12px 22px;margin-top:3px}
+.archive-actions .archive-link{max-width:100%;text-decoration:none;overflow-wrap:anywhere}
+.archive-actions .archive-link:first-child{color:#82e6a4}
+.archive-actions .archive-link:hover{color:#e4eaf2}
+@media(max-width:480px){
+  .archive-brandmarks{gap:6px}
+  .archive-brandmarks img{width:20px;height:20px}
+  .spotify-track{grid-template-columns:46px minmax(0,1fr) auto;gap:10px;padding:10px}
+  .spotify-track>img{width:46px;height:46px}
+  .spotify-track strong{font-size:12px}
+  .archive-actions{align-items:flex-start;flex-direction:column;gap:12px}
+}
