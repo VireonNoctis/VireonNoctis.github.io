@@ -37,6 +37,18 @@ The site links to the Spotify profile and can display your current track inside 
 
 The initial UI and public JSON contain no credentials. Without those three secrets, the Spotify refresh workflow exits without changing data. Spotify Development Mode currently has account and endpoint restrictions; consult the [official authorization guide](https://developer.spotify.com/documentation/web-api/concepts/authorization) and [currently-playing endpoint docs](https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track) if Spotify rejects the app or permission request.
 
+## Last.fm → Discord now playing
+
+The workflow at `.github/workflows/lastfm-discord.yml` checks the Last.fm account `reasfeetadmirer` every five minutes and sends a new branded Discord embed only when Last.fm reports a different currently playing track. It includes the track link, artist, album, up to three genre tags, the loved-track status, artist scrobbles, total scrobbles, and artwork when Last.fm provides it.
+
+### One-time setup
+
+1. Add the repository Actions secrets `LASTFM_API_KEY` and `DISCORD_WEBHOOK_URL` under **Settings → Secrets and variables → Actions**. The webhook URL and API key are read from the runner environment and are never committed to the repository.
+2. Open **Actions → Notify Discord about Last.fm now playing → Run workflow** to test it. The workflow also runs automatically every five minutes.
+3. The last-notified track identity is stored on the separate `lastfm-discord-state` branch, not `main`, so state updates do not trigger a GitHub Pages deployment. Repeated polling of the same track will not create duplicate messages.
+
+This is polling, not a real-time Last.fm event subscription. A notification is sent only while Last.fm marks a track as currently playing; if Last.fm is not receiving your listening activity, no message is sent.
+
 ## Rust API
 
 Requires Rust stable.

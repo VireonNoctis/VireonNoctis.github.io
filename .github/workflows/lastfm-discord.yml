@@ -1,0 +1,82 @@
+name: Notify Discord about Last.fm now playing
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lastfm-discord-now-playing
+  cancel-in-progress: false
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out the site repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check required secrets
+        id: config
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        shell: bash
+        run: |
+          if [[ -z "$LASTFM_API_KEY" || -z "$DISCORD_WEBHOOK_URL" ]]; then
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Add LASTFM_API_KEY and DISCORD_WEBHOOK_URL under Settings → Secrets and variables → Actions."
+            exit 0
+          fi
+          echo "configured=true" >> "$GITHUB_OUTPUT"
+
+      - name: Restore last notified track
+        if: steps.config.outputs.configured == 'true'
+        shell: bash
+        run: |
+          git fetch origin refs/heads/lastfm-discord-state:refs/remotes/origin/lastfm-discord-state
+          if git show origin/lastfm-discord-state:.lastfm-discord-state.json > .lastfm-discord-state.json 2>/dev/null; then
+            echo "Restored previous track identity."
+          else
+            rm -f .lastfm-discord-state.json
+            echo "No track has been persisted yet."
+          fi
+
+      - name: Post a new track when playback changes
+        id: notify
+        if: steps.config.outputs.configured == 'true'
+        env:
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        run: node scripts/lastfm-discord.mjs
+
+      - name: Persist track identity on the state branch
+        if: steps.config.outputs.configured == 'true' && steps.notify.outputs.state_changed == 'true'
+        shell: bash
+        run: |
+          cp .lastfm-discord-state.json "$RUNNER_TEMP/lastfm-discord-state.json"
+          rm -f .lastfm-discord-state.json
+          git fetch origin refs/heads/lastfm-discord-state:refs/remotes/origin/lastfm-discord-state
+          git checkout -B lastfm-discord-state origin/lastfm-discord-state
+          cp "$RUNNER_TEMP/lastfm-discord-state.json" .lastfm-discord-state.json
+          git add .lastfm-discord-state.json
+          if git diff --cached --quiet; then
+            echo "The stored state is already current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "chore: persist Last.fm notification state"
+          git push origin HEAD:refs/heads/lastfm-discord-state
