@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     siteName: "Vireon Noctis",
     images: [
       {
-        url: "/opengraph-image.png",
+        url: "/vireon-preview.svg",
         width: 1200,
         height: 630,
         alt: "Vireon Noctis — Software, Stories, Sound",
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Vireon Noctis — Software, Stories, Sound",
     description: "An independent digital world for software, anime, music, and creative projects.",
-    images: ["/opengraph-image.png"],
+    images: ["/vireon-preview.svg"],
   },
   icons: { icon: "/vireon-mark.svg" },
 };
