@@ -17,7 +17,7 @@ const socials = [
   { name: "GitHub", logo: "github", handle: "@VireonNoctis", href: "https://github.com/VireonNoctis" },
   { name: "AniList", logo: "anilist", handle: "Vireon", href: "https://anilist.co/user/Vireon" },
   { name: "Last.fm", logo: "lastfm", handle: "reasfeetadmirer", href: "https://last.fm/user/reasfeetadmirer" },
-  { name: "Telegram", logo: "telegram", handle: "Send a signal", href: "https://t.me/Theslopking" },
+  { name: "Telegram", logo: "telegram", handle: "@Imperialism12", href: "https://t.me/Imperialism12" },
   { name: "Discord", logo: "discord", handle: "Find me there", href: "https://discord.com/users/1419744000977403994" },
 ];
 const rise = { hidden: { opacity: 0, y: 32, filter: "blur(10px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1, ease: "easeOut" } } };
