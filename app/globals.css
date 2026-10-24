@@ -489,28 +489,16 @@ button, [role="button"], a { overflow-wrap: anywhere; }
   letter-spacing: -.075em;
 }
 .editorial-index-word > .editorial-index-noctis {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
+  display: block;
+  align-self: center;
   margin: 0;
   color: #a6b8ca;
   font-size: .92em;
   font-weight: 400;
   line-height: .9;
+  text-align: center;
   white-space: nowrap;
   letter-spacing: -.075em;
-}
-.editorial-index-graffiti-s {
-  display: block;
-  width: .68em;
-  height: .9em;
-  flex: none;
-  margin-left: -.025em;
-  overflow: visible;
-  transform: translateY(.02em) rotate(-4deg);
-  transform-origin: center;
-  filter: drop-shadow(0 3px 7px rgba(126, 155, 184, .2));
 }
 .hero-main,
 .hero-copy,
@@ -612,7 +600,4 @@ button, [role="button"], a { overflow-wrap: anywhere; }
   .editorial-index-word { font-size: 44px; }
   .editorial-index-top,
   .editorial-index-bottom { font-size: 7px; letter-spacing: .04em; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .editorial-index-graffiti-s { filter: none; }
 }
