@@ -1,0 +1,100 @@
+/* LIQUID GLASS — Apple-style functional chrome floats; content stays open and readable. */
+html[data-theme="glass"] {
+  color-scheme:light; --ink:#f4f6f9; --night:#e9edf3; --panel:rgba(255,255,255,.82);
+  --silver:#171a20; --muted:#697484; --ice:#087af5; --lav:#8db7ef; --line:rgba(28,35,45,.13);
+  --theme-accent:#087af5; --theme-accent-soft:rgba(8,122,245,.09); --theme-hot:#fff; --theme-shadow:rgba(31,45,67,.12);
+}
+html[data-theme="glass"] body { background:#f4f6f9; color:#171a20; font-family:var(--sans); letter-spacing:-.02em; }
+html[data-theme="glass"] .atmosphere {
+  background:radial-gradient(ellipse at 14% 8%,rgba(137,191,255,.32),transparent 32%),
+  radial-gradient(ellipse at 86% 25%,rgba(200,181,255,.27),transparent 30%),
+  radial-gradient(ellipse at 55% 72%,rgba(111,192,219,.18),transparent 32%),#f4f6f9;
+}
+html[data-theme="glass"] .atmosphere-grid, html[data-theme="glass"] .grain { display:none!important; }
+html[data-theme="glass"] .aurora { display:block!important; opacity:.12; filter:blur(115px); }
+html[data-theme="glass"] .site-header {
+  position:sticky; top:10px; z-index:60; height:72px; width:min(1240px,calc(100% - 40px));
+  margin:10px auto 0; padding:0 20px; border:1px solid rgba(255,255,255,.72); border-radius:999px;
+  background:rgba(250,252,255,.68); color:#171a20; backdrop-filter:blur(32px) saturate(180%);
+  -webkit-backdrop-filter:blur(32px) saturate(180%);
+  box-shadow:inset 0 1px rgba(255,255,255,.9),0 10px 36px rgba(38,56,83,.1);
+}
+html[data-theme="glass"] .site-header:after {
+  content:""; position:absolute; inset:1px 12px auto; height:1px; border-radius:inherit;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent); pointer-events:none;
+}
+html[data-theme="glass"] .wordmark-copy strong { color:#161a20; font-family:var(--sans); font-weight:650; letter-spacing:-.04em; }
+html[data-theme="glass"] .wordmark-copy small { color:#667282; }
+html[data-theme="glass"] .navigation { gap:clamp(12px,1.6vw,24px); }
+html[data-theme="glass"] .navigation>a { color:#4a5260; font-size:11px; }
+html[data-theme="glass"] .navigation>a:hover { color:#11151b; }
+html[data-theme="glass"] .nav-index { display:none; }
+html[data-theme="glass"] .navigation .nav-contact { padding:10px 15px; border-radius:999px; background:#171a20; border:1px solid #171a20; color:#fff; }
+html[data-theme="glass"] .theme-switcher { background:rgba(255,255,255,.44); color:#222833; border:1px solid rgba(50,63,81,.14); border-radius:999px; box-shadow:inset 0 1px rgba(255,255,255,.85); }
+html[data-theme="glass"] .theme-switcher-label { color:#788393; }
+html[data-theme="glass"] .theme-switcher-current, html[data-theme="glass"] .theme-switcher-index { color:#087af5; }
+html[data-theme="glass"] .menu-toggle { background:rgba(255,255,255,.5); color:#252b34; border-radius:50%; border:1px solid rgba(255,255,255,.8); }
+html[data-theme="glass"] .hero { min-height:calc(94svh - 70px); padding-top:28px; }
+html[data-theme="glass"] .hero-meta { border-bottom:0; padding:0 10px; }
+html[data-theme="glass"] .eyebrow, html[data-theme="glass"] .coordinates, html[data-theme="glass"] .hero-foot { color:#6b7482; }
+html[data-theme="glass"] .eyebrow i { background:#087af5; box-shadow:0 0 0 4px rgba(8,122,245,.1); }
+html[data-theme="glass"] .hero-main { grid-template-columns:1.1fr .9fr; min-height:0; padding-block:clamp(55px,9vw,125px); }
+html[data-theme="glass"] .hero h1 { color:#12161d; font-family:var(--sans); font-size:clamp(72px,9vw,130px); font-weight:650; letter-spacing:-.09em; line-height:.86; }
+html[data-theme="glass"] .hero h1 em { color:#59677a; font-weight:450; }
+html[data-theme="glass"] .hero-kicker { color:#687487; font:500 clamp(13px,1.4vw,16px)/1.6 var(--sans); font-style:normal; }
+html[data-theme="glass"] .hero-bottomline p { color:#667282; }
+html[data-theme="glass"] .hero-art.editorial-index-slop { border:0; background:transparent; box-shadow:none; overflow:visible; }
+html[data-theme="glass"] .editorial-index:before { display:none; }
+html[data-theme="glass"] .slop-brand-vireon { color:#171a20; font-family:var(--sans); font-weight:720; letter-spacing:-.11em; text-shadow:0 1px #fff; }
+html[data-theme="glass"] .slop-brand-title, html[data-theme="glass"] .slop-brand-caption, html[data-theme="glass"] .slop-brand-overline,
+html[data-theme="glass"] .slop-brand-signature, html[data-theme="glass"] .slop-live-label, html[data-theme="glass"] .editorial-index-top,
+html[data-theme="glass"] .editorial-index-bottom, html[data-theme="glass"] .editorial-index-side { color:#5e6a7a; }
+html[data-theme="glass"] .slop-halo { opacity:.45; filter:blur(15px); }
+html[data-theme="glass"] .slop-orbit { border-color:rgba(74,122,180,.22); }
+html[data-theme="glass"] .slop-brand-divider { background:linear-gradient(90deg,#7ca8df,rgba(124,168,223,.05)); }
+html[data-theme="glass"] .marquee { margin-block:16px; border-block:0; background:rgba(255,255,255,.32); backdrop-filter:blur(18px); }
+html[data-theme="glass"] .marquee-track span { font-family:var(--sans); font-size:10px; font-weight:550; letter-spacing:.18em; color:#657185; }
+html[data-theme="glass"] .marquee-track b { color:#087af5; }
+/* Apple-style hierarchy: keep content canvas clear. Glass is reserved for the floating tools layer. */
+html[data-theme="glass"] .section-space { width:min(1420px,calc(100% - clamp(28px,7vw,100px))); padding:clamp(50px,6vw,92px) 0; margin:0 auto; border:0; border-radius:0; background:transparent; box-shadow:none; }
+html[data-theme="glass"] .work, html[data-theme="glass"] .archive { border-color:rgba(31,43,60,.14); }
+html[data-theme="glass"] .section-heading h2, html[data-theme="glass"] .work-heading h2, html[data-theme="glass"] .archive-heading h2,
+html[data-theme="glass"] .contact-main h2, html[data-theme="glass"] .stack-heading h2, html[data-theme="glass"] .learning-heading h2 {
+  font-family:var(--sans); color:#171a20; font-weight:620; letter-spacing:-.08em;
+}
+html[data-theme="glass"] .section-shell h2 em { color:#657285; }
+html[data-theme="glass"] .manifesto-text .lead { color:#242a33; font-family:var(--sans); font-weight:550; letter-spacing:-.04em; }
+html[data-theme="glass"] .manifesto-text p, html[data-theme="glass"] .work-heading>p, html[data-theme="glass"] .archive-heading>p,
+html[data-theme="glass"] .project-detail p, html[data-theme="glass"] .project-row p, html[data-theme="glass"] .archive-card-bottom>p,
+html[data-theme="glass"] .stack-heading>p, html[data-theme="glass"] .learning-heading>p { color:#667282; }
+html[data-theme="glass"] .project-feature { border:0; border-radius:0; box-shadow:none; background:transparent; }
+html[data-theme="glass"] .project-art { height:390px; border-radius:24px; overflow:hidden; background:linear-gradient(140deg,#dfe9f6,#becce1 52%,#e7eaf1); }
+html[data-theme="glass"] .project-row { grid-template-columns:.55fr 3fr 1.1fr 20px; margin-top:0; padding:28px 0; border:0; border-top:1px solid rgba(31,43,60,.13); border-radius:0; background:transparent; box-shadow:none; }
+html[data-theme="glass"] .project-row:hover { padding-left:9px; background:transparent; }
+html[data-theme="glass"] .archive-grid { gap:clamp(18px,2.5vw,34px); }
+html[data-theme="glass"] .archive-card { min-height:500px; border:0; border-radius:0; padding:0 0 26px; background:transparent; box-shadow:none; }
+html[data-theme="glass"] .archive-illustration { border-radius:22px; background:linear-gradient(135deg,#e5ebf5,#cfd9e8); }
+html[data-theme="glass"] .archive-card-bottom { padding-top:24px; }
+html[data-theme="glass"] .archive-card-bottom h3 { color:#171a20; font-family:var(--sans); font-weight:600; }
+html[data-theme="glass"] .archive-card-top { color:#586577; }
+html[data-theme="glass"] .signal-panel { border:0; border-top:1px solid rgba(31,43,60,.16); border-radius:0; background:transparent; box-shadow:none; }
+html[data-theme="glass"] .deep-stats { border-color:rgba(31,43,60,.15); }
+html[data-theme="glass"] .deep-stats>div { border-color:rgba(31,43,60,.13); background:rgba(255,255,255,.45); }
+html[data-theme="glass"] .deep-stats strong, html[data-theme="glass"] .discord-metrics strong { color:#171a20; }
+html[data-theme="glass"] .ranked-row { border-color:rgba(31,43,60,.12); }
+html[data-theme="glass"] .ranked-row>strong { color:#242a33; }
+html[data-theme="glass"] .ranked-row>span, html[data-theme="glass"] .ranked-row>small { color:#687589; }
+html[data-theme="glass"] .signal-footer-link, html[data-theme="glass"] .text-link { color:#087af5; border-color:rgba(8,122,245,.32); }
+html[data-theme="glass"] .interlude { min-height:390px; border:0; background:radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.8),transparent 65%); }
+html[data-theme="glass"] .interlude-lines, html[data-theme="glass"] .interlude-orbit { display:none; }
+html[data-theme="glass"] .interlude-inner p { color:#171a20; font-family:var(--sans); font-weight:620; }
+html[data-theme="glass"] .interlude-mark { color:#087af5; }
+html[data-theme="glass"] .theme-picker-backdrop { background:rgba(24,31,43,.26); backdrop-filter:blur(12px) saturate(130%); }
+html[data-theme="glass"] .theme-picker-dialog { border:1px solid rgba(255,255,255,.8); border-radius:32px; color:#171a20; background:rgba(250,252,255,.8); backdrop-filter:blur(42px) saturate(175%); box-shadow:0 30px 100px rgba(32,46,67,.18),inset 0 1px #fff; }
+html[data-theme="glass"] .theme-picker-heading h2, html[data-theme="glass"] .theme-card { color:#171a20; }
+html[data-theme="glass"] .theme-picker-heading p, html[data-theme="glass"] .theme-card-description { color:#667282; }
+html[data-theme="glass"] .theme-card { border:1px solid rgba(255,255,255,.72); border-radius:18px; background:rgba(255,255,255,.48); box-shadow:inset 0 1px rgba(255,255,255,.86); }
+html[data-theme="glass"] .theme-card.is-active { border-color:#087af5; background:rgba(255,255,255,.68); box-shadow:inset 0 0 0 1px #087af5; }
+.theme-preview-glass { border-radius:17px; border:1px solid rgba(255,255,255,.8); background:linear-gradient(130deg,rgba(255,255,255,.8),rgba(217,231,249,.2) 42%,rgba(85,128,180,.32)),#d7e5f5; box-shadow:inset 0 1px white,0 7px 18px rgba(70,100,140,.14); }
+.theme-preview-glass .theme-preview-top { padding:6px; border:1px solid rgba(255,255,255,.85); border-radius:999px; background:rgba(255,255,255,.35); backdrop-filter:blur(6px); }
+.theme-preview-glass .theme-preview-content em { border:1px solid rgba(255,255,255,.8); border-radius:999px; background:rgba(255,255,255,.22); }

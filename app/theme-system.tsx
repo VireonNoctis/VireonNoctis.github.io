@@ -13,62 +13,14 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowRight, Check, Palette, X } from "lucide-react";
 
 export const THEMES = [
-  {
-    id: "classic",
-    name: "Vireon Classic",
-    shortName: "Classic",
-    category: "EDITORIAL NOIR",
-    description: "The existing Vireon identity: quiet, sharp, and atmospheric.",
-  },
-  {
-    id: "nothing",
-    name: "Nothing × Proton",
-    shortName: "Nothing",
-    category: "MONOCHROME SIGNAL",
-    description: "Dot-matrix detail, precise controls, and crisp code-switch motion.",
-  },
-  {
-    id: "glass",
-    name: "Liquid Glass",
-    shortName: "Glass",
-    category: "FLUID MATERIAL",
-    description: "Translucent surfaces, soft refraction, and luminous layered depth.",
-  },
-  {
-    id: "3d",
-    name: "Dimensional 3D",
-    shortName: "3D",
-    category: "SCULPTED SPACE",
-    description: "Perspective, lifted panels, and tactile dimensional surfaces.",
-  },
-  {
-    id: "light",
-    name: "Light",
-    shortName: "Light",
-    category: "CLEAN DAYLIGHT",
-    description: "A bright reading canvas with ink-like text and crisp contrast.",
-  },
-  {
-    id: "aurora",
-    name: "Aurora",
-    shortName: "Aurora",
-    category: "COSMIC GRADIENT",
-    description: "Deep indigo, violet light, and a more atmospheric night palette.",
-  },
-  {
-    id: "paper",
-    name: "Editorial Paper",
-    shortName: "Paper",
-    category: "ANALOG LUXURY",
-    description: "Warm paper, restrained burgundy, and expressive editorial type.",
-  },
-  {
-    id: "emerald",
-    name: "Emerald Terminal",
-    shortName: "Emerald",
-    category: "DEVELOPER MODE",
-    description: "Terminal-green signals, technical grids, and focused contrast.",
-  },
+  { id: "classic", name: "Vireon Classic", shortName: "Classic", category: "EDITORIAL NOIR", description: "The original Vireon identity, preserved exactly as it is." },
+  { id: "nothing", name: "Nothing × Proton", shortName: "Nothing", category: "MONOCHROME SYSTEM", description: "Pure black and white, Unicode signal glyphs, and rolling numeric readouts." },
+  { id: "glass", name: "Liquid Glass", shortName: "Glass", category: "FLOATING CHROME", description: "A content-first canvas with fluid, translucent Apple-inspired controls." },
+  { id: "3d", name: "Dimensional 3D", shortName: "3D", category: "SPATIAL OBJECTS", description: "A rotating six-face cube, shaded sphere, and true CSS perspective." },
+  { id: "light", name: "Light", shortName: "Light", category: "MODERN GALLERY", description: "Architectural whitespace, a bright gallery canvas, and precise ink contrast." },
+  { id: "universe", name: "Universe / Space", shortName: "Universe", category: "DEEP SPACE", description: "A star atlas, a planet with orbital geometry, and observatory telemetry." },
+  { id: "paper", name: "Editorial Paper", shortName: "Paper", category: "PRINT EDITION", description: "A tactile journal with serif hierarchy, marginalia, and ruled ledgers." },
+  { id: "lunar", name: "Lunar", shortName: "Lunar", category: "INDIGO GLITCH", description: "LunarX-inspired dark surfaces, indigo brand light, and clipped glitch signals." },
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]["id"];
@@ -114,7 +66,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.body.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme === "light" || theme === "paper" ? "light" : "dark";
+    document.documentElement.style.colorScheme = theme === "light" || theme === "paper" || theme === "glass" ? "light" : "dark";
   }, [theme]);
 
   const previewTheme = useCallback((nextTheme: ThemeId) => {
@@ -176,7 +128,7 @@ export function ThemeSwitcher() {
       <Palette size={15} strokeWidth={1.8} aria-hidden="true" />
       <span className="theme-switcher-label">Theme</span>
       <span className="theme-switcher-index" aria-hidden="true" key={theme}>
-        {theme === "nothing" ? <RollingNumber value={selectedIndex + 1} replayKey={theme} /> : String(selectedIndex + 1).padStart(2, "0")}
+        {(theme === "nothing" || theme === "lunar") ? <RollingNumber value={selectedIndex + 1} replayKey={theme} /> : String(selectedIndex + 1).padStart(2, "0")}
       </span>
       <span className="theme-switcher-current" key={theme}>{selectedTheme.shortName}</span>
     </button>
@@ -231,34 +183,102 @@ export function NothingSystemStrip() {
   return (
     <AnimatePresence>
       {theme === "nothing" && (
-        <motion.aside
-          className="nothing-system-strip section-shell"
-          aria-label="Nothing monochrome system readout"
-          initial={reduceMotion ? false : { opacity: 0, y: -8, filter: "blur(5px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -5 }}
-          transition={{ duration: reduceMotion ? 0 : 0.3 }}
-        >
-          <div className="nothing-system-cell nothing-system-live">
-            <UnicodeSpinner label="Animated Unicode system indicator" />
-            <span>SYSTEM ONLINE</span>
-          </div>
-          <div className="nothing-system-cell">
-            <span className="nothing-system-label">THEME INDEX</span>
-            <span className="nothing-system-value"><RollingNumber value={2} replayKey={theme} /><span> / 08</span></span>
-          </div>
-          <div className="nothing-system-cell">
-            <span className="nothing-system-label">PROJECT MODULES</span>
-            <span className="nothing-system-value"><RollingNumber value={4} replayKey={theme} /><span> ACTIVE</span></span>
-          </div>
-          <div className="nothing-system-cell nothing-system-unicode">
-            <span className="nothing-system-label">SIGNAL</span>
-            <span aria-hidden="true">⠿ ⠶ ⣿ ⠿</span>
-          </div>
+        <motion.aside className="nothing-system-strip section-shell" aria-label="Nothing monochrome system readout"
+          initial={reduceMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0 }} transition={{ duration: reduceMotion ? 0 : 0.3 }}>
+          <div className="nothing-system-cell nothing-system-live"><UnicodeSpinner label="Animated Unicode system indicator" /><span>SYSTEM ONLINE</span></div>
+          <div className="nothing-system-cell"><span className="nothing-system-label">THEME INDEX</span><span className="nothing-system-value"><RollingNumber value={2} replayKey={theme} /><span> / 08</span></span></div>
+          <div className="nothing-system-cell"><span className="nothing-system-label">PROJECT MODULES</span><span className="nothing-system-value"><RollingNumber value={4} replayKey={theme} /><span> ACTIVE</span></span></div>
+          <div className="nothing-system-cell nothing-system-unicode"><span className="nothing-system-label">SIGNAL</span><span aria-hidden="true">⠿ ⠶ ⣿ ⠿</span></div>
         </motion.aside>
       )}
     </AnimatePresence>
   );
+}
+
+export function ThemeSignatureRail() {
+  const { theme } = useThemeContext();
+  const reduceMotion = useReducedMotion();
+  return (
+    <AnimatePresence>
+      {theme === "universe" && (
+        <motion.aside className="universe-signature-rail section-shell" aria-label="Universe observatory readout"
+          initial={reduceMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+          transition={{ duration: reduceMotion ? 0 : 0.42 }}>
+          <span className="universe-rail-orbit" aria-hidden="true">◎</span>
+          <span><small>OBSERVATORY</small> VN-001 / LOCAL SECTOR</span>
+          <span><small>STARS MAPPED</small> <RollingNumber value={248} replayKey={theme} /></span>
+          <span><small>STATUS</small> <i className="universe-status-dot" /> NOMINAL</span>
+          <span className="universe-coordinate">RA 18h 36m · DEC +38° 47′</span>
+        </motion.aside>
+      )}
+      {theme === "lunar" && (
+        <motion.aside className="lunar-signature-rail section-shell" aria-label="Lunar visual telemetry"
+          initial={reduceMotion ? false : { opacity: 0, y: -8, filter: "blur(4px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0)" }} exit={{ opacity: 0 }}
+          transition={{ duration: reduceMotion ? 0 : 0.32 }}>
+          <span className="lunar-rail-brand"><i /> LUNAR / STYLE SIGNAL</span>
+          <span className="lunar-rail-code">BRAND HSL(239 84% 67%)</span>
+          <span className="lunar-rail-status"><UnicodeSpinner label="Lunar signal animation" /> SYNCED</span>
+          <span className="lunar-rail-index">PROFILE / 0{THEMES.findIndex((entry) => entry.id === theme) + 1}</span>
+        </motion.aside>
+      )}
+    </AnimatePresence>
+  );
+}
+
+function useCurrentTheme() {
+  return useThemeContext().theme;
+}
+
+export function ThemeHeroArtwork() {
+  const theme = useCurrentTheme();
+
+  if (theme === "3d") return (
+    <div className="theme-hero-artwork theme-hero-artwork-3d" aria-hidden="true">
+      <div className="three-d-caption three-d-caption-top"><span>V / OBJECT STUDY</span><span>DEPTH: Z+</span></div>
+      <div className="three-d-floor-grid" />
+      <div className="three-d-light three-d-light-a" /><div className="three-d-light three-d-light-b" />
+      <div className="three-d-ring three-d-ring-a" /><div className="three-d-ring three-d-ring-b" />
+      <div className="three-d-orb three-d-orb-large"><i /><b /></div>
+      <div className="three-d-cube-wrap"><div className="three-d-cube">
+        <div className="three-d-face three-d-front"><span>VN</span></div><div className="three-d-face three-d-back"><span>01</span></div>
+        <div className="three-d-face three-d-right" /><div className="three-d-face three-d-left" />
+        <div className="three-d-face three-d-top" /><div className="three-d-face three-d-bottom" />
+      </div></div>
+      <div className="three-d-prism"><span /><span /><span /><span /><span /><span /></div>
+      <div className="three-d-caption three-d-caption-bottom"><span>ROTATION / ACTIVE</span><span>001 — ∞</span></div>
+    </div>
+  );
+
+  if (theme === "universe") return (
+    <div className="theme-hero-artwork theme-hero-artwork-universe" aria-hidden="true">
+      <div className="universe-starfield" /><div className="universe-orbit universe-orbit-a" />
+      <div className="universe-orbit universe-orbit-b" /><div className="universe-orbit universe-orbit-c" />
+      <div className="universe-planet">
+        <i className="universe-planet-crater universe-crater-a" /><i className="universe-planet-crater universe-crater-b" /><i className="universe-planet-crater universe-crater-c" />
+      </div>
+      <div className="universe-planet-ring" /><div className="universe-satellite universe-satellite-a" /><div className="universe-satellite universe-satellite-b" />
+      <div className="universe-comet"><i /></div>
+      <div className="universe-art-label universe-art-label-top">SECTOR 01 / THE UNKNOWN</div>
+      <div className="universe-art-label universe-art-label-bottom">A SMALL POINT OF VIEW / AN ENDLESS SKY</div>
+    </div>
+  );
+
+  if (theme === "lunar") return (
+    <div className="theme-hero-artwork theme-hero-artwork-lunar" aria-hidden="true">
+      <div className="lunar-css-stars" /><div className="lunar-glitch-orbit lunar-glitch-orbit-a" />
+      <div className="lunar-glitch-orbit lunar-glitch-orbit-b" /><div className="lunar-css-moon"><i /><b /></div>
+      <div className="lunar-glitch-word" data-text="VIREON">
+        <span className="lunar-glitch-main">VIREON</span>
+        <span className="lunar-glitch-ghost lunar-glitch-ghost-a">VIREON</span>
+        <span className="lunar-glitch-ghost lunar-glitch-ghost-b">VIREON</span>
+      </div>
+      <div className="lunar-css-code"><span>GLITCH / SIGNAL</span><span>239 · 84 · 67</span></div>
+    </div>
+  );
+
+  return null;
 }
 
 function ThemePreview({ theme }: { theme: ThemeId }) {
@@ -360,7 +380,7 @@ function ThemePickerDialog({
                     <span className="theme-card-name">{item.name}</span>
                     <span className="theme-card-description">{item.description}</span>
                     <span className="theme-card-meta">
-                      <span className="theme-card-index">{theme === "nothing" ? <RollingNumber value={index + 1} replayKey={theme} /> : String(index + 1).padStart(2, "0")}</span>
+                      <span className="theme-card-index">{(theme === "nothing" || theme === "lunar") ? <RollingNumber value={index + 1} replayKey={theme} /> : String(index + 1).padStart(2, "0")}</span>
                       <span>{item.category}</span>
                     </span>
                   </span>

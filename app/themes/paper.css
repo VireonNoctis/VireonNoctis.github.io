@@ -1,0 +1,78 @@
+/* EDITORIAL PAPER — a print issue, with serif hierarchy, margin notes, and ruled ledgers. */
+html[data-theme="paper"] {
+  color-scheme:light; --ink:#eee5d4; --night:#e6dac6; --panel:#f7f0e3; --silver:#312720; --muted:#77665a;
+  --ice:#934151; --lav:#827065; --line:rgba(61,43,31,.22); --theme-accent:#934151;
+  --theme-accent-soft:rgba(147,65,81,.09); --theme-hot:#6c2735; --theme-shadow:rgba(61,43,31,.1);
+}
+html[data-theme="paper"] body { background:#eee5d4; color:#312720; font-family:Georgia,"Times New Roman",serif; }
+html[data-theme="paper"] .atmosphere { background:repeating-linear-gradient(0deg,rgba(70,49,31,.018) 0 1px,transparent 1px 4px),radial-gradient(ellipse at 85% 5%,rgba(184,133,96,.1),transparent 35%),#eee5d4; }
+html[data-theme="paper"] .atmosphere-grid, html[data-theme="paper"] .aurora { display:none!important; }
+html[data-theme="paper"] .grain { display:block!important; opacity:.075; mix-blend-mode:multiply; }
+html[data-theme="paper"] .site-header { border-top:2px solid #312720; border-bottom:1px solid rgba(61,43,31,.38); }
+html[data-theme="paper"] .wordmark-copy strong, html[data-theme="paper"] .wordmark-copy small, html[data-theme="paper"] .eyebrow,
+html[data-theme="paper"] .coordinates, html[data-theme="paper"] .hero-foot, html[data-theme="paper"] .index-label,
+html[data-theme="paper"] .nav-index, html[data-theme="paper"] .project-index, html[data-theme="paper"] .project-type,
+html[data-theme="paper"] .archive-card-top, html[data-theme="paper"] .archive-stats, html[data-theme="paper"] .archive-link,
+html[data-theme="paper"] .interlude-credit, html[data-theme="paper"] .social-number, html[data-theme="paper"] .footer-year,
+html[data-theme="paper"] .back-top, html[data-theme="paper"] .micro-label { font-family:"IBM Plex Mono",monospace; letter-spacing:.06em; color:#77665a; }
+html[data-theme="paper"] .navigation>a { color:#514137; }
+html[data-theme="paper"] .navigation .nav-contact { border-color:#312720; background:#312720; color:#f5eddf; }
+html[data-theme="paper"] .theme-switcher { background:#f7f0e5; color:#312720; border-color:rgba(61,43,31,.3); }
+html[data-theme="paper"] .theme-switcher-current, html[data-theme="paper"] .theme-switcher-index { color:#934151; }
+html[data-theme="paper"] .hero { min-height:700px; }
+html[data-theme="paper"] .hero h1, html[data-theme="paper"] .section-shell h2, html[data-theme="paper"] .project-detail h3,
+html[data-theme="paper"] .project-row h3, html[data-theme="paper"] .archive-card-bottom h3, html[data-theme="paper"] .contact-main h2,
+html[data-theme="paper"] .interlude-inner p { font-family:Georgia,"Times New Roman",serif; font-weight:400; letter-spacing:-.065em; }
+html[data-theme="paper"] .hero h1 { font-size:clamp(75px,9.2vw,136px); line-height:.83; }
+html[data-theme="paper"] .hero-kicker, html[data-theme="paper"] .manifesto-text .lead { font-family:Georgia,"Times New Roman",serif; font-style:italic; }
+html[data-theme="paper"] .hero h1 em, html[data-theme="paper"] .section-shell h2 em { color:#934151; font-style:italic; }
+html[data-theme="paper"] .hero-bottomline p, html[data-theme="paper"] .manifesto-text p, html[data-theme="paper"] .project-detail p,
+html[data-theme="paper"] .project-row p, html[data-theme="paper"] .archive-card-bottom>p, html[data-theme="paper"] .work-heading>p,
+html[data-theme="paper"] .archive-heading>p, html[data-theme="paper"] .signal-intro, html[data-theme="paper"] .discord-note p { color:#77665a; }
+html[data-theme="paper"] .hero-art.editorial-index-slop { background:#e6dac6; border-color:rgba(61,43,31,.3); box-shadow:8px 8px 0 rgba(61,43,31,.08),16px 16px 0 rgba(61,43,31,.035); }
+html[data-theme="paper"] .editorial-index:before { border-color:rgba(61,43,31,.16); }
+html[data-theme="paper"] .slop-brand-vireon, html[data-theme="paper"] .slop-brand-title, html[data-theme="paper"] .slop-brand-overline,
+html[data-theme="paper"] .slop-brand-caption, html[data-theme="paper"] .slop-brand-signature, html[data-theme="paper"] .slop-live-label,
+html[data-theme="paper"] .editorial-index-top, html[data-theme="paper"] .editorial-index-bottom { color:#312720; }
+html[data-theme="paper"] .slop-brand-divider { background:linear-gradient(90deg,#934151,rgba(147,65,81,.08)); }
+html[data-theme="paper"] .marquee { background:#e6dac6; border-color:rgba(61,43,31,.25); }
+html[data-theme="paper"] .marquee-track span { color:#514137; font-family:Georgia,serif; font-size:12px; letter-spacing:.12em; }
+html[data-theme="paper"] .marquee-track b { color:#934151; }
+html[data-theme="paper"] .section-space { padding-block:clamp(70px,8vw,120px); }
+html[data-theme="paper"] .index-label { flex-direction:row; gap:12px; }
+html[data-theme="paper"] .index-label span:first-child { color:#934151; }
+html[data-theme="paper"] .manifesto-content { grid-template-columns:.9fr 1.1fr; gap:11%; }
+html[data-theme="paper"] .section-heading h2, html[data-theme="paper"] .work-heading h2, html[data-theme="paper"] .archive-heading h2, html[data-theme="paper"] .contact-main h2 { font-size:clamp(62px,7.4vw,108px); line-height:.88; }
+html[data-theme="paper"] .manifesto-text .lead { font-size:clamp(24px,2.8vw,36px); line-height:1.24; color:#312720; }
+html[data-theme="paper"] .project-feature { border-bottom:1px solid rgba(61,43,31,.38); }
+html[data-theme="paper"] .project-art { background:linear-gradient(135deg,#e8dcc9,#d6c8b3); }
+html[data-theme="paper"] .project-art:after { background:linear-gradient(90deg,transparent 50%,rgba(238,229,212,.24)); }
+html[data-theme="paper"] .lunar-moon { box-shadow:0 16px 45px rgba(61,43,31,.17); filter:sepia(.15); }
+html[data-theme="paper"] .lunar-ring { border-color:rgba(147,65,81,.32); }
+html[data-theme="paper"] .project-row { border-bottom-color:rgba(61,43,31,.27); }
+html[data-theme="paper"] .project-row:hover { background:rgba(255,255,255,.24); }
+html[data-theme="paper"] .tag-row span { border-color:rgba(61,43,31,.22); color:#655448; }
+html[data-theme="paper"] .archive-grid { gap:28px; }
+html[data-theme="paper"] .archive-card { border:1px solid rgba(61,43,31,.17); background:linear-gradient(140deg,#f6efe3,#e8ddca); box-shadow:5px 5px 0 rgba(61,43,31,.055),10px 10px 0 rgba(61,43,31,.025); }
+html[data-theme="paper"] .archive-card-top { border-bottom:1px solid rgba(61,43,31,.16); padding-bottom:14px; }
+html[data-theme="paper"] .archive-card-bottom h3 { font-size:33px; }
+html[data-theme="paper"] .interlude { background:radial-gradient(ellipse at center,rgba(147,65,81,.07),transparent 62%),#e6dac6; border-color:rgba(61,43,31,.18); }
+html[data-theme="paper"] .interlude-inner p { color:#312720; }
+html[data-theme="paper"] .interlude-mark { color:#934151; }
+html[data-theme="paper"] .signal-panel, html[data-theme="paper"] .lunar-profile-card, html[data-theme="paper"] .discord-metrics>div { border-color:rgba(61,43,31,.18); background:rgba(255,252,245,.62); box-shadow:3px 3px 0 rgba(61,43,31,.04); }
+html[data-theme="paper"] .deep-stats>div { background:rgba(255,255,255,.5); }
+html[data-theme="paper"] .deep-stats strong, html[data-theme="paper"] .discord-metrics strong { color:#312720; }
+html[data-theme="paper"] .genre-row { color:#655448; }
+html[data-theme="paper"] .genre-row>div>i { background:#934151; }
+html[data-theme="paper"] .ranked-row { border-color:rgba(61,43,31,.14); }
+html[data-theme="paper"] .ranked-row>span, html[data-theme="paper"] .ranked-row>small, html[data-theme="paper"] .ranked-row>strong small { color:#77665a; }
+html[data-theme="paper"] .ranked-row>svg { color:#934151; }
+html[data-theme="paper"] .theme-picker-backdrop { background:rgba(37,27,20,.38); }
+html[data-theme="paper"] .theme-picker-dialog { border-color:rgba(61,43,31,.2); background:rgba(245,237,223,.98); }
+html[data-theme="paper"] .theme-picker-heading h2, html[data-theme="paper"] .theme-card { color:#312720; }
+html[data-theme="paper"] .theme-picker-heading p, html[data-theme="paper"] .theme-card-description { color:#77665a; }
+html[data-theme="paper"] .theme-card { background:rgba(255,255,255,.44); border-color:rgba(61,43,31,.16); }
+html[data-theme="paper"] .theme-card.is-active { background:rgba(147,65,81,.07); }
+.theme-preview-paper { border-radius:0; border:1px solid #cbbba7; background:repeating-linear-gradient(0deg,#f0e7d8 0 2px,#eee3d3 3px 5px); box-shadow:3px 3px 0 #d7c8b5,6px 6px 0 #e2d6c5; }
+.theme-preview-paper .theme-preview-content b { background:#46372e; height:3px; }
+@media(max-width:760px) { html[data-theme="paper"] .manifesto-content { grid-template-columns:1fr; gap:28px; } html[data-theme="paper"] .archive-grid { grid-template-columns:1fr; } html[data-theme="paper"] .hero-art.editorial-index-slop { width:100%; aspect-ratio:1.15; } }
