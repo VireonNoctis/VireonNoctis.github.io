@@ -178,11 +178,8 @@ html[data-theme] .theme-switcher-current { color: var(--theme-accent); animation
 .theme-preview-3d .theme-preview-content em { height: 17px; box-shadow: 3px 3px 0 rgba(167,154,255,.22); }
 .theme-preview-light { --preview-bg: #f3f4f5; --preview-text: #222831; --preview-accent: #516f9d; border-color: rgba(15,25,38,.16); }
 .theme-preview-light::before { opacity: .18; }
-.theme-preview-aurora { --preview-bg: #0c0920; --preview-text: #f3edff; --preview-accent: #c5a8ff; background-image: radial-gradient(ellipse at 75% 0%, #48317e, transparent 63%); }
 .theme-preview-paper { --preview-bg: #f0e6d4; --preview-text: #2d241f; --preview-accent: #8d3040; border-color: rgba(65,42,29,.19); }
 .theme-preview-paper::before { opacity: .12; }
-.theme-preview-emerald { --preview-bg: #05130e; --preview-text: #e0ffe9; --preview-accent: #66f0aa; }
-.theme-preview-emerald::after { content: ""; position: absolute; inset: 0; opacity: .16; background: repeating-linear-gradient(0deg, transparent 0 5px, rgba(98,243,168,.3) 6px); }
 .theme-card-copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 6px; padding: 11px 6px 5px; }
 .theme-card-name { overflow-wrap: anywhere; font: 500 14px/1.25 'Clash Display', sans-serif; letter-spacing: -.025em; }
 .theme-card-description { min-height: 39px; color: var(--muted); font-size: 9px; line-height: 1.65; }
