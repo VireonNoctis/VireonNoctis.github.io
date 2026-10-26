@@ -8,6 +8,7 @@ import "./themes/light.css";
 import "./themes/universe.css";
 import "./themes/paper.css";
 import "./themes/lunar.css";
+import "./theme-picker.css";
 import { ThemeProvider } from "./theme-system";
 
 export const metadata: Metadata = {

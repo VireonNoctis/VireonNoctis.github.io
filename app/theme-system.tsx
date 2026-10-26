@@ -6,10 +6,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { createPortal } from "react-dom";
 import { ArrowRight, Check, Palette, X } from "lucide-react";
 
 export const THEMES = [
@@ -24,7 +26,8 @@ export const THEMES = [
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]["id"];
-const STORAGE_KEY = "vireon-noctis-theme";
+const STORAGE_KEY = "vireon-noctis-theme-v2";
+const LEGACY_STORAGE_KEY = "vireon-noctis-theme";
 
 type ThemeContextValue = {
   theme: ThemeId;
@@ -51,15 +54,25 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
+
       if (isThemeId(saved)) {
         setTheme(saved);
         setHasPreference(true);
       } else {
+        // Preserve existing visitors' selection and show the refreshed theme picker once.
+        const legacySaved = window.localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (isThemeId(legacySaved)) {
+          setTheme(legacySaved);
+          setHasPreference(true);
+        }
+
         setPickerOpen(true);
       }
     } catch {
+      // If storage is blocked, the picker still works for the current session.
       setPickerOpen(true);
     }
+
     setReady(true);
   }, []);
 
@@ -76,9 +89,11 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   const applyTheme = useCallback(() => {
     try {
       window.localStorage.setItem(STORAGE_KEY, theme);
+      window.localStorage.removeItem(LEGACY_STORAGE_KEY);
     } catch {
       // Keep the selected theme for the current session if storage is unavailable.
     }
+
     setHasPreference(true);
     setPickerOpen(false);
   }, [theme]);
@@ -94,14 +109,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   return (
     <ThemeContext.Provider value={value}>
       {children}
-      <ThemePickerDialog
-        open={ready && isPickerOpen}
-        theme={theme}
-        hasPreference={hasPreference}
-        onPreview={previewTheme}
-        onApply={applyTheme}
-        onClose={closePicker}
-      />
+      {ready ? (
+        <ThemePickerDialog
+          open={isPickerOpen}
+          theme={theme}
+          hasPreference={hasPreference}
+          onPreview={previewTheme}
+          onApply={applyTheme}
+          onClose={closePicker}
+        />
+      ) : null}
     </ThemeContext.Provider>
   );
 }
@@ -114,8 +131,7 @@ function useThemeContext() {
 
 export function ThemeSwitcher() {
   const { theme, openPicker } = useThemeContext();
-  const selectedIndex = THEMES.findIndex((item) => item.id === theme);
-  const selectedTheme = THEMES[selectedIndex] ?? THEMES[0];
+  const selectedTheme = THEMES.find((item) => item.id === theme) ?? THEMES[0];
 
   return (
     <button
@@ -124,12 +140,10 @@ export function ThemeSwitcher() {
       onClick={openPicker}
       aria-label={`Change website theme. Current theme: ${selectedTheme.name}`}
       aria-haspopup="dialog"
+      aria-controls="theme-picker-title"
+      title={`Current theme: ${selectedTheme.name}. Click to change.`}
     >
-      <Palette size={15} strokeWidth={1.8} aria-hidden="true" />
-      <span className="theme-switcher-label">Theme</span>
-      <span className="theme-switcher-index" aria-hidden="true" key={theme}>
-        {(theme === "nothing" || theme === "lunar") ? <RollingNumber value={selectedIndex + 1} replayKey={theme} /> : String(selectedIndex + 1).padStart(2, "0")}
-      </span>
+      <Palette size={14} strokeWidth={1.9} aria-hidden="true" />
       <span className="theme-switcher-current" key={theme}>{selectedTheme.shortName}</span>
     </button>
   );
@@ -325,23 +339,66 @@ function ThemePickerDialog({
   onClose: () => void;
 }) {
   const reduceMotion = useReducedMotion();
+  const dialogRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
   const selectedTheme = THEMES.find((item) => item.id === theme) ?? THEMES[0];
 
   useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
+
+  useEffect(() => {
     if (!open) return;
+
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null;
     document.body.style.overflow = "hidden";
+
+    const getFocusable = () => Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ) ?? [],
+    ).filter((element) => element.offsetParent !== null);
+
+    const focusFrame = window.requestAnimationFrame(() => getFocusable()[0]?.focus());
+
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") {
+        onCloseRef.current();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+      const focusable = getFocusable();
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialogRef.current?.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => {
+      window.cancelAnimationFrame(focusFrame);
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -361,6 +418,8 @@ function ThemePickerDialog({
             aria-modal="true"
             aria-labelledby="theme-picker-title"
             aria-describedby="theme-picker-description"
+            ref={dialogRef}
+            tabIndex={-1}
             initial={reduceMotion ? false : { opacity: 0, y: 18, scale: 0.985, filter: "blur(8px)" }}
             animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.99, filter: "blur(5px)" }}
@@ -418,6 +477,7 @@ function ThemePickerDialog({
           </motion.section>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
