@@ -3,7 +3,7 @@ name = "vireon-noctis-api"
 version = "0.2.0"
 edition = "2021"
 description = "Rust/Axum API companion for the Vireon Noctis website"
-license = "MIT"
+license-file = "LICENSE"
 
 [dependencies]
 axum = { version = "0.8", features = ["json"] }
