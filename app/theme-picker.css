@@ -258,3 +258,10 @@ html[data-theme] .theme-switcher:focus-visible { outline: 2px solid var(--theme-
 @media (prefers-reduced-motion: reduce) {
   .theme-picker-dialog { animation: none; }
 }
+
+/* Keep the theme grid comfortable on very narrow mobile viewports. */
+@media (max-width: 360px) {
+  .theme-picker-dialog { padding: 12px; }
+  .theme-picker-grid { gap: 6px; }
+  .theme-card-description { font-size: 8px; }
+}
