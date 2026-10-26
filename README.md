@@ -56,7 +56,7 @@ Themes are intentionally different in layout, type, materials, information hiera
 | **Light** | A bright gallery cover, architectural spacing, restrained blue-gray accents, and clear project groupings. |
 | **Universe / Space** | A star atlas, planet artwork, orbital geometry, and observatory-style telemetry. |
 | **Editorial Paper** | Warm paper texture, serif hierarchy, print-inspired details, and a magazine-like project spread. |
-| **Lunar** | Near-black surfaces, white type, indigo brand light, and clipped ghost-text glitch effects inspired by the supplied LunarX CSS. |
+| **Lunar** | Near-black surfaces, white type, indigo brand light, and clipped ghost-text glitch effects inspired by my Animanga/novel Website. |
 
 Choose a theme when the site first opens, then switch at any time using the **Theme** control in the top bar. Theme styling lives in individual CSS files so each visual system can evolve independently.
 
