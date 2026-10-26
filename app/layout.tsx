@@ -1,6 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./themes.css";
+import "./themes/nothing.css";
+import "./themes/liquid-glass.css";
+import "./themes/dimensional-3d.css";
+import "./themes/light.css";
+import "./themes/universe.css";
+import "./themes/paper.css";
+import "./themes/lunar.css";
 import { ThemeProvider } from "./theme-system";
 
 export const metadata: Metadata = {

@@ -1,0 +1,109 @@
+/* DIMENSIONAL 3D — an actual spatial object stage, not just raised cards. */
+html[data-theme="3d"] {
+  --ink:#080817; --night:#10102b; --panel:#171735; --silver:#f2f0ff; --muted:#aaa6ca;
+  --ice:#b8a9ff; --lav:#7363d9; --line:rgba(195,185,255,.24);
+  --theme-accent:#b8a9ff; --theme-accent-soft:rgba(184,169,255,.14); --theme-hot:#e7e1ff; --theme-shadow:rgba(0,0,0,.55);
+}
+html[data-theme="3d"] body { background:#080817; color:#f2f0ff; perspective:1800px; }
+html[data-theme="3d"] .atmosphere { background:radial-gradient(ellipse at 52% 8%,rgba(101,82,222,.34),transparent 36%),#080817; }
+html[data-theme="3d"] .atmosphere-grid { display:block!important; opacity:.2; background-image:linear-gradient(rgba(184,169,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(184,169,255,.12) 1px,transparent 1px); background-size:60px 60px; mask-image:linear-gradient(#000,transparent 82%); }
+html[data-theme="3d"] .aurora { display:block!important; opacity:.2; filter:blur(90px); }
+html[data-theme="3d"] .grain { display:none!important; }
+html[data-theme="3d"] .site-header { border-bottom:0; box-shadow:0 1px rgba(255,255,255,.15),0 7px 0 rgba(5,5,18,.95),0 14px 0 rgba(123,103,230,.18); }
+html[data-theme="3d"] .hero-main { perspective:1400px; align-items:center; }
+html[data-theme="3d"] .hero-copy { transform:translateZ(35px); }
+html[data-theme="3d"] .hero-art.editorial-index-slop { overflow:visible; border:0; background:transparent; box-shadow:none; transform-style:preserve-3d; perspective:1150px; }
+html[data-theme="3d"] .hero-art.editorial-index-slop:before, html[data-theme="3d"] .hero-art.editorial-index-slop:after { display:none; }
+html[data-theme="3d"] .hero-art.editorial-index-slop>:not(.theme-hero-artwork) { display:none!important; }
+.theme-hero-artwork-3d { position:absolute; inset:0; min-width:100%; min-height:100%; overflow:visible; perspective:1050px; transform-style:preserve-3d; }
+.three-d-caption { position:absolute; z-index:8; display:flex; justify-content:space-between; gap:14px; font:8px "IBM Plex Mono",monospace; letter-spacing:.12em; color:#a69ddb; }
+.three-d-caption-top { left:2%; right:2%; top:2%; }
+.three-d-caption-bottom { left:2%; right:2%; bottom:1%; color:#8279ad; }
+.three-d-floor-grid {
+  position:absolute; left:-18%; right:-18%; bottom:-7%; height:47%; transform:rotateX(74deg) translateZ(-65px); transform-origin:center bottom;
+  background-image:linear-gradient(rgba(181,169,255,.24) 1px,transparent 1px),linear-gradient(90deg,rgba(181,169,255,.24) 1px,transparent 1px);
+  background-size:30px 30px; mask-image:linear-gradient(transparent,black 35%,transparent);
+}
+.three-d-light { position:absolute; border-radius:50%; filter:blur(34px); pointer-events:none; }
+.three-d-light-a { width:48%; height:54%; top:15%; left:16%; background:rgba(130,93,255,.38); }
+.three-d-light-b { width:34%; height:38%; bottom:10%; right:0; background:rgba(48,205,255,.18); }
+.three-d-ring { position:absolute; left:50%; top:51%; width:82%; height:30%; border:1px solid rgba(191,181,255,.7); border-radius:50%; transform-style:preserve-3d; box-shadow:0 0 18px rgba(145,123,255,.1),inset 0 0 12px rgba(145,123,255,.07); }
+.three-d-ring-a { transform:translate(-50%,-50%) rotateX(72deg) rotateZ(-19deg) translateZ(3px); }
+.three-d-ring-b { width:72%; height:48%; border-color:rgba(113,202,255,.42); transform:translate(-50%,-50%) rotateY(68deg) rotateZ(29deg) translateZ(-23px); }
+.three-d-orb { position:absolute; border-radius:50%; transform-style:preserve-3d; }
+.three-d-orb-large {
+  width:clamp(90px,13vw,154px); aspect-ratio:1; left:13%; top:25%; z-index:2;
+  background:radial-gradient(circle at 27% 24%,#fff4ff 0,#c4b4ff 7%,#6658d8 32%,#29204e 61%,#111025 78%,#070715 100%);
+  box-shadow:inset -20px -18px 35px rgba(0,0,0,.62),inset 8px 7px 15px rgba(255,255,255,.35),0 35px 45px rgba(0,0,0,.42),0 0 45px rgba(130,93,255,.17);
+  animation:three-d-orb-hover 8s ease-in-out infinite;
+}
+.three-d-orb-large:before { content:""; position:absolute; inset:9%; border-radius:50%; border:1px solid rgba(255,255,255,.25); transform:rotateY(55deg) rotateX(24deg); }
+.three-d-orb-large:after { content:""; position:absolute; inset:13% 19% 23% 11%; border-radius:50%; border:1px solid rgba(255,255,255,.12); transform:rotateY(-34deg) rotateZ(25deg); }
+.three-d-orb-large i { position:absolute; width:22%; height:16%; left:21%; top:36%; border-radius:50%; background:rgba(13,10,32,.24); filter:blur(3px); transform:rotate(-23deg); }
+.three-d-orb-large b { position:absolute; width:13%; height:13%; right:21%; top:20%; border-radius:50%; background:#fff; filter:blur(10px); opacity:.48; }
+.three-d-cube-wrap { position:absolute; inset:0; perspective:1100px; transform-style:preserve-3d; z-index:4; }
+.three-d-cube {
+  --cube-side:clamp(108px,16vw,172px); width:var(--cube-side); height:var(--cube-side); position:absolute; left:50%; top:49%;
+  margin-left:calc(clamp(108px,16vw,172px) / -2); margin-top:calc(clamp(108px,16vw,172px) / -2);
+  transform-style:preserve-3d; animation:three-d-cube-turn 22s linear infinite;
+}
+.three-d-face { position:absolute; inset:0; display:grid; place-items:center; backface-visibility:hidden; border:1px solid rgba(240,233,255,.65); box-shadow:inset 0 0 30px rgba(174,148,255,.1); }
+.three-d-face span { font:600 22px "IBM Plex Mono",monospace; color:#fff; letter-spacing:-.1em; text-shadow:0 0 25px rgba(216,202,255,.8); }
+.three-d-front { transform:translateZ(clamp(54px,8vw,86px)); background:linear-gradient(145deg,rgba(186,163,255,.52),rgba(35,26,85,.88)); }
+.three-d-back { transform:rotateY(180deg) translateZ(clamp(54px,8vw,86px)); background:linear-gradient(35deg,rgba(19,12,49,.92),rgba(103,88,223,.5)); }
+.three-d-right { transform:rotateY(90deg) translateZ(clamp(54px,8vw,86px)); background:linear-gradient(140deg,rgba(89,211,255,.36),rgba(28,22,77,.94)); }
+.three-d-left { transform:rotateY(-90deg) translateZ(clamp(54px,8vw,86px)); background:linear-gradient(130deg,rgba(69,46,177,.85),rgba(10,10,34,.92)); }
+.three-d-top { transform:rotateX(90deg) translateZ(clamp(54px,8vw,86px)); background:linear-gradient(145deg,rgba(231,225,255,.88),rgba(131,112,218,.56)); }
+.three-d-bottom { transform:rotateX(-90deg) translateZ(clamp(54px,8vw,86px)); background:linear-gradient(145deg,rgba(9,8,28,.92),rgba(47,40,101,.92)); }
+.three-d-prism { position:absolute; z-index:5; right:8%; bottom:18%; width:70px; height:120px; transform-style:preserve-3d; transform:rotateY(32deg) rotateX(-18deg); animation:three-d-prism-float 7.5s ease-in-out infinite; }
+.three-d-prism span { position:absolute; inset:0; border:1px solid rgba(125,226,255,.7); background:linear-gradient(145deg,rgba(125,226,255,.26),rgba(49,48,125,.15)); }
+.three-d-prism span:nth-child(1) { transform:translateZ(28px); }
+.three-d-prism span:nth-child(2) { transform:rotateY(60deg) translateZ(28px); }
+.three-d-prism span:nth-child(3) { transform:rotateY(120deg) translateZ(28px); }
+.three-d-prism span:nth-child(4) { transform:rotateY(180deg) translateZ(28px); }
+.three-d-prism span:nth-child(5) { transform:rotateY(240deg) translateZ(28px); }
+.three-d-prism span:nth-child(6) { transform:rotateY(300deg) translateZ(28px); }
+@keyframes three-d-cube-turn { from{transform:rotateX(-27deg) rotateY(-20deg)} to{transform:rotateX(333deg) rotateY(340deg)} }
+@keyframes three-d-orb-hover { 0%,100%{transform:translate3d(0,0,22px)} 50%{transform:translate3d(-5px,-18px,42px)} }
+@keyframes three-d-prism-float { 0%,100%{transform:translate3d(0,0,26px) rotateY(32deg) rotateX(-18deg)} 50%{transform:translate3d(0,-16px,48px) rotateY(92deg) rotateX(6deg)} }
+html[data-theme="3d"] .hero { min-height:760px; }
+html[data-theme="3d"] .hero h1 { text-shadow:0 3px 0 rgba(125,110,236,.22),0 10px 35px rgba(112,83,240,.12); }
+html[data-theme="3d"] .hero h1 em { color:#d1c6ff; }
+html[data-theme="3d"] .section-space { transform-style:preserve-3d; }
+html[data-theme="3d"] .work .project-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:22px; border:0; perspective:1400px; }
+html[data-theme="3d"] .project-feature { grid-column:1/-1; border:1px solid rgba(196,186,255,.3); border-radius:18px; overflow:hidden; box-shadow:0 14px 0 #050510,0 27px 0 rgba(98,83,218,.22),0 40px 55px rgba(0,0,0,.3); transform-style:preserve-3d; transition:transform .45s,box-shadow .45s; }
+html[data-theme="3d"] .project-feature:hover { transform:translateY(-8px) rotateX(1.8deg) rotateY(-.5deg); box-shadow:0 18px 0 #050510,0 31px 0 rgba(98,83,218,.23),0 55px 70px rgba(0,0,0,.38); }
+html[data-theme="3d"] .project-art { background:radial-gradient(ellipse at 50% 25%,#51459f,#181638 58%,#0c0c22); }
+html[data-theme="3d"] .project-detail { transform:translateZ(14px); padding:32px 26px 36px; }
+html[data-theme="3d"] .project-row { margin:0; min-width:0; grid-template-columns:44px minmax(0,1fr) 20px; gap:10px; padding:22px 15px; border:1px solid rgba(196,186,255,.22); border-radius:14px; background:linear-gradient(145deg,#25214f,#101026); box-shadow:0 7px 0 #050510,0 18px 30px rgba(0,0,0,.24); transform-style:preserve-3d; transition:transform .32s,box-shadow .32s; }
+html[data-theme="3d"] .project-row:hover { transform:translateY(-6px) rotateX(1deg) translateZ(8px); box-shadow:0 12px 0 #050510,0 25px 38px rgba(0,0,0,.33); }
+html[data-theme="3d"] .project-type { display:none; }
+html[data-theme="3d"] .archive-grid { gap:28px; perspective:1250px; }
+html[data-theme="3d"] .archive-card { min-height:520px; border:1px solid rgba(196,186,255,.27); border-radius:15px; background:linear-gradient(145deg,#2a2558,#0c0c21); box-shadow:0 8px 0 #050510,0 17px 0 rgba(104,89,211,.17),0 34px 45px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.12); transform-style:preserve-3d; transition:transform .42s,box-shadow .42s; }
+html[data-theme="3d"] .archive-card:hover { transform:translateY(-8px) rotateX(2deg) rotateY(-1deg); box-shadow:0 13px 0 #050510,0 24px 0 rgba(104,89,211,.22),0 44px 55px rgba(0,0,0,.35); }
+html[data-theme="3d"] .archive-illustration { transform:translateZ(28px); }
+html[data-theme="3d"] .signal-panel, html[data-theme="3d"] .lunar-profile-card, html[data-theme="3d"] .discord-metrics>div { border:1px solid rgba(196,186,255,.25); border-radius:15px; background:linear-gradient(145deg,#211e45,#0d0d25); box-shadow:0 7px 0 #050510,0 17px 28px rgba(0,0,0,.25); }
+html[data-theme="3d"] .round-link, html[data-theme="3d"] .project-arrow, html[data-theme="3d"] .theme-switcher { border-radius:12px; box-shadow:0 5px 0 #050510,0 9px 20px rgba(0,0,0,.28); }
+html[data-theme="3d"] .theme-picker-dialog { border-radius:17px; box-shadow:0 13px 0 #050510,0 40px 100px rgba(0,0,0,.55); }
+html[data-theme="3d"] .theme-card { border-radius:10px; box-shadow:0 5px 0 #050510; }
+html[data-theme="3d"] .theme-card.is-active { transform:translateY(-3px); box-shadow:0 8px 0 #050510,0 14px 25px rgba(0,0,0,.28); }
+.theme-preview-3d { overflow:visible; margin-bottom:8px; border-radius:5px; transform:perspective(260px) rotateY(-7deg) rotateX(3deg); box-shadow:0 4px 0 #080817,0 9px 0 #29234e,0 15px 16px rgba(0,0,0,.3); }
+.theme-preview-3d:before { inset:0; background:linear-gradient(140deg,rgba(184,169,255,.42),transparent 60%); }
+.theme-preview-3d .theme-preview-content em { height:18px; transform:translateZ(8px); box-shadow:3px 4px 0 rgba(167,154,255,.25); }
+@media(max-width:760px) {
+ html[data-theme="3d"] .hero-main { display:flex; flex-direction:column; align-items:stretch; }
+ html[data-theme="3d"] .hero-art.editorial-index-slop { width:100%; aspect-ratio:1.1; }
+ html[data-theme="3d"] .work .project-list { grid-template-columns:1fr; gap:14px; }
+ html[data-theme="3d"] .project-feature { grid-column:auto; }
+ html[data-theme="3d"] .project-row { grid-template-columns:40px minmax(0,1fr) 20px; }
+ html[data-theme="3d"] .archive-grid { grid-template-columns:1fr; }
+ html[data-theme="3d"] .three-d-prism { right:0; }
+}
+@media(prefers-reduced-motion:reduce) {
+ .three-d-cube, .three-d-orb-large, .three-d-prism { animation:none!important; }
+ html[data-theme="3d"] .project-feature, html[data-theme="3d"] .project-row, html[data-theme="3d"] .archive-card { transition:none!important; transform:none!important; }
+}
+
+/* Center the rotating object independently of its own transform animation. */
+.three-d-cube { left:50%; top:49%; margin:0; transform:translate(-50%,-50%) rotateX(-27deg) rotateY(-20deg); }
+@keyframes three-d-cube-turn { from { transform:translate(-50%,-50%) rotateX(-27deg) rotateY(-20deg); } to { transform:translate(-50%,-50%) rotateX(333deg) rotateY(340deg); } }

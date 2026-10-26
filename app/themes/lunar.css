@@ -1,0 +1,144 @@
+/* LUNAR — source traits adapted from the supplied LunarX stylesheet: neutral dark UI, indigo brand, clipped ghost glitches. */
+html[data-theme="lunar"] {
+  color-scheme:dark;
+  --brand-400:234.5 89.5% 73.9%;
+  --brand-500:238.7 83.5% 66.7%;
+  --brand-600:243.4 75.4% 58.6%;
+  --brand:239 84% 67%;
+  --ink:#0a0a0b; --night:#111113; --panel:#19191c; --silver:#fafafa; --muted:#a1a1aa;
+  --ice:#7a72ff; --lav:#a6a1ff; --line:rgba(255,255,255,.12);
+  --theme-accent:#6355e8; --theme-accent-soft:rgba(99,85,232,.16); --theme-hot:#c7c3ff; --theme-shadow:rgba(0,0,0,.42);
+}
+html[data-theme="lunar"] body { background:#0a0a0b; color:#fafafa; }
+html[data-theme="lunar"] .atmosphere {
+  background:radial-gradient(ellipse at 70% 8%,rgba(99,85,232,.18),transparent 34%),
+  radial-gradient(ellipse at 15% 45%,rgba(75,67,181,.11),transparent 30%),#0a0a0b;
+}
+html[data-theme="lunar"] .atmosphere-grid { display:block!important; opacity:.11; background-image:linear-gradient(rgba(145,135,255,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(145,135,255,.13) 1px,transparent 1px); background-size:44px 44px; }
+html[data-theme="lunar"] .aurora, html[data-theme="lunar"] .grain { display:none!important; }
+html[data-theme="lunar"] .site-header { border-bottom-color:rgba(145,135,255,.28); }
+html[data-theme="lunar"] .wordmark-logo { filter:drop-shadow(0 0 10px rgba(99,85,232,.3)); }
+html[data-theme="lunar"] .wordmark-copy strong { letter-spacing:.2em; }
+html[data-theme="lunar"] .navigation>a { color:#c6c4d7; }
+html[data-theme="lunar"] .navigation .nav-contact { border-color:rgba(145,135,255,.4); background:rgba(99,85,232,.12); }
+html[data-theme="lunar"] .theme-switcher { background:#111113; border-color:rgba(145,135,255,.45); color:#fafafa; }
+html[data-theme="lunar"] .theme-switcher-current, html[data-theme="lunar"] .theme-switcher-index { color:#8d83ff; }
+html[data-theme="lunar"] .hero-main { grid-template-columns:.88fr 1.12fr; }
+html[data-theme="lunar"] .hero-art.editorial-index-slop { border:0; background:transparent; box-shadow:none; overflow:visible; }
+html[data-theme="lunar"] .hero-art.editorial-index-slop:before, html[data-theme="lunar"] .hero-art.editorial-index-slop:after { display:none; }
+html[data-theme="lunar"] .hero-art.editorial-index-slop>:not(.theme-hero-artwork) { display:none!important; }
+.theme-hero-artwork-lunar { position:absolute; inset:0; overflow:visible; }
+.lunar-css-stars { position:absolute; inset:0; opacity:.7; background-image:
+  radial-gradient(1px 1px at 17% 20%,#fff 99%,transparent),radial-gradient(1px 1px at 81% 14%,#aba5ff 99%,transparent),
+  radial-gradient(1px 1px at 82% 76%,#fff 99%,transparent),radial-gradient(1px 1px at 27% 77%,#c9c5ff 99%,transparent),
+  radial-gradient(2px 2px at 58% 34%,#fff 99%,transparent);
+}
+.lunar-css-moon {
+  position:absolute; width:62%; aspect-ratio:1; top:17%; left:20%; border-radius:50%;
+  background:radial-gradient(circle at 28% 24%,#e6e4ff 0,#a6a1ff 5%,#6355e8 28%,#30266d 56%,#111119 75%);
+  box-shadow:inset -28px -14px 42px rgba(0,0,0,.75),inset 8px 5px 19px rgba(255,255,255,.19),0 0 50px rgba(99,85,232,.2);
+}
+.lunar-css-moon:before { content:""; position:absolute; inset:12%; border:1px solid rgba(194,190,255,.18); border-radius:50%; transform:rotateY(55deg) rotateX(16deg); }
+.lunar-css-moon:after { content:""; position:absolute; inset:0; border-radius:50%; background:repeating-linear-gradient(155deg,transparent 0 13px,rgba(174,168,255,.08) 14px 16px,transparent 17px 26px); }
+.lunar-css-moon i { position:absolute; left:22%; top:38%; width:13%; height:9%; border-radius:50%; background:rgba(12,10,34,.3); box-shadow:inset 3px 2px 6px rgba(0,0,0,.6); }
+.lunar-css-moon b { position:absolute; right:20%; top:25%; width:8%; height:8%; border-radius:50%; background:rgba(4,3,20,.45); }
+.lunar-glitch-orbit { position:absolute; left:50%; top:51%; width:94%; height:35%; border:1px solid rgba(133,123,255,.45); border-radius:50%; }
+.lunar-glitch-orbit-a { transform:translate(-50%,-50%) rotate(-18deg) rotateX(69deg); }
+.lunar-glitch-orbit-b { width:78%; height:76%; border-color:rgba(99,85,232,.2); transform:translate(-50%,-50%) rotate(30deg) rotateY(62deg); }
+.lunar-glitch-word {
+  position:absolute; z-index:5; left:7%; bottom:14%; font:800 clamp(42px,6.2vw,82px)/.85 Arial,sans-serif;
+  letter-spacing:-.12em; color:#fafafa; text-shadow:0 0 22px rgba(99,85,232,.35);
+}
+.lunar-glitch-main, .lunar-glitch-ghost { display:block; }
+.lunar-glitch-ghost { position:absolute; inset:0; pointer-events:none; opacity:.35; }
+.lunar-glitch-ghost-a { color:#a6a1ff; animation:lunar-ghost-a 5.7s steps(1,end) infinite; }
+.lunar-glitch-ghost-b { color:#5145cd; animation:lunar-ghost-b 5.7s steps(1,end) infinite; }
+.lunar-glitch-main { animation:lunar-main-glitch 5.7s steps(1,end) infinite; }
+.lunar-glitch-word:after { content:attr(data-text); position:absolute; inset:0; color:#7a72ff; opacity:.12; filter:blur(13px); pointer-events:none; }
+.lunar-css-code { position:absolute; z-index:6; left:7%; right:5%; bottom:4%; display:flex; justify-content:space-between; gap:10px; font:7px "IBM Plex Mono",monospace; letter-spacing:.11em; color:#8d83ff; }
+@keyframes lunar-main-glitch {
+  0%,to { opacity:1; clip-path:inset(0); transform:translate(0) skew(0); }
+  22% { opacity:1; clip-path:inset(0 0 46%); transform:translate(-.06em,.02em) skew(-8deg); }
+  24% { opacity:.62; clip-path:inset(44% 0 0); transform:translate(.04em,-.02em) skew(7deg); }
+  27% { opacity:1; clip-path:inset(0); transform:none; }
+  56% { opacity:.75; clip-path:inset(26% 0); transform:translate(.03em,-.02em) skew(5deg); }
+  58% { opacity:1; clip-path:inset(0); transform:none; }
+  78% { clip-path:inset(58% 0 0); transform:translate(-.04em,-.02em) skew(-6deg); }
+  81% { opacity:1; clip-path:inset(0); transform:none; }
+}
+@keyframes lunar-ghost-a {
+  0%,to { opacity:.24; clip-path:inset(0); transform:translate(-.015em); }
+  22% { opacity:.75; clip-path:inset(6% 0 50%); transform:translate(-.12em,.03em); }
+  27% { opacity:.25; clip-path:inset(0); transform:translate(-.015em); }
+  56% { opacity:.8; clip-path:inset(30% 0 28%); transform:translate(.09em,-.02em); }
+  58%,81% { opacity:.25; clip-path:inset(0); transform:translate(-.015em); }
+}
+@keyframes lunar-ghost-b {
+  0%,to { opacity:.25; clip-path:inset(0); transform:translate(.015em); }
+  22% { opacity:.8; clip-path:inset(46% 0 8%); transform:translate(.12em,-.03em); }
+  27% { opacity:.25; clip-path:inset(0); transform:translate(.015em); }
+  78% { opacity:.8; clip-path:inset(2% 0 58%); transform:translate(.1em,-.02em); }
+  81% { opacity:.25; clip-path:inset(0); transform:translate(.015em); }
+}
+html[data-theme="lunar"] .marquee { border-block:1px solid rgba(99,85,232,.26); background:#0a0a0b; }
+html[data-theme="lunar"] .marquee-track span { color:#c5c1ff; font-family:"IBM Plex Mono",monospace; }
+html[data-theme="lunar"] .marquee-track b { color:#7a72ff; }
+html[data-theme="lunar"] .section-space { padding-block:clamp(70px,8vw,116px); }
+html[data-theme="lunar"] .index-label { flex-direction:row; gap:11px; }
+html[data-theme="lunar"] .index-label span:first-child { color:#8d83ff; }
+html[data-theme="lunar"] .section-heading h2, html[data-theme="lunar"] .work-heading h2, html[data-theme="lunar"] .archive-heading h2,
+html[data-theme="lunar"] .contact-main h2, html[data-theme="lunar"] .stack-heading h2, html[data-theme="lunar"] .learning-heading h2 { letter-spacing:-.075em; }
+html[data-theme="lunar"] .hero h1 em, html[data-theme="lunar"] .section-shell h2 em { color:#8d83ff; }
+html[data-theme="lunar"] .eyebrow i { background:#7a72ff; box-shadow:0 0 12px rgba(99,85,232,.48); }
+html[data-theme="lunar"] .hero-kicker { color:#c5c1ff; }
+html[data-theme="lunar"] .project-art { background:radial-gradient(ellipse at 50% 30%,rgba(99,85,232,.27),transparent 50%),linear-gradient(145deg,#181529,#08080c); }
+html[data-theme="lunar"] .project-feature { border-color:rgba(99,85,232,.3); }
+html[data-theme="lunar"] .project-row { border-bottom-color:rgba(99,85,232,.24); }
+html[data-theme="lunar"] .project-row h3 { font-family:var(--sans); letter-spacing:-.045em; }
+html[data-theme="lunar"] .project-index { color:#b9b4ff; }
+html[data-theme="lunar"] .project-type { color:#857df5; }
+html[data-theme="lunar"] .tag-row span { border-color:rgba(99,85,232,.32); color:#c5c1ff; }
+html[data-theme="lunar"] .round-link, html[data-theme="lunar"] .project-arrow { border-color:rgba(99,85,232,.55); }
+html[data-theme="lunar"] .round-link:hover, html[data-theme="lunar"] .project-feature:hover .project-arrow { background:#6355e8; color:#fff; }
+html[data-theme="lunar"] .archive-grid { gap:20px; }
+html[data-theme="lunar"] .archive-card { background:linear-gradient(145deg,#17161f,#0a0a0d); border-color:rgba(99,85,232,.25); }
+html[data-theme="lunar"] .archive-card:hover { border-color:rgba(133,123,255,.58); box-shadow:0 0 36px rgba(99,85,232,.07); }
+html[data-theme="lunar"] .signal-panel, html[data-theme="lunar"] .lunar-profile-card, html[data-theme="lunar"] .discord-metrics>div { border-color:rgba(99,85,232,.28); background:linear-gradient(145deg,#15141d,#0b0b0e); }
+html[data-theme="lunar"] .deep-stats>div { background:#111114; }
+html[data-theme="lunar"] .deep-stats strong, html[data-theme="lunar"] .discord-metrics strong { color:#dedbff; }
+html[data-theme="lunar"] .genre-row>div>i { background:#6355e8; }
+html[data-theme="lunar"] .ranked-row { border-color:rgba(99,85,232,.2); }
+html[data-theme="lunar"] .ranked-row>svg, html[data-theme="lunar"] .ranked-row:hover { color:#a6a1ff; }
+html[data-theme="lunar"] .lunar-signature-rail { display:grid; grid-template-columns:1.3fr 1fr .7fr .8fr; align-items:center; gap:12px; padding-block:12px; border-bottom:1px solid rgba(99,85,232,.32); color:#c7c3ff; font:8px "IBM Plex Mono",monospace; letter-spacing:.09em; }
+html[data-theme="lunar"] .lunar-rail-brand { display:flex; align-items:center; gap:8px; color:#fafafa; }
+html[data-theme="lunar"] .lunar-rail-brand i { width:5px; height:5px; border-radius:50%; background:#6355e8; box-shadow:0 0 9px #6355e8; }
+html[data-theme="lunar"] .lunar-rail-code { color:#8d83ff; }
+html[data-theme="lunar"] .lunar-rail-status { display:flex; align-items:center; gap:7px; }
+html[data-theme="lunar"] .lunar-rail-status .unicode-signal { font-size:12px; }
+html[data-theme="lunar"] .lunar-rail-index { text-align:right; color:#8077ed; }
+.theme-preview-lunar { border:1px solid rgba(145,135,255,.44); background:radial-gradient(circle at 60% 32%,#6355e8,#292157 30%,#0a0a0b 72%); }
+.theme-preview-lunar:before { opacity:.7; background:radial-gradient(1px 1px at 18% 23%,#fff 99%,transparent),radial-gradient(1px 1px at 84% 34%,#a6a1ff 99%,transparent); }
+.theme-preview-lunar .theme-preview-content b { background:#fff; }
+.theme-preview-lunar .theme-preview-content em { border-color:#7a72ff; box-shadow:0 0 9px rgba(99,85,232,.25); }
+@media(max-width:1100px) { html[data-theme="lunar"] .lunar-signature-rail { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:760px) {
+ html[data-theme="lunar"] .hero-main { display:flex; flex-direction:column; align-items:stretch; gap:30px; padding-block:58px 34px; }
+ html[data-theme="lunar"] .hero-art.editorial-index-slop { width:100%; aspect-ratio:1.12; }
+ html[data-theme="lunar"] .hero-copy { order:1; }
+ html[data-theme="lunar"] .lunar-signature-rail { width:calc(100% - 36px); grid-template-columns:1fr 1fr; }
+ html[data-theme="lunar"] .archive-grid { grid-template-columns:1fr; }
+ html[data-theme="lunar"] .project-row { grid-template-columns:44px minmax(0,1fr) 20px; gap:10px; }
+ html[data-theme="lunar"] .project-type { display:none; }
+}
+@media(prefers-reduced-motion:reduce) { .lunar-glitch-main, .lunar-glitch-ghost-a, .lunar-glitch-ghost-b { animation:none!important; } }
+
+/* Lunar places the orbiting title in the left margin and gives the hero copy the opposite column. */
+html[data-theme="lunar"] .hero-main { grid-template-columns:1fr 1fr; gap:clamp(25px,4vw,70px); }
+html[data-theme="lunar"] .hero-copy { grid-column:2; grid-row:1; }
+html[data-theme="lunar"] .hero-art.editorial-index-slop { grid-column:1; grid-row:1; justify-self:stretch; }
+html[data-theme="lunar"] .hero h1 { font-size:clamp(64px,8.4vw,124px); }
+@media(max-width:760px) {
+ html[data-theme="lunar"] .hero-main { display:flex; flex-direction:column; align-items:stretch; }
+ html[data-theme="lunar"] .hero-art.editorial-index-slop { order:0; }
+ html[data-theme="lunar"] .hero-copy { order:1; }
+}
