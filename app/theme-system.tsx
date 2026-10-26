@@ -340,7 +340,12 @@ function ThemePickerDialog({
 }) {
   const reduceMotion = useReducedMotion();
   const dialogRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
   const selectedTheme = THEMES.find((item) => item.id === theme) ?? THEMES[0];
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!open) return;
@@ -361,7 +366,7 @@ function ThemePickerDialog({
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -391,7 +396,7 @@ function ThemePickerDialog({
       window.removeEventListener("keydown", handleKeyDown);
       previousFocus?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   return createPortal(
     <AnimatePresence>
