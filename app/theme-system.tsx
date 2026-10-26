@@ -202,7 +202,7 @@ export function ThemeSignatureRail() {
   return (
     <AnimatePresence>
       {theme === "universe" && (
-        <motion.aside className="universe-signature-rail section-shell" aria-label="Universe observatory readout"
+        <motion.aside key="universe-rail" className="universe-signature-rail section-shell" aria-label="Universe observatory readout"
           initial={reduceMotion ? false : { opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.42 }}>
           <span className="universe-rail-orbit" aria-hidden="true">◎</span>
@@ -213,7 +213,7 @@ export function ThemeSignatureRail() {
         </motion.aside>
       )}
       {theme === "lunar" && (
-        <motion.aside className="lunar-signature-rail section-shell" aria-label="Lunar visual telemetry"
+        <motion.aside key="lunar-rail" className="lunar-signature-rail section-shell" aria-label="Lunar visual telemetry"
           initial={reduceMotion ? false : { opacity: 0, y: -8, filter: "blur(4px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0)" }} exit={{ opacity: 0 }}
           transition={{ duration: reduceMotion ? 0 : 0.32 }}>
