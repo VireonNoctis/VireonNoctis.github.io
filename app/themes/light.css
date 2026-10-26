@@ -91,3 +91,29 @@ html[data-theme="light"] .theme-card.is-active { background:#f1f5f9; }
   html[data-theme="light"] .project-type { display:none; }
   html[data-theme="light"] .archive-grid { grid-template-columns:1fr; }
 }
+
+/* The Light theme is a gallery cover: centered lead, broad artwork stage, then a grid of work. */
+html[data-theme="light"] .hero-main { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:34px; padding-block:clamp(54px,8vw,100px) 42px; }
+html[data-theme="light"] .hero-copy { width:100%; max-width:900px; text-align:center; }
+html[data-theme="light"] .hero-kicker { justify-content:center; }
+html[data-theme="light"] .hero h1 { font-size:clamp(72px,10vw,138px); line-height:.82; }
+html[data-theme="light"] .hero-bottomline { justify-content:center; }
+html[data-theme="light"] .hero-bottomline p { max-width:430px; }
+html[data-theme="light"] .hero-art.editorial-index-slop { width:min(100%,1000px); max-width:none; align-self:stretch; aspect-ratio:2.35; margin:0; box-shadow:0 18px 48px rgba(35,53,77,.07); }
+html[data-theme="light"] .hero-art .slop-brand-vireon { font-size:clamp(54px,8vw,108px); }
+html[data-theme="light"] .work .project-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; border:0; }
+html[data-theme="light"] .project-feature { grid-column:1/-1; border-bottom:0; }
+html[data-theme="light"] .project-feature .project-art { border:1px solid #d7e0ea; }
+html[data-theme="light"] .project-detail { padding:27px 0; }
+html[data-theme="light"] .project-row { display:flex; align-items:flex-start; gap:18px; padding:22px 0; border-top:1px solid #d7dde5; }
+html[data-theme="light"] .project-row .project-index { min-width:55px; padding-top:8px; }
+html[data-theme="light"] .project-row .project-title-row { flex:1; }
+html[data-theme="light"] .project-row .row-arrow { margin-top:8px; }
+html[data-theme="light"] .project-row .project-type { display:none; }
+@media(max-width:760px) {
+ html[data-theme="light"] .hero-main { gap:24px; padding-block:44px 24px; }
+ html[data-theme="light"] .hero-art.editorial-index-slop { aspect-ratio:1.25; }
+ html[data-theme="light"] .work .project-list { grid-template-columns:1fr; gap:0; }
+ html[data-theme="light"] .project-feature { grid-column:auto; }
+ html[data-theme="light"] .project-row { display:grid; grid-template-columns:44px minmax(0,1fr) 20px; gap:10px; }
+}

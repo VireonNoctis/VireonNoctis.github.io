@@ -131,3 +131,14 @@ html[data-theme="lunar"] .lunar-rail-index { text-align:right; color:#8077ed; }
  html[data-theme="lunar"] .project-type { display:none; }
 }
 @media(prefers-reduced-motion:reduce) { .lunar-glitch-main, .lunar-glitch-ghost-a, .lunar-glitch-ghost-b { animation:none!important; } }
+
+/* Lunar places the orbiting title in the left margin and gives the hero copy the opposite column. */
+html[data-theme="lunar"] .hero-main { grid-template-columns:1fr 1fr; gap:clamp(25px,4vw,70px); }
+html[data-theme="lunar"] .hero-copy { grid-column:2; grid-row:1; }
+html[data-theme="lunar"] .hero-art.editorial-index-slop { grid-column:1; grid-row:1; justify-self:stretch; }
+html[data-theme="lunar"] .hero h1 { font-size:clamp(64px,8.4vw,124px); }
+@media(max-width:760px) {
+ html[data-theme="lunar"] .hero-main { display:flex; flex-direction:column; align-items:stretch; }
+ html[data-theme="lunar"] .hero-art.editorial-index-slop { order:0; }
+ html[data-theme="lunar"] .hero-copy { order:1; }
+}

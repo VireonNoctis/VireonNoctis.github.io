@@ -234,6 +234,19 @@ function useCurrentTheme() {
 export function ThemeHeroArtwork() {
   const theme = useCurrentTheme();
 
+  if (theme === "glass") return (
+    <div className="theme-hero-artwork theme-hero-artwork-glass" aria-hidden="true">
+      <div className="glass-artfield" />
+      <div className="glass-art-orbit glass-art-orbit-a" />
+      <div className="glass-art-orbit glass-art-orbit-b" />
+      <div className="glass-object glass-object-primary"><i /><b /></div>
+      <div className="glass-pane glass-pane-a"><span>V / 01</span><i /></div>
+      <div className="glass-pane glass-pane-b"><span>SOFTWARE</span><i /></div>
+      <div className="glass-pane glass-pane-c"><span>STORIES · SOUND</span><i /></div>
+      <div className="glass-art-reflection" />
+    </div>
+  );
+
   if (theme === "3d") return (
     <div className="theme-hero-artwork theme-hero-artwork-3d" aria-hidden="true">
       <div className="three-d-caption three-d-caption-top"><span>V / OBJECT STUDY</span><span>DEPTH: Z+</span></div>

@@ -76,3 +76,23 @@ html[data-theme="paper"] .theme-card.is-active { background:rgba(147,65,81,.07);
 .theme-preview-paper { border-radius:0; border:1px solid #cbbba7; background:repeating-linear-gradient(0deg,#f0e7d8 0 2px,#eee3d3 3px 5px); box-shadow:3px 3px 0 #d7c8b5,6px 6px 0 #e2d6c5; }
 .theme-preview-paper .theme-preview-content b { background:#46372e; height:3px; }
 @media(max-width:760px) { html[data-theme="paper"] .manifesto-content { grid-template-columns:1fr; gap:28px; } html[data-theme="paper"] .archive-grid { grid-template-columns:1fr; } html[data-theme="paper"] .hero-art.editorial-index-slop { width:100%; aspect-ratio:1.15; } }
+
+/* Magazine cover composition: wide title, photographic plate, then a two-column project spread. */
+html[data-theme="paper"] .hero-main { grid-template-columns:minmax(0,1fr); gap:28px; padding:52px 0 45px; min-height:0; }
+html[data-theme="paper"] .hero-copy { max-width:900px; }
+html[data-theme="paper"] .hero h1 { max-width:900px; font-size:clamp(78px,10vw,148px); }
+html[data-theme="paper"] .hero-art.editorial-index-slop { width:100%; max-width:none; aspect-ratio:2.55; justify-self:stretch; margin:0; box-shadow:7px 7px 0 rgba(61,43,31,.06),14px 14px 0 rgba(61,43,31,.025); }
+html[data-theme="paper"] .slop-brand-vireon { font-size:clamp(52px,8vw,100px); }
+html[data-theme="paper"] .work .project-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 34px; border-top:0; }
+html[data-theme="paper"] .project-feature { grid-column:1/-1; }
+html[data-theme="paper"] .project-feature .project-detail { border-bottom:1px solid rgba(61,43,31,.24); }
+html[data-theme="paper"] .project-row { display:grid; grid-template-columns:44px minmax(0,1fr) 20px; align-items:start; gap:12px; padding:25px 0; }
+html[data-theme="paper"] .project-row .project-title-row { grid-column:2; }
+html[data-theme="paper"] .project-row .row-arrow { grid-column:3; grid-row:1; margin-top:6px; }
+html[data-theme="paper"] .project-row .project-type { display:none; }
+@media(max-width:760px) {
+ html[data-theme="paper"] .hero-main { gap:22px; padding-block:38px 24px; }
+ html[data-theme="paper"] .hero-art.editorial-index-slop { aspect-ratio:1.18; }
+ html[data-theme="paper"] .work .project-list { grid-template-columns:1fr; }
+ html[data-theme="paper"] .project-feature { grid-column:auto; }
+}

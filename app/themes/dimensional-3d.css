@@ -103,3 +103,7 @@ html[data-theme="3d"] .theme-card.is-active { transform:translateY(-3px); box-sh
  .three-d-cube, .three-d-orb-large, .three-d-prism { animation:none!important; }
  html[data-theme="3d"] .project-feature, html[data-theme="3d"] .project-row, html[data-theme="3d"] .archive-card { transition:none!important; transform:none!important; }
 }
+
+/* Center the rotating object independently of its own transform animation. */
+.three-d-cube { left:50%; top:49%; margin:0; transform:translate(-50%,-50%) rotateX(-27deg) rotateY(-20deg); }
+@keyframes three-d-cube-turn { from { transform:translate(-50%,-50%) rotateX(-27deg) rotateY(-20deg); } to { transform:translate(-50%,-50%) rotateX(333deg) rotateY(340deg); } }

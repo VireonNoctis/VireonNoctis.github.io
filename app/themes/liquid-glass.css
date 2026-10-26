@@ -98,3 +98,27 @@ html[data-theme="glass"] .theme-card.is-active { border-color:#087af5; backgroun
 .theme-preview-glass { border-radius:17px; border:1px solid rgba(255,255,255,.8); background:linear-gradient(130deg,rgba(255,255,255,.8),rgba(217,231,249,.2) 42%,rgba(85,128,180,.32)),#d7e5f5; box-shadow:inset 0 1px white,0 7px 18px rgba(70,100,140,.14); }
 .theme-preview-glass .theme-preview-top { padding:6px; border:1px solid rgba(255,255,255,.85); border-radius:999px; background:rgba(255,255,255,.35); backdrop-filter:blur(6px); }
 .theme-preview-glass .theme-preview-content em { border:1px solid rgba(255,255,255,.8); border-radius:999px; background:rgba(255,255,255,.22); }
+
+/* Product-stage treatment: refractive object geometry, kept distinct from the site's flat content. */
+html[data-theme="glass"] .hero-art.editorial-index-slop>:not(.theme-hero-artwork) { display:none!important; }
+html[data-theme="glass"] .hero-art.editorial-index-slop { width:min(100%,650px); aspect-ratio:.98; }
+.theme-hero-artwork-glass { position:absolute; inset:0; overflow:visible; perspective:900px; transform-style:preserve-3d; }
+.glass-artfield { position:absolute; inset:7%; border-radius:48% 52% 45% 55%; background:radial-gradient(ellipse at 45% 30%,rgba(255,255,255,.8),rgba(255,255,255,.08) 35%,rgba(114,158,203,.06) 60%,transparent 72%); filter:blur(1px); }
+.glass-art-orbit { position:absolute; left:50%; top:48%; border:1px solid rgba(255,255,255,.72); border-radius:50%; box-shadow:0 0 0 1px rgba(96,135,177,.12),inset 0 0 18px rgba(255,255,255,.14); }
+.glass-art-orbit-a { width:88%; height:32%; transform:translate(-50%,-50%) rotate(-24deg) rotateX(64deg); }
+.glass-art-orbit-b { width:66%; height:74%; transform:translate(-50%,-50%) rotate(28deg) rotateY(62deg); border-color:rgba(106,148,195,.55); }
+.glass-object { position:absolute; z-index:3; width:35%; aspect-ratio:1; left:33%; top:23%; border-radius:42% 58% 51% 49%; background:radial-gradient(circle at 28% 24%,rgba(255,255,255,.98),rgba(255,255,255,.6) 7%,rgba(185,216,247,.55) 24%,rgba(115,163,212,.25) 49%,rgba(55,99,150,.1) 70%,rgba(255,255,255,.45) 100%); border:1px solid rgba(255,255,255,.82); box-shadow:inset 0 2px 4px rgba(255,255,255,.95),inset -18px -20px 30px rgba(76,111,154,.15),0 24px 50px rgba(58,88,128,.12); transform:rotateX(9deg) rotateY(-12deg) translateZ(22px); animation:glass-object-drift 8s ease-in-out infinite; }
+.glass-object:before { content:""; position:absolute; inset:7%; border:1px solid rgba(255,255,255,.8); border-radius:inherit; background:linear-gradient(130deg,rgba(255,255,255,.24),transparent 38%,rgba(255,255,255,.16)); }
+.glass-object:after { content:""; position:absolute; left:13%; right:28%; top:11%; height:2px; border-radius:99px; background:rgba(255,255,255,.9); transform:rotate(-18deg); filter:blur(.2px); }
+.glass-object i { position:absolute; right:18%; bottom:24%; width:17%; height:17%; border-radius:50%; background:rgba(255,255,255,.85); filter:blur(9px); }
+.glass-object b { position:absolute; left:18%; bottom:18%; width:24%; height:24%; border-radius:50%; background:rgba(121,179,231,.18); filter:blur(10px); }
+.glass-pane { position:absolute; z-index:4; display:flex; flex-direction:column; justify-content:space-between; width:48%; height:23%; padding:12px 14px; border:1px solid rgba(255,255,255,.86); border-radius:20px; background:linear-gradient(130deg,rgba(255,255,255,.72),rgba(255,255,255,.18) 48%,rgba(191,216,244,.13)); box-shadow:inset 0 1px rgba(255,255,255,.95),0 12px 30px rgba(67,98,139,.11); backdrop-filter:blur(20px) saturate(150%); -webkit-backdrop-filter:blur(20px) saturate(150%); color:#3e5067; font:7px "IBM Plex Mono",monospace; letter-spacing:.09em; }
+.glass-pane span { display:block; }
+.glass-pane i { display:block; width:52%; height:3px; border-radius:99px; background:rgba(85,130,181,.46); }
+.glass-pane-a { top:18%; right:1%; transform:rotate(8deg) translateZ(36px); }
+.glass-pane-b { bottom:18%; left:2%; transform:rotate(-9deg) translateZ(55px); }
+.glass-pane-c { bottom:5%; right:5%; width:40%; height:18%; transform:rotate(4deg) translateZ(12px); }
+.glass-art-reflection { position:absolute; z-index:1; left:10%; right:10%; bottom:5%; height:24%; border-radius:50%; background:radial-gradient(ellipse,rgba(103,156,212,.12),transparent 68%); filter:blur(8px); }
+@keyframes glass-object-drift { 0%,100% { transform:rotateX(9deg) rotateY(-12deg) translate3d(0,0,22px); } 50% { transform:rotateX(2deg) rotateY(8deg) translate3d(0,-12px,42px); } }
+@media(max-width:760px) { html[data-theme="glass"] .hero-main { display:flex; flex-direction:column; align-items:stretch; } html[data-theme="glass"] .hero-art.editorial-index-slop { width:100%; aspect-ratio:1.02; } .glass-pane { border-radius:14px; padding:8px; } .glass-pane-a { right:0; } .glass-pane-b { left:0; } }
+@media(prefers-reduced-motion:reduce) { .glass-object { animation:none!important; } }
