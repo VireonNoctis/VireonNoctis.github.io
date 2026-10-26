@@ -162,7 +162,8 @@ function useThemeContext() {
 
 export function ThemeSwitcher() {
   const { theme, openPicker } = useThemeContext();
-  const selectedTheme = THEMES.find((item) => item.id === theme) ?? THEMES[0];
+  const selectedIndex = THEMES.findIndex((item) => item.id === theme);
+  const selectedTheme = THEMES[selectedIndex] ?? THEMES[0];
 
   return (
     <button
@@ -174,8 +175,89 @@ export function ThemeSwitcher() {
     >
       <Palette size={15} strokeWidth={1.8} aria-hidden="true" />
       <span className="theme-switcher-label">Theme</span>
+      <span className="theme-switcher-index" aria-hidden="true" key={theme}>
+        {theme === "nothing" ? <RollingNumber value={selectedIndex + 1} replayKey={theme} /> : String(selectedIndex + 1).padStart(2, "0")}
+      </span>
       <span className="theme-switcher-current" key={theme}>{selectedTheme.shortName}</span>
     </button>
+  );
+}
+
+const UNICODE_FRAMES = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
+function UnicodeSpinner({ label = "System activity" }: { label?: string }) {
+  const [frame, setFrame] = useState(0);
+  const reduceMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (reduceMotion) return;
+    const timer = window.setInterval(() => setFrame((current) => (current + 1) % UNICODE_FRAMES.length), 84);
+    return () => window.clearInterval(timer);
+  }, [reduceMotion]);
+
+  return <span className="unicode-signal" role="img" aria-label={label}>{UNICODE_FRAMES[frame]}</span>;
+}
+
+function RollingNumber({ value, replayKey }: { value: number; replayKey: string }) {
+  const reduceMotion = useReducedMotion();
+  const [display, setDisplay] = useState(0);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setDisplay(value);
+      return;
+    }
+
+    setDisplay(0);
+    const start = window.performance.now();
+    let frame = 0;
+    const tick = (now: number) => {
+      const progress = Math.min(1, (now - start) / 920);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      setDisplay(progress === 1 ? value : Math.floor(eased * value));
+      if (progress < 1) frame = window.requestAnimationFrame(tick);
+    };
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [value, replayKey, reduceMotion]);
+
+  return <span className="rolling-number" aria-label={String(value).padStart(2, "0")}>{String(display).padStart(2, "0")}</span>;
+}
+
+export function NothingSystemStrip() {
+  const { theme } = useThemeContext();
+  const reduceMotion = useReducedMotion();
+
+  return (
+    <AnimatePresence>
+      {theme === "nothing" && (
+        <motion.aside
+          className="nothing-system-strip section-shell"
+          aria-label="Nothing monochrome system readout"
+          initial={reduceMotion ? false : { opacity: 0, y: -8, filter: "blur(5px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -5 }}
+          transition={{ duration: reduceMotion ? 0 : 0.3 }}
+        >
+          <div className="nothing-system-cell nothing-system-live">
+            <UnicodeSpinner label="Animated Unicode system indicator" />
+            <span>SYSTEM ONLINE</span>
+          </div>
+          <div className="nothing-system-cell">
+            <span className="nothing-system-label">THEME INDEX</span>
+            <span className="nothing-system-value"><RollingNumber value={2} replayKey={theme} /><span> / 08</span></span>
+          </div>
+          <div className="nothing-system-cell">
+            <span className="nothing-system-label">PROJECT MODULES</span>
+            <span className="nothing-system-value"><RollingNumber value={4} replayKey={theme} /><span> ACTIVE</span></span>
+          </div>
+          <div className="nothing-system-cell nothing-system-unicode">
+            <span className="nothing-system-label">SIGNAL</span>
+            <span aria-hidden="true">⠿ ⠶ ⣿ ⠿</span>
+          </div>
+        </motion.aside>
+      )}
+    </AnimatePresence>
   );
 }
 
@@ -278,7 +360,7 @@ function ThemePickerDialog({
                     <span className="theme-card-name">{item.name}</span>
                     <span className="theme-card-description">{item.description}</span>
                     <span className="theme-card-meta">
-                      <span className="theme-card-index">{String(index + 1).padStart(2, "0")}</span>
+                      <span className="theme-card-index">{theme === "nothing" ? <RollingNumber value={index + 1} replayKey={theme} /> : String(index + 1).padStart(2, "0")}</span>
                       <span>{item.category}</span>
                     </span>
                   </span>
