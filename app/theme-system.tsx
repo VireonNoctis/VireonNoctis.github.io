@@ -166,28 +166,39 @@ function UnicodeSpinner({ label = "System activity" }: { label?: string }) {
 
 function RollingNumber({ value, replayKey }: { value: number; replayKey: string }) {
   const reduceMotion = useReducedMotion();
-  const [display, setDisplay] = useState(0);
+  const [ready, setReady] = useState(false);
+  const formatted = String(value).padStart(2, "0");
 
   useEffect(() => {
     if (reduceMotion) {
-      setDisplay(value);
+      setReady(true);
       return;
     }
 
-    setDisplay(0);
-    const start = window.performance.now();
-    let frame = 0;
-    const tick = (now: number) => {
-      const progress = Math.min(1, (now - start) / 920);
-      const eased = 1 - Math.pow(1 - progress, 4);
-      setDisplay(progress === 1 ? value : Math.floor(eased * value));
-      if (progress < 1) frame = window.requestAnimationFrame(tick);
-    };
-    frame = window.requestAnimationFrame(tick);
+    setReady(false);
+    const frame = window.requestAnimationFrame(() => setReady(true));
     return () => window.cancelAnimationFrame(frame);
   }, [value, replayKey, reduceMotion]);
 
-  return <span className="rolling-number" aria-label={String(value).padStart(2, "0")}>{String(display).padStart(2, "0")}</span>;
+  return (
+    <span className={`rolling-number${reduceMotion ? " is-static" : ""}`} aria-label={formatted}>
+      <span className="rolling-number-accessible">{formatted}</span>
+      <span className="rolling-number-wheels" aria-hidden="true">
+        {[...formatted].reverse().map((digit, index) => (
+          <span className="rolling-number-digit" key={`${index}-${digit}`}>
+            <span
+              className="rolling-number-wheel"
+              style={{ transform: `translateY(-${ready ? Number(digit) : 0}em)` }}
+            >
+              {Array.from({ length: 10 }, (_, number) => (
+                <span className="rolling-number-wheel-digit" key={number}>{number}</span>
+              ))}
+            </span>
+          </span>
+        ))}
+      </span>
+    </span>
+  );
 }
 
 export function NothingSystemStrip() {
