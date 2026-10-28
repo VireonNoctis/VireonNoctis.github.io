@@ -302,3 +302,160 @@ html[data-theme="nothing"] .nothing-hero-code-bottom { bottom: 2%; right: 0; }
   72% { opacity: .3; }
   100% { transform: translateX(720%); opacity: 0; }
 }
+
+
+
+/* NothingOS is a monochrome instrument panel, not the editorial layout recoloured. */
+html[data-theme="nothing"] body {
+  background-color: #000;
+  background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+html[data-theme="nothing"] .section-space {
+  padding-block: clamp(64px, 8vw, 112px);
+  border-top: 1px solid #383838;
+}
+html[data-theme="nothing"] .section-topline {
+  align-items: center;
+  border-bottom: 1px solid #383838;
+  padding-bottom: 13px;
+}
+html[data-theme="nothing"] .index-label {
+  color: #f7f7f5;
+  gap: 14px;
+}
+html[data-theme="nothing"] .index-label span:first-child {
+  border: 1px solid #777;
+  padding: 6px 7px;
+}
+html[data-theme="nothing"] .hero-art.editorial-index-slop {
+  border: 1px solid #fff;
+  border-radius: 0 !important;
+  background: #000;
+  box-shadow: 8px 8px 0 #262626;
+}
+html[data-theme="nothing"] .editorial-index:before {
+  inset: 11px;
+  border: 1px dashed #555;
+}
+html[data-theme="nothing"] .slop-brand-overline,
+html[data-theme="nothing"] .slop-brand-caption,
+html[data-theme="nothing"] .slop-brand-divider,
+html[data-theme="nothing"] .slop-brand-signature,
+html[data-theme="nothing"] .slop-panel-top,
+html[data-theme="nothing"] .slop-panel-bottom,
+html[data-theme="nothing"] .slop-panel-side {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+html[data-theme="nothing"] .slop-brand-vireon {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  font-weight: 700;
+  letter-spacing: -.105em;
+}
+html[data-theme="nothing"] .slop-brand-title {
+  font-family: Arial,"Helvetica Neue",sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: -.07em;
+}
+html[data-theme="nothing"] .slop-brand-divider span {
+  font-size: 12px;
+}
+html[data-theme="nothing"] .hero h1,
+html[data-theme="nothing"] .section-shell h2 {
+  text-transform: uppercase;
+}
+html[data-theme="nothing"] .hero h1 em,
+html[data-theme="nothing"] .section-shell h2 em {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  font-size: .72em;
+  letter-spacing: -.085em;
+}
+html[data-theme="nothing"] .project-feature,
+html[data-theme="nothing"] .code-footprint,
+html[data-theme="nothing"] .stack-site,
+html[data-theme="nothing"] .learning-card,
+html[data-theme="nothing"] .archive-card,
+html[data-theme="nothing"] .signal-panel {
+  border: 1px solid #3a3a3a;
+  border-radius: 0 !important;
+  background: rgba(0,0,0,.94);
+  box-shadow: none !important;
+}
+html[data-theme="nothing"] .project-art {
+  border-bottom: 1px solid #444;
+  background: #050505;
+}
+html[data-theme="nothing"] .project-detail,
+html[data-theme="nothing"] .project-row,
+html[data-theme="nothing"] .archive-note,
+html[data-theme="nothing"] .social-list>a {
+  border-color: #343434;
+}
+html[data-theme="nothing"] .code-footprint-grid {
+  gap: 0;
+  border: 1px solid #444;
+  background: #000;
+}
+html[data-theme="nothing"] .code-footprint-metric,
+html[data-theme="nothing"] .code-footprint-metric:nth-child(3n),
+html[data-theme="nothing"] .code-footprint-metric:nth-child(3n + 2),
+html[data-theme="nothing"] .code-footprint-metric:nth-child(n + 4) {
+  min-height: 130px;
+  padding: 17px 15px;
+  border-right: 1px solid #383838;
+  border-bottom: 1px solid #383838;
+}
+html[data-theme="nothing"] .code-footprint-metric > span,
+html[data-theme="nothing"] .code-footprint-projects-heading,
+html[data-theme="nothing"] .code-footprint-project-stats,
+html[data-theme="nothing"] .deep-stats > div > span {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+html[data-theme="nothing"] .code-footprint-metric > strong {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  font-size: clamp(19px,2.4vw,30px);
+  letter-spacing: -.06em;
+}
+html[data-theme="nothing"] .code-footprint-project,
+html[data-theme="nothing"] .ranked-row {
+  border-color: #333;
+  border-radius: 0 !important;
+  background: transparent;
+}
+html[data-theme="nothing"] .deep-stats {
+  gap: 0;
+  border-top: 1px solid #444;
+  border-left: 1px solid #444;
+}
+html[data-theme="nothing"] .deep-stats > div {
+  padding: 18px;
+  border-right: 1px solid #444;
+  border-bottom: 1px solid #444;
+  background: #020202;
+}
+html[data-theme="nothing"] .deep-stats > div > strong {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  font-size: clamp(23px,3vw,38px);
+  letter-spacing: -.06em;
+}
+html[data-theme="nothing"] .interlude {
+  min-height: 320px;
+  border-block: 1px solid #444;
+  background: repeating-linear-gradient(0deg,#000 0,#000 31px,#101010 32px);
+}
+html[data-theme="nothing"] .contact-circle {
+  border-radius: 0;
+  border-color: #fff;
+  background: #fff;
+  color: #000;
+}
+html[data-theme="nothing"] .contact-circle:hover {
+  background: #000;
+  color: #fff;
+}
