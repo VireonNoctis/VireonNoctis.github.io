@@ -367,16 +367,36 @@ export function ThemeHeroArtwork() {
 }
 
 function ThemePreview({ theme }: { theme: ThemeId }) {
-  return (
-    <div className={`theme-preview theme-preview-${theme}`} aria-hidden="true">
-      <div className="theme-preview-top"><i /><i /><i /><span>V / N</span></div>
-      <div className="theme-preview-content">
-        <span />
-        <b />
-        <b />
-        <em />
+  if (theme === "nothing") {
+    return (
+      <div className="theme-preview theme-preview-nothing" aria-hidden="true">
+        <div className="preview-system-top"><span>SYS / 001</span><i /><i /><i /></div>
+        <div className="preview-system-grid">
+          <span>01 <b>BOOT</b></span><span>02 <b>BUILD</b></span><span>03 <b>SHIP</b></span>
+        </div>
+        <div className="preview-system-readout"><strong>83.6</strong><span> SIGNAL STABLE / RUNNING</span></div>
       </div>
-      <div className="theme-preview-footer"><i /><i /><i /></div>
+    );
+  }
+  if (theme === "light") {
+    return (
+      <div className="theme-preview theme-preview-light" aria-hidden="true">
+        <div className="preview-gallery-back" />
+        <div className="preview-gallery-sheet">
+          <span>VOLUME 001 · NOTES</span>
+          <strong>A curious</strong><strong>collection.</strong>
+          <i /><small>WORK / WORLDS / SOUND</small>
+        </div>
+        <span className="preview-gallery-mark">V / N</span>
+      </div>
+    );
+  }
+  return (
+    <div className="theme-preview theme-preview-classic" aria-hidden="true">
+      <div className="preview-classic-index"><span>V / N</span><span>FIELD NOTES</span></div>
+      <div className="preview-classic-title">Things I<br /><em>keep</em><br />coming back to.</div>
+      <div className="preview-classic-rule" />
+      <div className="preview-classic-footer"><span>SOFTWARE</span><span>STORIES</span><span>SOUND</span></div>
     </div>
   );
 }
