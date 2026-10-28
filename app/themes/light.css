@@ -362,3 +362,35 @@ html[data-theme="light"] .contact-circle:hover {
   background: #315d91;
   color: #fff;
 }
+
+
+@media (max-width: 760px) {
+  html[data-theme="light"] .hero-main {
+    grid-template-columns: minmax(0,1fr);
+    gap: 24px;
+    padding-block: 45px 28px;
+  }
+  html[data-theme="light"] .hero-copy { text-align: center; }
+  html[data-theme="light"] .hero-kicker { margin-inline: auto; }
+  html[data-theme="light"] .hero-bottomline { justify-content: center; }
+  html[data-theme="light"] .hero-art.editorial-index-slop {
+    width: 100%;
+    max-width: 560px;
+    min-height: 320px;
+    aspect-ratio: 1.28;
+    justify-self: center;
+  }
+  html[data-theme="light"] .code-footprint-metric,
+  html[data-theme="light"] .code-footprint-metric:nth-child(3n),
+  html[data-theme="light"] .code-footprint-metric:nth-child(3n + 2),
+  html[data-theme="light"] .code-footprint-metric:nth-child(n + 4) {
+    min-height: 110px;
+    padding: 14px 11px;
+  }
+}
+@media (max-width: 420px) {
+  html[data-theme="light"] .hero h1 { font-size: clamp(45px,13vw,62px); }
+  html[data-theme="light"] .hero-art.editorial-index-slop { min-height: 280px; aspect-ratio: 1.05; padding: 15px; }
+  html[data-theme="light"] .slop-brand-vireon { font-size: clamp(48px,14vw,70px); }
+  html[data-theme="light"] .slop-brand-title { font-size: clamp(25px,7vw,34px); }
+}
