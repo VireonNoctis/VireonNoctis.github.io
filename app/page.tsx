@@ -9,6 +9,21 @@ type Repo = { name: string; description: string | null; html_url: string; starga
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
 type GenreItem = { genre: string; count: number };
 type Live = { repos?: number; followers?: number; anime?: number; manga?: number; scrobbles?: number; track?: string; artist?: string; playing?: boolean; animeEpisodes?: number; animeMinutes?: number; animeScore?: number; mangaChapters?: number; mangaVolumes?: number; mangaScore?: number; animeGenres?: GenreItem[]; mangaGenres?: GenreItem[]; topArtists?: RankedItem[]; topTracks?: RankedItem[] };
+type CodeStats = {
+  generatedAt: string;
+  scope: string;
+  totals: {
+    repositories: number;
+    failedRepositories: number;
+    files: number;
+    lines: number;
+    nonblankLines: number;
+    characters: number;
+    words: number;
+    stars: number;
+    forks: number;
+  };
+};
 type SpotifyNowPlaying = { configured: boolean; isPlaying: boolean; track: string | null; artist: string | null; album: string | null; albumImage: string | null; url: string | null };
 // Fill this placeholder with the Lunar X API token when ready. Do not commit a real secret to a public repository.
 // Keep credentials as placeholders here; this project is exported as a static GitHub Pages site, so real secrets must not be committed or shipped to browsers.
@@ -34,12 +49,44 @@ export default function Home() {
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const [menu, setMenu] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
+  const [codeStats, setCodeStats] = useState<CodeStats | null>(null);
+  const [codeStatsStatus, setCodeStatsStatus] = useState<"loading" | "ready" | "unavailable">("loading");
   const [live, setLive] = useState<Live>({});
   const [spotify, setSpotify] = useState<SpotifyNowPlaying>({ configured: false, isPlaying: false, track: null, artist: null, album: null, albumImage: null, url: null });
   const [year, setYear] = useState("2026");
   useEffect(() => {
     setYear(String(new Date().getFullYear()));
     const controller = new AbortController();
+    async function loadCodeStats() {
+      try {
+        const response = await fetch(
+          "https://raw.githubusercontent.com/VireonNoctis/VireonNoctis/main/code-stats.json?ts=" + Date.now(),
+          { cache: "no-store", signal: controller.signal },
+        );
+        if (response.ok) {
+          const payload: unknown = await response.json();
+          if (payload && typeof payload === "object") {
+            const candidate = payload as Partial<CodeStats>;
+            const totals = candidate.totals;
+            const validKeys: Array<keyof CodeStats["totals"]> = [
+              "repositories", "failedRepositories", "files", "lines", "nonblankLines",
+              "characters", "words", "stars", "forks",
+            ];
+            const valid = typeof candidate.generatedAt === "string" &&
+              Boolean(totals) &&
+              validKeys.every((key) => Number.isFinite(totals?.[key]));
+            if (valid) {
+              setCodeStats(candidate as CodeStats);
+              setCodeStatsStatus("ready");
+              return;
+            }
+          }
+        }
+      } catch {
+        // Metrics are progressive enhancement; they never block the rest of the page.
+      }
+      if (!controller.signal.aborted) setCodeStatsStatus("unavailable");
+    }
     async function loadSpotify() {
       try {
         const response = await fetch("/spotify-now-playing.json?ts=" + Date.now(), { cache: "no-store", signal: controller.signal });
@@ -93,6 +140,7 @@ export default function Home() {
       } catch { /* Last.fm is non-blocking. */ }
     }
     void load();
+    void loadCodeStats();
     void loadSpotify();
     const spotifyRefresh = window.setInterval(() => { void loadSpotify(); }, 60_000);
     return () => { controller.abort(); window.clearInterval(spotifyRefresh); };
@@ -146,7 +194,20 @@ export default function Home() {
 <a className="project-row" href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer">
   <span className="project-index">04 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/vireon-mark.svg" alt="" width="34" height="34"/><div><h3>Personal systems</h3><p>Small utilities, profile tooling, automation, and experiments made to reduce friction and make digital life more considered.</p></div></div><span className="project-type">TOOLS / EXPERIMENTS</span><ArrowUpRight className="row-arrow" size={19}/>
 </a>
-</div><div className="github-live"><div className="github-live-icon"><Github size={19}/></div><div><span className="micro-label">LIVE FROM GITHUB</span><p>{live.repos!==undefined?live.repos+" public repositories":"A growing collection of open work"}{live.followers!==undefined?" · "+live.followers+" followers":""}</p></div><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">EXPLORE REPOSITORIES <ArrowUpRight size={15}/></a></div>{repos.length>0&&<div className="repo-live-area">
+</div><div className="github-live"><div className="github-live-icon"><Github size={19}/></div><div><span className="micro-label">LIVE FROM GITHUB</span><p>{live.repos!==undefined?live.repos+" public repositories":"A growing collection of open work"}{live.followers!==undefined?" · "+live.followers+" followers":""}</p></div><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">EXPLORE REPOSITORIES <ArrowUpRight size={15}/></a></div><section className="code-footprint" aria-label="Automated public repository code footprint" aria-busy={codeStatsStatus === "loading"}>
+  <div className="code-footprint-heading"><span className="micro-label">CODE FOOTPRINT / AUTO-SYNCED</span><span className="code-footprint-updated">{codeStats ? "UPDATED " + new Date(codeStats.generatedAt).toLocaleDateString("en-IE", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase() : codeStatsStatus === "loading" ? "FETCHING LATEST SNAPSHOT" : "FIRST SNAPSHOT PENDING"}</span></div>
+  {codeStats ? <><div className="code-footprint-grid">
+    {[
+      { label: "TEXT CHARACTERS", value: codeStats.totals.characters, note: "Line breaks excluded" },
+      { label: "TEXT LINES", value: codeStats.totals.lines, note: codeStats.totals.nonblankLines.toLocaleString("en-US") + " non-blank" },
+      { label: "WORDS", value: codeStats.totals.words, note: "Code, config and docs" },
+      { label: "TRACKED FILES", value: codeStats.totals.files, note: "Text files only" },
+      { label: "PUBLIC PROJECTS", value: codeStats.totals.repositories, note: codeStats.totals.failedRepositories + " scan failures" },
+      { label: "STARS / FORKS", value: codeStats.totals.stars.toLocaleString("en-US") + " / " + codeStats.totals.forks.toLocaleString("en-US"), note: "Across scanned projects" },
+    ].map(metric => <div className="code-footprint-metric" key={metric.label}><span>{metric.label}</span><strong>{typeof metric.value === "number" ? metric.value.toLocaleString("en-US") : metric.value}</strong><small>{metric.note}</small></div>)}
+  </div><p className="code-footprint-note">Current text footprint across public, non-fork projects on their default branches. Dependency/build output, lockfiles, binaries, and files over 1 MB are excluded. This is not a line-by-line claim of individual authorship.</p></> : <p className="code-footprint-note">{codeStatsStatus === "loading" ? "The repository scan is being fetched from the profile repository." : "The automated scan has not published its first snapshot yet. GitHub Actions will populate this panel automatically."}</p>}
+  <a className="code-footprint-link" href="https://github.com/VireonNoctis/VireonNoctis#codebase-footprint-automatically-refreshed" target="_blank" rel="noreferrer">OPEN GENERATED BREAKDOWN <ArrowUpRight size={13}/></a>
+</section>{repos.length>0&&<div className="repo-live-area">
   <div className="repo-live-heading"><span className="micro-label">LATEST PUBLIC REPOSITORIES · AUTO-SYNCED</span><span className="repo-live-count">Sorted by latest update</span></div>
   <div className="repo-live-list">{repos.map((repo,i)=><motion.a key={repo.name} href={repo.html_url} target="_blank" rel="noreferrer" aria-label={`Open GitHub repository ${repo.name}`} initial="hidden" whileInView="show" viewport={{once:true}} variants={motionRise} transition={{delay:i*.06}}>
     <span className="repo-row-index">{String(i+1).padStart(2,"0")}</span>

@@ -181,3 +181,124 @@ html[data-theme="nothing"] .rolling-number.is-static .rolling-number-wheel {
   html[data-theme="nothing"] .manifesto-content { grid-template-columns:1fr; gap:25px; }
   html[data-theme="nothing"] .manifesto-aside { margin-top:35px; width:100%; }
 }
+
+
+/* Active NothingOS motion: animated dot field, scan sweep, and rolling system sequence. */
+html[data-theme="nothing"] .atmosphere-grid {
+  will-change: transform;
+  animation: nothing-grid-drift 18s linear infinite;
+}
+html[data-theme="nothing"] .nothing-system-strip {
+  position: relative;
+  overflow: hidden;
+}
+html[data-theme="nothing"] .nothing-system-strip::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  inset: 0 auto 0 -22%;
+  width: 18%;
+  pointer-events: none;
+  opacity: .48;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.09), transparent);
+  animation: nothing-strip-scan 5.4s ease-in-out infinite;
+}
+html[data-theme="nothing"] .nothing-system-cycle {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 3px;
+  min-height: 1em;
+}
+html[data-theme="nothing"] .nothing-system-cycle > span:last-child {
+  color: #bcbcbc;
+  font-size: 8px;
+}
+html[data-theme="nothing"] .nothing-system-signal {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing {
+  position: absolute;
+  z-index: 1;
+  inset: 8%;
+  overflow: hidden;
+  pointer-events: none;
+  display: grid;
+  place-items: center;
+  opacity: .9;
+}
+html[data-theme="nothing"] .nothing-hero-grid {
+  position: absolute;
+  inset: -10%;
+  background-image: linear-gradient(rgba(255,255,255,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px);
+  background-size: 27px 27px;
+  mask-image: radial-gradient(ellipse at center, #000 10%, transparent 82%);
+  animation: nothing-grid-drift 18s linear infinite;
+}
+html[data-theme="nothing"] .nothing-hero-ring {
+  position: absolute;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255,255,255,.62);
+  border-radius: 50%;
+}
+html[data-theme="nothing"] .nothing-hero-ring-outer {
+  width: 69%;
+  border-style: dashed;
+  animation: nothing-orbit-turn 32s linear infinite;
+}
+html[data-theme="nothing"] .nothing-hero-ring-inner {
+  width: 48%;
+  border-color: rgba(255,255,255,.25);
+  animation: nothing-orbit-turn 19s linear infinite reverse;
+}
+html[data-theme="nothing"] .nothing-hero-core {
+  width: 29%;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border: 1px solid #fff;
+  background: rgba(0,0,0,.82);
+  box-shadow: 0 0 50px rgba(255,255,255,.05), inset 0 0 0 7px #000, inset 0 0 0 8px #555;
+}
+html[data-theme="nothing"] .nothing-hero-core span {
+  color: #fff;
+  font: 700 clamp(34px, 5vw, 72px)/1 Arial, sans-serif;
+  letter-spacing: -.1em;
+}
+html[data-theme="nothing"] .nothing-hero-scan {
+  position: absolute;
+  top: -5%;
+  left: 4%;
+  right: 4%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #fff 22%, #fff 78%, transparent);
+  box-shadow: 0 0 8px rgba(255,255,255,.7);
+  animation: nothing-vertical-scan 4.6s ease-in-out infinite;
+}
+html[data-theme="nothing"] .nothing-hero-code {
+  position: absolute;
+  color: #aaa;
+  font: 7px/1.5 "IBM Plex Mono", monospace;
+  letter-spacing: .1em;
+}
+html[data-theme="nothing"] .nothing-hero-code-top { top: 2%; left: 0; }
+html[data-theme="nothing"] .nothing-hero-code-bottom { bottom: 2%; right: 0; }
+@keyframes nothing-grid-drift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(16px); }
+}
+@keyframes nothing-orbit-turn { to { transform: rotate(360deg); } }
+@keyframes nothing-vertical-scan {
+  0%, 8% { transform: translateY(0); opacity: 0; }
+  16% { opacity: .8; }
+  85% { opacity: .8; }
+  100% { transform: translateY(460px); opacity: 0; }
+}
+@keyframes nothing-strip-scan {
+  0%, 14% { transform: translateX(0); opacity: 0; }
+  28% { opacity: .5; }
+  72% { opacity: .3; }
+  100% { transform: translateX(720%); opacity: 0; }
+}

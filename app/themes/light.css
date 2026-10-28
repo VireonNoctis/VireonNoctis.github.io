@@ -117,3 +117,57 @@ html[data-theme="light"] .project-row .project-type { display:none; }
  html[data-theme="light"] .project-feature { grid-column:auto; }
  html[data-theme="light"] .project-row { display:grid; grid-template-columns:44px minmax(0,1fr) 20px; gap:10px; }
 }
+
+
+/* Light Mode art direction: centered editorial type and an offset paper-stack illustration. */
+html[data-theme="light"] .theme-hero-artwork-light {
+  position: absolute;
+  z-index: 1;
+  inset: 6% 7%;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  pointer-events: none;
+}
+html[data-theme="light"] .light-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image: linear-gradient(rgba(39,67,101,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(39,67,101,.07) 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+html[data-theme="light"] .light-hero-sheet {
+  position: absolute;
+  width: min(42%, 320px);
+  aspect-ratio: .77;
+  border: 1px solid #c7d1dd;
+  background: rgba(255,255,255,.9);
+  box-shadow: 12px 14px 35px rgba(35,53,77,.08);
+}
+html[data-theme="light"] .light-hero-sheet-back {
+  transform: translate(38px,-12px) rotate(6deg);
+  background: #edf2f7;
+}
+html[data-theme="light"] .light-hero-sheet-front {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 11px;
+  padding: clamp(16px,2vw,28px);
+  transform: translate(-18px,10px) rotate(-3deg);
+  color: #18202b;
+  font: 10px/1.4 "Satoshi", Arial, sans-serif;
+}
+html[data-theme="light"] .light-hero-sheet-front span { font: 600 clamp(22px,3vw,42px)/1 Georgia,serif; letter-spacing: -.08em; }
+html[data-theme="light"] .light-hero-sheet-front i { width: 76%; height: 3px; background: #7188a5; }
+html[data-theme="light"] .light-hero-sheet-front b { width: 52%; height: 20%; border: 1px solid #c7d1dd; background: linear-gradient(135deg,#edf2f7,#fff); }
+html[data-theme="light"] .light-hero-sheet-front small { margin-top: auto; font: 7px var(--mono); letter-spacing: .08em; }
+html[data-theme="light"] .light-hero-index {
+  position: absolute;
+  color: #6c7a8d;
+  font: 8px var(--mono);
+  letter-spacing: .12em;
+}
+html[data-theme="light"] .light-hero-index-top { top: 3%; left: 0; }
+html[data-theme="light"] .light-hero-index-bottom { bottom: 3%; right: 0; }
+html[data-theme="light"] .hero h1 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; letter-spacing: -.075em; }
+html[data-theme="light"] .hero h1 em { font-style: italic; }

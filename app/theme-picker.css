@@ -59,7 +59,7 @@
   transition: background .2s, border-color .2s, transform .2s;
 }
 .theme-picker-close:hover { border-color: var(--theme-accent); background: var(--theme-accent-soft); transform: rotate(4deg); }
-.theme-picker-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.theme-picker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
 .theme-card {
   position: relative;
   display: flex;
@@ -117,7 +117,7 @@
 .theme-preview-footer { gap: 5px; }
 .theme-preview-footer i { height: 2px; width: 20%; background: var(--preview-accent, #a9c9e8); opacity: .6; }
 .theme-preview-classic { --preview-bg: #090b0f; --preview-text: #edf0f2; --preview-accent: #b6c9dc; }
-.theme-preview-nothing { --preview-bg: #050607; --preview-text: #f8f8f6; --preview-accent: #f04444; }
+.theme-preview-nothing { --preview-bg: #050607; --preview-text: #f8f8f6; --preview-accent: #fff; }
 .theme-preview-nothing::after { content: ""; position: absolute; inset: 0; opacity: .14; background-image: radial-gradient(#f7f7f7 .7px, transparent .7px); background-size: 5px 5px; }
 .theme-preview-glass { --preview-bg: #0d1d32; --preview-text: #edf6ff; --preview-accent: #85caff; border-radius: 12px; background-image: linear-gradient(130deg, rgba(255,255,255,.16), transparent 55%), radial-gradient(ellipse at 80% 10%, #4b77a8, transparent 55%); }
 .theme-preview-glass .theme-preview-content em { border-radius: 8px; background: rgba(255,255,255,.1); }
@@ -175,7 +175,7 @@
 .theme-picker-head { gap: 18px; margin-bottom: clamp(14px, 2vw, 22px); }
 .theme-picker-heading h2 { max-width: 760px; font-size: clamp(28px, 4vw, 48px); line-height: .98; }
 .theme-picker-close { flex: 0 0 36px; width: 36px; height: 36px; border-radius: 50%; }
-.theme-picker-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(8px, 1.1vw, 12px); }
+.theme-picker-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 1.1vw, 12px); }
 .theme-card { min-height: 0; border-radius: 8px; padding: 7px; }
 .theme-card-copy { gap: 5px; padding: 9px 5px 4px; }
 .theme-card-name { font-size: 13px; }
