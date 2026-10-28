@@ -459,3 +459,68 @@ html[data-theme="nothing"] .contact-circle:hover {
   background: #000;
   color: #fff;
 }
+
+
+
+/* Larger, legible telemetry on narrow screens — never shrink critical counters to tiny labels. */
+html[data-theme="nothing"] .code-footprint-metric > strong,
+html[data-theme="nothing"] .deep-stats > div > strong,
+html[data-theme="nothing"] .archive-stats strong,
+html[data-theme="nothing"] .language-footprint-stat > strong,
+html[data-theme="nothing"] .manual-project-area > strong,
+html[data-theme="nothing"] .manual-project-heading > strong {
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+html[data-theme="nothing"] .language-footprint,
+html[data-theme="nothing"] .manual-project-estimate {
+  border: 1px solid #444;
+  background: #000;
+}
+html[data-theme="nothing"] .language-footprint-row,
+html[data-theme="nothing"] .language-footprint-columns,
+html[data-theme="nothing"] .manual-project-area {
+  border-color: #383838;
+}
+html[data-theme="nothing"] .language-footprint-primary > strong,
+html[data-theme="nothing"] .manual-project-area > span,
+html[data-theme="nothing"] .manual-project-heading h3 a {
+  color: #fff;
+}
+html[data-theme="nothing"] .language-footprint-bar { background: #292929; }
+html[data-theme="nothing"] .language-footprint-bar > i { background: #fff; }
+html[data-theme="nothing"] .manual-project-area { background: #050505; border-radius: 0; }
+html[data-theme="nothing"] .manual-project-area > strong,
+html[data-theme="nothing"] .manual-project-heading > strong { color: #fff; }
+@media (max-width: 760px) {
+  html[data-theme="nothing"] .code-footprint-grid .code-footprint-metric > strong {
+    font-size: clamp(22px,6.2vw,30px);
+    line-height: 1.15;
+    letter-spacing: -.065em;
+  }
+  html[data-theme="nothing"] .code-footprint-metric > span,
+  html[data-theme="nothing"] .code-footprint-metric > small {
+    font-size: 9px;
+    line-height: 1.55;
+  }
+  html[data-theme="nothing"] .deep-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  html[data-theme="nothing"] .deep-stats > div { padding: 14px 11px; min-width: 0; }
+  html[data-theme="nothing"] .deep-stats > div > strong { font-size: clamp(23px,6.2vw,30px); line-height: 1.15; }
+  html[data-theme="nothing"] .deep-stats > div > span { font-size: 9px; line-height: 1.5; }
+  html[data-theme="nothing"] .archive-stats { flex-wrap: wrap; gap: 13px 20px; }
+  html[data-theme="nothing"] .archive-stats strong { font-size: 26px; }
+  html[data-theme="nothing"] .ranked-row > small,
+  html[data-theme="nothing"] .ranked-row > strong small { font-size: 10px; }
+  html[data-theme="nothing"] .nothing-system-cell { min-width: 0; padding: 12px 9px; }
+  html[data-theme="nothing"] .nothing-system-label { font-size: 9px; line-height: 1.5; }
+  html[data-theme="nothing"] .nothing-system-value,
+  html[data-theme="nothing"] .nothing-system-cycle { font-size: 18px; }
+  html[data-theme="nothing"] .nothing-system-cell .rolling-number { font-size: 1.08em; }
+}
+@media (max-width: 360px) {
+  html[data-theme="nothing"] .code-footprint-grid .code-footprint-metric > strong { font-size: 21px; }
+  html[data-theme="nothing"] .deep-stats > div > strong { font-size: 22px; }
+  html[data-theme="nothing"] .nothing-system-value,
+  html[data-theme="nothing"] .nothing-system-cycle { font-size: 16px; }
+}
