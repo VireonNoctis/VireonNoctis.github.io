@@ -175,3 +175,27 @@ html[data-theme="light"] .code-footprint-project-stats strong { color: #18202b; 
   .code-footprint-project-stats { grid-column: 1; grid-row: 2; text-align: left; }
   .code-footprint-project > svg { grid-column: 2; grid-row: 1 / span 2; }
 }
+
+
+
+/* Shared number animation output. The count-up itself is driven by AnimatedNumber. */
+.animated-number {
+  display: inline-block;
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap;
+}
+html[data-theme="classic"] .animated-number {
+  color: inherit;
+  text-shadow: 0 0 14px rgba(182,201,220,.12);
+}
+html[data-theme="nothing"] .animated-number {
+  color: #fff;
+  font-family: "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  font-weight: 600;
+  letter-spacing: -.035em;
+}
+html[data-theme="light"] .animated-number {
+  color: #315d91;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-weight: 600;
+}
