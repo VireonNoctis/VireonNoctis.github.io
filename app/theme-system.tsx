@@ -196,6 +196,81 @@ function RollingNumber({ value, replayKey }: { value: number; replayKey: string 
   );
 }
 
+
+/**
+ * Animates any live metric when its data arrives or changes. Unlike the
+ * NothingOS digit wheels, this count-up works in every theme and for values
+ * loaded asynchronously from AniList, Last.fm, GitHub, and the code snapshot.
+ */
+export function AnimatedNumber({
+  value,
+  decimals = 0,
+  duration = 1250,
+  prefix = "",
+  suffix = "",
+}: {
+  value: number;
+  decimals?: number;
+  duration?: number;
+  prefix?: string;
+  suffix?: string;
+}) {
+  const reduceMotion = useReducedMotion();
+  const [displayed, setDisplayed] = useState(0);
+  const current = useRef(0);
+
+  useEffect(() => {
+    if (!Number.isFinite(value)) return;
+    if (reduceMotion || current.current === value) {
+      current.current = value;
+      setDisplayed(value);
+      return;
+    }
+
+    const start = current.current;
+    const span = Math.max(250, duration);
+    let startedAt: number | null = null;
+    let frame = 0;
+    const tick = (now: number) => {
+      if (startedAt === null) startedAt = now;
+      const progress = Math.min(1, (now - startedAt) / span);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      const next = start + (value - start) * eased;
+      current.current = next;
+      setDisplayed(next);
+      if (progress < 1) {
+        frame = window.requestAnimationFrame(tick);
+      } else {
+        current.current = value;
+        setDisplayed(value);
+      }
+    };
+
+    frame = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame);
+  }, [value, duration, reduceMotion]);
+
+  const formatter = useMemo(
+    () => new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }),
+    [decimals],
+  );
+  const targetText = formatter.format(value);
+
+  return (
+    <span
+      className="animated-number"
+      aria-label={`${prefix}${targetText}${suffix}`}
+      aria-live="off"
+      data-animated-number=""
+    >
+      {prefix}{formatter.format(displayed)}{suffix}
+    </span>
+  );
+}
+
 export function NothingSystemStrip() {
   const { theme } = useThemeContext();
   const reduceMotion = useReducedMotion();
