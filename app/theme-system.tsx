@@ -257,7 +257,7 @@ export function ThemeSignatureRail() {
   );
 }
 
-function useCurrentTheme() {
+export function useCurrentTheme() {
   return useThemeContext().theme;
 }
 
