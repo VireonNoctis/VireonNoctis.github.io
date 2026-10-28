@@ -29,7 +29,7 @@ html[data-theme="nothing"] .theme-switcher-label { color:#aaa; }
 html[data-theme="nothing"] .theme-switcher-current, html[data-theme="nothing"] .theme-switcher-index { color:#fff; font-variant-numeric:tabular-nums; }
 html[data-theme="nothing"] .hero { min-height:0; }
 html[data-theme="nothing"] .hero-meta { border-bottom:1px solid #444; padding-bottom:14px; }
-html[data-theme="nothing"] .hero-meta:after { content:"⠿   000 / 008"; color:#bbb; font:9px "IBM Plex Mono",monospace; letter-spacing:.1em; }
+html[data-theme="nothing"] .hero-meta:after { content:"⠿   000 / 003"; color:#bbb; font:9px "IBM Plex Mono",monospace; letter-spacing:.1em; }
 html[data-theme="nothing"] .hero-main { grid-template-columns:minmax(0,1.3fr) minmax(250px,.7fr); gap:clamp(22px,4vw,64px); padding:82px 0 54px; min-height:580px; }
 html[data-theme="nothing"] .hero-kicker { font:11px/1.5 "IBM Plex Mono",monospace; color:#c8c8c8; text-transform:uppercase; letter-spacing:.06em; }
 html[data-theme="nothing"] .hero h1 { font:700 clamp(72px,10vw,144px)/.78 Arial,sans-serif; text-transform:uppercase; letter-spacing:-.095em; }
