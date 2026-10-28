@@ -55,8 +55,8 @@ type CodeStats = {
     forks: number;
   };
   repositories: CodeStatsRepository[];
-  languages: CodeStatsLanguage[];
-  manualProjectEstimates: CodeStatsProjectEstimate[];
+  languages?: CodeStatsLanguage[];
+  manualProjectEstimates?: CodeStatsProjectEstimate[];
 };
 type SpotifyNowPlaying = { configured: boolean; isPlaying: boolean; track: string | null; artist: string | null; album: string | null; albumImage: string | null; url: string | null };
 // Fill this placeholder with the Lunar X API token when ready. Do not commit a real secret to a public repository.
@@ -232,7 +232,9 @@ export default function Home() {
           archiveIndex:"05 / 06",archiveLabel:"THE OPEN TABS",archiveEyebrow:"WHAT STAYS IN ROTATION",archiveTop:"What's open",archiveBottom:"in another tab.",archiveDescription:"The stuff I read, watch, and listen to when I'm not building.",
           contactIndex:"06 / 06",contactLabel:"OPEN CHANNEL",contactEyebrow:"EVERY GOOD THING STARTS SOMEWHERE",contactTop:"Have a good",contactBottom:"reason to talk?",contactCopy:"Ideas, collaborations, questions, or a conversation about something worth making. The channel is open.",contactCta:"START HERE"
         };
-  const largestLanguageLines = Math.max(1, ...(codeStats?.languages ?? []).map((language) => language.lines));
+  const languages = codeStats?.languages ?? [];
+  const estimates = codeStats?.manualProjectEstimates ?? [];
+  const largestLanguageLines = Math.max(1, ...languages.map((language) => language.lines));
   const motionRise = reduce ? {} : rise;
   return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
@@ -294,17 +296,17 @@ export default function Home() {
       { label: themeCopy.metricLabels[5], value: <><AnimatedNumber value={codeStats.totals.stars}/> / <AnimatedNumber value={codeStats.totals.forks}/></>, note: themeCopy.metricNotes[5] },
     ].map(metric => <div className="code-footprint-metric" key={metric.label}><span>{metric.label}</span><strong>{metric.value}</strong><small>{metric.note}</small></div>)}
   </div>
-  {codeStats.languages.length > 0 && <section className="language-footprint" aria-label="Lines and characters by language or file format">
-    <div className="language-footprint-heading"><span className="micro-label">{activeTheme === "nothing" ? "LANGUAGE TELEMETRY / TRACKED SOURCES" : activeTheme === "light" ? "LANGUAGES IN THE COLLECTION" : "LANGUAGES & FORMATS / AUTO-SCANNED"}</span><span>{codeStats.languages.length} LANGUAGES / FORMATS</span></div>
+  {languages.length > 0 && <section className="language-footprint" aria-label="Lines and characters by language or file format">
+    <div className="language-footprint-heading"><span className="micro-label">{activeTheme === "nothing" ? "LANGUAGE TELEMETRY / TRACKED SOURCES" : activeTheme === "light" ? "LANGUAGES IN THE COLLECTION" : "LANGUAGES & FORMATS / AUTO-SCANNED"}</span><span>{languages.length} LANGUAGES / FORMATS</span></div>
     <div className="language-footprint-columns"><span>LANGUAGE / FILE FORMAT</span><span>LINES / FILES</span><span>CHARACTERS / WORDS</span></div>
-    {codeStats.languages.map((language) => <div className="language-footprint-row" key={language.language}>
+    {languages.map((language) => <div className="language-footprint-row" key={language.language}>
       <div className="language-footprint-primary"><strong>{language.language}</strong><div className="language-footprint-bar" aria-hidden="true"><i style={{width: (language.lines / largestLanguageLines * 100) + "%"}} /></div></div>
       <div className="language-footprint-stat"><strong><AnimatedNumber value={language.lines}/></strong><small><AnimatedNumber value={language.files}/> files</small></div>
       <div className="language-footprint-stat"><strong><AnimatedNumber value={language.characters}/></strong><small><AnimatedNumber value={language.words}/> words</small></div>
     </div>)}
     <p className="language-footprint-note">Tracked file extensions are grouped into languages and formats (for example, TS and TSX under TypeScript, JS and JSX under JavaScript). Documentation and configuration are listed separately where their format is identifiable. These are whole-repository counts, not line-by-line authorship claims.</p>
   </section>}
-  {codeStats.manualProjectEstimates.map((estimate) => <section className="manual-project-estimate" key={estimate.id} aria-label={estimate.name + " user-provided line estimates"}>
+  {estimates.map((estimate) => <section className="manual-project-estimate" key={estimate.id} aria-label={estimate.name + " user-provided line estimates"}>
     <div className="manual-project-heading"><div><span className="micro-label">{activeTheme === "nothing" ? "MANUAL TELEMETRY / UNINDEXED REPOSITORY" : activeTheme === "light" ? "A PROJECT ESTIMATE" : "PROJECT ESTIMATE / MANUALLY SUPPLIED"}</span><h3><a href={estimate.url} target="_blank" rel="noreferrer">{estimate.name}</a></h3></div><strong><AnimatedNumber value={estimate.areas.reduce((total, area) => total + area.lines, 0)}/> <small>reported lines</small></strong></div>
     <div className="manual-project-areas">{estimate.areas.map((area) => <div className="manual-project-area" key={area.name}><span>{area.name}</span><small>{area.stack}</small><strong><AnimatedNumber value={area.lines}/></strong><em>lines</em></div>)}</div>
     <p className="language-footprint-note">{estimate.classification} Only line counts were provided, so character and word totals are not inferred.</p>
