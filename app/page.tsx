@@ -9,11 +9,25 @@ type Repo = { name: string; description: string | null; html_url: string; starga
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
 type GenreItem = { genre: string; count: number };
 type Live = { repos?: number; followers?: number; anime?: number; manga?: number; scrobbles?: number; track?: string; artist?: string; playing?: boolean; animeEpisodes?: number; animeMinutes?: number; animeScore?: number; mangaChapters?: number; mangaVolumes?: number; mangaScore?: number; animeGenres?: GenreItem[]; mangaGenres?: GenreItem[]; topArtists?: RankedItem[]; topTracks?: RankedItem[] };
+type CodeStatsRepository = {
+  name: string;
+  fullName: string;
+  url: string;
+  branch: string;
+  relationship: "owned" | "contributor";
+  contributionNote?: string;
+  files: number;
+  lines: number;
+  characters: number;
+  words: number;
+};
 type CodeStats = {
   generatedAt: string;
   scope: string;
   totals: {
     repositories: number;
+    ownedRepositories: number;
+    contributorRepositories: number;
     failedRepositories: number;
     files: number;
     lines: number;
@@ -23,6 +37,7 @@ type CodeStats = {
     stars: number;
     forks: number;
   };
+  repositories: CodeStatsRepository[];
 };
 type SpotifyNowPlaying = { configured: boolean; isPlaying: boolean; track: string | null; artist: string | null; album: string | null; albumImage: string | null; url: string | null };
 // Fill this placeholder with the Lunar X API token when ready. Do not commit a real secret to a public repository.
@@ -69,8 +84,8 @@ export default function Home() {
             const candidate = payload as Partial<CodeStats>;
             const totals = candidate.totals;
             const validKeys: Array<keyof CodeStats["totals"]> = [
-              "repositories", "failedRepositories", "files", "lines", "nonblankLines",
-              "characters", "words", "stars", "forks",
+              "repositories", "ownedRepositories", "contributorRepositories", "failedRepositories",
+              "files", "lines", "nonblankLines", "characters", "words", "stars", "forks",
             ];
             const valid = typeof candidate.generatedAt === "string" &&
               Boolean(totals) &&
@@ -208,10 +223,17 @@ export default function Home() {
       { label: "TEXT LINES", value: codeStats.totals.lines, note: codeStats.totals.nonblankLines.toLocaleString("en-US") + " non-blank" },
       { label: "WORDS", value: codeStats.totals.words, note: "Code, config and docs" },
       { label: "TRACKED FILES", value: codeStats.totals.files, note: "Text files only" },
-      { label: "PUBLIC PROJECTS", value: codeStats.totals.repositories, note: codeStats.totals.failedRepositories + " scan failures" },
+      { label: "OWNED / CONTRIBUTED REPOS", value: codeStats.totals.ownedRepositories + " / " + codeStats.totals.contributorRepositories, note: codeStats.totals.repositories + " total · " + codeStats.totals.failedRepositories + " scan failures" },
       { label: "STARS / FORKS", value: codeStats.totals.stars.toLocaleString("en-US") + " / " + codeStats.totals.forks.toLocaleString("en-US"), note: "Across scanned projects" },
     ].map(metric => <div className="code-footprint-metric" key={metric.label}><span>{metric.label}</span><strong>{typeof metric.value === "number" ? metric.value.toLocaleString("en-US") : metric.value}</strong><small>{metric.note}</small></div>)}
-  </div><p className="code-footprint-note">Current text footprint across public, non-fork projects on their default branches. Dependency/build output, lockfiles, binaries, and files over 1 MB are excluded. This is not a line-by-line claim of individual authorship.</p></> : <p className="code-footprint-note">{codeStatsStatus === "loading" ? "The repository scan is being fetched from the profile repository." : "The automated scan has not published its first snapshot yet. GitHub Actions will populate this panel automatically."}</p>}
+  </div>{codeStats.repositories.filter(project => project.relationship === "contributor").length > 0 && <div className="code-footprint-projects">
+    <div className="code-footprint-projects-heading"><span className="micro-label">CONTRIBUTOR PROJECTS INCLUDED</span><span>{codeStats.totals.contributorRepositories} PUBLIC PROJECTS</span></div>
+    {codeStats.repositories.filter(project => project.relationship === "contributor").map(project => <a className="code-footprint-project" href={project.url} key={project.fullName} target="_blank" rel="noreferrer">
+      <span className="code-footprint-project-name"><strong>{project.name}</strong><small>{project.fullName}</small></span>
+      <span className="code-footprint-project-stats"><strong>{project.lines.toLocaleString("en-US")}</strong> lines <i>·</i> <strong>{project.characters.toLocaleString("en-US")}</strong> characters</span>
+      <ArrowUpRight size={14} aria-hidden="true"/>
+    </a>)}
+  </div>}<p className="code-footprint-note">Current text footprint across public projects you own or contribute to, including explicitly listed projects and repositories with public commits attributed to your GitHub account. Whole-repository totals describe project size, not the amount personally authored. Dependency/build output, lockfiles, binaries, and files over 1 MB are excluded.</p></> : <p className="code-footprint-note">{codeStatsStatus === "loading" ? "The repository scan is being fetched from the profile repository." : "The automated scan has not published its first snapshot yet. GitHub Actions will populate this panel automatically."}</p>}
   <a className="code-footprint-link" href="https://github.com/VireonNoctis/VireonNoctis#codebase-footprint-automatically-refreshed" target="_blank" rel="noreferrer">OPEN GENERATED BREAKDOWN <ArrowUpRight size={13}/></a>
 </section>{repos.length>0&&<div className="repo-live-area">
   <div className="repo-live-heading"><span className="micro-label">LATEST PUBLIC REPOSITORIES · AUTO-SYNCED</span><span className="repo-live-count">Sorted by latest update</span></div>
