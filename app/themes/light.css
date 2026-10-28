@@ -394,3 +394,28 @@ html[data-theme="light"] .contact-circle:hover {
   html[data-theme="light"] .slop-brand-vireon { font-size: clamp(48px,14vw,70px); }
   html[data-theme="light"] .slop-brand-title { font-size: clamp(25px,7vw,34px); }
 }
+
+
+
+html[data-theme="light"] .language-footprint,
+html[data-theme="light"] .manual-project-estimate {
+  border-color: #d5dce4;
+  border-radius: 14px;
+  background: rgba(255,255,255,.92);
+}
+html[data-theme="light"] .language-footprint-row,
+html[data-theme="light"] .language-footprint-columns { border-color: #e0e5eb; }
+html[data-theme="light"] .language-footprint-primary > strong,
+html[data-theme="light"] .language-footprint-stat > strong,
+html[data-theme="light"] .manual-project-heading > strong,
+html[data-theme="light"] .manual-project-area > strong,
+html[data-theme="light"] .manual-project-heading h3 a { color: #1b2d44; }
+html[data-theme="light"] .language-footprint-bar { background: #e5eaf0; }
+html[data-theme="light"] .language-footprint-bar > i { background: #315d91; }
+html[data-theme="light"] .manual-project-area { border-color: #e0e5eb; border-radius: 10px; background: #f8fafc; }
+@media (max-width: 760px) {
+  html[data-theme="light"] .code-footprint-grid .code-footprint-metric > strong { font-size: clamp(22px,6vw,30px); }
+  html[data-theme="light"] .deep-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  html[data-theme="light"] .deep-stats > div { min-width: 0; padding: 14px 11px; }
+  html[data-theme="light"] .deep-stats > div > strong { font-size: clamp(24px,6vw,31px); overflow-wrap: anywhere; }
+}
