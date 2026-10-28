@@ -180,7 +180,7 @@ function RollingNumber({ value, replayKey }: { value: number; replayKey: string 
       <span className="rolling-number-accessible">{formatted}</span>
       <span className="rolling-number-wheels" aria-hidden="true">
         {[...formatted].reverse().map((digit, index) => (
-          <span className="rolling-number-digit" key={`${index}-${digit}`}>
+          <span className="rolling-number-digit" key={index}>
             <span
               className="rolling-number-wheel"
               style={{ transform: `translateY(-${ready ? Number(digit) : 0}em)` }}
