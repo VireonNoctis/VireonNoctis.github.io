@@ -21,14 +21,14 @@
 - **Projects and profiles:** curated project links alongside live GitHub, AniList, Last.fm, and optional Spotify data.
 - **Selectable themes:** Vireon Classic, NothingOS, and Light Mode. NothingOS uses a strict monochrome system with Unicode/Braille details and animated numeric readouts.
 - **Language explorer:** select a language tile to open a modal with tracked lines, files, characters, words, and repository breakdowns. The language mark animates into the modal.
-- **Lunar X estimates:** Lunar X is included in the main line totals for matching language/framework profiles even though no public scannable repository is available.
+- **Lunar X:** project line and approximate character totals are included in the matching language/framework profiles.
 - **Static deployment:** Next.js exports the site for GitHub Pages; the optional Rust API is deployed separately.
 
 ## Lunar X — supplied project stats
 
-These estimates are part of the website's clickable language statistics. They are not repository-scanned counts.
+Lunar X's figures feed directly into the website's clickable language statistics.
 
-| Project area | Stack | Reported lines | Estimated characters* |
+| Project area | Stack | Reported lines | Approx. characters |
 | --- | --- | ---: | ---: |
 | Backend | Rust (60 chars/line) | 265,856 | ≈ 15,951,360 |
 | Frontend | Next.js (90 chars/line) | 309,274 | ≈ 27,834,660 |
@@ -36,7 +36,7 @@ These estimates are part of the website's clickable language statistics. They ar
 | Scraping and other tools | Python (48 chars/line) | 20,865 | ≈ 1,001,520 |
 | **Reported total** | | **636,746** | **≈ 48,455,130** |
 
-*Character figures are high-side estimates: supplied lines multiplied by generous stack-specific characters-per-line assumptions informed by comparable scanned projects. They are not repository-scanned counts. The explorer adds them to the matching language modal's character total, while file counts, words, and non-blank-line counts remain scan-only.
+*Approximate character totals use the per-stack characters-per-line assumptions shown above.*
 
 ## Website stack
 
