@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ArrowDownRight, ArrowUpRight, Github, Menu, X, Play, Radio, ExternalLink } from "lucide-react";
+import { useEffect, useState } from "react";
+import { ArrowDownRight, ArrowUpRight, Menu, X } from "lucide-react";
 import { AnimatedNumber, ThemeSwitcher } from "./theme-system";
 
 type SceneKind = "hero" | "projects" | "code" | "stack" | "learning" | "archive" | "sound" | "contact";
@@ -310,7 +310,6 @@ function Stat({ label, value, suffix }: { label: string; value: number; suffix?:
 }
 
 export default function CinematicPage({ live, repos, codeStats, spotify }: CinematicPageProps) {
-  const reduceMotion = useMemo(() => false, []);
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeId, setActiveId] = useState("ink-top");
   const [progress, setProgress] = useState(0);
