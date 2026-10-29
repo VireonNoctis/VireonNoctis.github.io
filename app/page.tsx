@@ -23,7 +23,7 @@ type CodeStatsProjectEstimate = {
   name: string;
   url: string;
   classification: string;
-  areas: { name: string; stack: string; lines: number }[];
+  areas: { name: string; stack: string; lines: number; characters?: number; estimatedCharactersPerLine?: number }[];
 };
 type CodeStatsRepository = {
   name: string;
@@ -84,6 +84,21 @@ const techLogosByName: Record<string, string> = {
   "Go module": "go", "Next.js": "nextdotjs", React: "react",
 };
 const formatLanguageNames = new Set(["Batch", "Markdown", "JSON", "Plain text", "YAML", "TOML", "Environment config", "Shell", "SVG", "Git config", "Config", "XML", "Dockerfile", "Docker config", "Go module", "Properties"]);
+const LUNAR_X_CHARACTERS_PER_LINE: Record<string, number> = { Rust: 60, "Next.js": 90, React: 90, Python: 48 };
+function estimateProjectCharacters(area: { stack: string; lines: number; characters?: number; estimatedCharactersPerLine?: number }): number | null {
+  if (typeof area.characters === "number" && Number.isFinite(area.characters) && area.characters >= 0) {
+    return Math.round(area.characters);
+  }
+  const rate = typeof area.estimatedCharactersPerLine === "number" && Number.isFinite(area.estimatedCharactersPerLine)
+    ? area.estimatedCharactersPerLine
+    : LUNAR_X_CHARACTERS_PER_LINE[area.stack.trim()];
+  return typeof rate === "number" && Number.isFinite(rate) && rate >= 0
+    ? Math.round(area.lines * rate)
+    : null;
+}
+function formatCompactEstimate(value: number): string {
+  return new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(value);
+}
 function Eyebrow({ children }: { children: React.ReactNode }) { return <span className="eyebrow"><i />{children}</span>; }
 function IndexLabel({ n, label }: { n: string; label: string }) { return <div className="index-label"><span>{n}</span><span>{label}</span></div>; }
 
@@ -275,8 +290,11 @@ export default function Home() {
         .map((area) => ({ project, area })))
     : [];
   const selectedManualLines = selectedEstimateAreas.reduce((total, entry) => total + entry.area.lines, 0);
+  const selectedManualCharacters = selectedEstimateAreas.reduce((total, entry) => total + (estimateProjectCharacters(entry.area) ?? 0), 0);
   const selectedScannedLines = selectedLanguage?.lines ?? 0;
+  const selectedScannedCharacters = selectedLanguage?.characters ?? 0;
   const selectedTotalLines = selectedScannedLines + selectedManualLines;
+  const selectedTotalCharacters = selectedScannedCharacters + selectedManualCharacters;
   const statTechOptions = Array.from(new Map([
     ...languages.map((language) => ({
       name: language.language,
@@ -387,17 +405,19 @@ export default function Home() {
       <div className="project-language-grid">
         {statTechOptions.map((tech,i)=>{
           const scanned=languages.find((language)=>language.language.toLowerCase()===tech.name.toLowerCase());
-          const lunarLines=estimates.reduce((total,project)=>total+project.areas.filter((area)=>area.stack.trim().toLowerCase()===tech.name.toLowerCase()).reduce((sum,area)=>sum+area.lines,0),0);
+          const lunarAreas=estimates.flatMap(project=>project.areas.filter(area=>area.stack.trim().toLowerCase()===tech.name.toLowerCase()));
+          const lunarLines=lunarAreas.reduce((sum,area)=>sum+area.lines,0);
+          const lunarCharacters=lunarAreas.reduce((sum,area)=>sum+(estimateProjectCharacters(area)??0),0);
           const totalLines=(scanned?.lines??0)+lunarLines;
           return <motion.button type="button" className="project-language-tile" key={tech.name} aria-haspopup="dialog" aria-label={`Open ${tech.name} language statistics, ${totalLines.toLocaleString()} total lines`} onClick={()=>setSelectedTech({name:tech.name,logo:tech.logo,kind:tech.kind})} initial={reduce?false:{opacity:0,y:12}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.12}} transition={{duration:.35,delay:Math.min(i*.018,.25)}}>
             <span className="project-language-logo">{tech.logo ? <motion.img layoutId={`tech-logo-${tech.name}`} src={`/brands/tech-${tech.logo}.svg`} alt="" loading="lazy"/> : <motion.span layoutId={`tech-logo-${tech.name}`} className="project-language-generic"><Code2 size={16}/></motion.span>}</span>
-            <span className="project-language-copy"><strong>{tech.name}</strong><small>{lunarLines>0?"includes Lunar X estimate":"tracked repository data"}</small></span>
+            <span className="project-language-copy"><strong>{tech.name}</strong><small>{lunarLines>0?("Lunar X · ≈ "+formatCompactEstimate(lunarCharacters)+" estimated characters"):"tracked repository data"}</small></span>
             <span className="project-language-lines"><strong>{totalLines.toLocaleString()}</strong><small>lines</small></span>
             <ArrowUpRight size={14} className="project-language-arrow" aria-hidden="true"/>
           </motion.button>;
         })}
       </div>
-      <p className="project-language-note">Lunar X is included in the main line count for Rust, Python, Next.js, and React using the supplied estimates. Its estimated counts are not fabricated into file, character, word, or non-blank-line totals.</p>
+      <p className="project-language-note">Lunar X character figures are high-side estimates calculated from the supplied lines using generous stack-specific ratios: Rust 60, Next.js 90, React 90, and Python 48 characters per line. The assumptions are informed by the higher character densities in comparable scanned projects. Estimated characters are shown separately from scanned counts; files, words, and non-blank-line totals remain scan-only.</p>
     </div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div>
     {portalReady && createPortal(
       <AnimatePresence initial={false}>
@@ -433,7 +453,7 @@ export default function Home() {
                   <span className="micro-label">{selectedEstimateAreas.length > 0 ? "COMBINED TOTAL / LUNAR X INCLUDED" : selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : "NO SOURCE DATA FOUND"}</span>
                   <h2 id="tech-modal-title">{selectedTech.name}</h2>
                   <p>{selectedEstimateAreas.length > 0
-                    ? "The headline line total combines the public-repository scan with the supplied Lunar X estimate for this technology. Only measured fields are shown—no file, character, word, or non-blank counts are invented."
+                    ? "The headline totals combine scanned repository data with Lunar X's high-side character estimate. Estimated characters are labeled as estimates, never as measured data; file, word, and non-blank-line counts remain scan-only."
                     : selectedLanguage
                       ? "Whole-repository totals from the latest public-project scan. These counts describe project contents, not individual authorship."
                       : "No tracked language counts or Lunar X estimates have been recorded for this technology yet."}</p>
@@ -443,12 +463,16 @@ export default function Home() {
                 <div className="tech-modal-grid" aria-label={`${selectedTech.name} combined statistics`}>
                   {[
                     { label: "TOTAL LINES", value: selectedTotalLines, note: selectedEstimateAreas.length > 0 ? "Repository scan + Lunar X estimate" : "Across scanned repositories" },
-                    ...(selectedEstimateAreas.length > 0 ? [{ label: "LUNAR X LINES", value: selectedManualLines, note: "Supplied project estimate" }] : []),
+                    ...(selectedEstimateAreas.length > 0 ? [
+                      { label: "LUNAR X LINES", value: selectedManualLines, note: "Supplied project line estimate" },
+                      { label: "TOTAL CHARACTERS", value: selectedTotalCharacters, note: "Scanned text + high-side estimate" },
+                      { label: "LUNAR X CHARACTERS", value: selectedManualCharacters, note: "Estimated · not scanned" },
+                    ] : []),
                     ...(selectedLanguage ? [
                       { label: "SCANNED LINES", value: selectedLanguage.lines, note: "Public repositories only" },
                       { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Scanned repositories" },
                       { label: "FILES", value: selectedLanguage.files, note: "Tracked text files" },
-                      { label: "CHARACTERS", value: selectedLanguage.characters, note: "Line breaks excluded" },
+                      { label: selectedEstimateAreas.length > 0 ? "SCANNED CHARACTERS" : "CHARACTERS", value: selectedLanguage.characters, note: "Measured text · line breaks excluded" },
                       { label: "WORDS", value: selectedLanguage.words, note: "Scanned repository text" },
                     ] : []),
                   ].map((metric) => <div className="tech-modal-stat" key={metric.label}>
@@ -468,13 +492,16 @@ export default function Home() {
                   <div className="tech-modal-estimate-list">
                     {selectedEstimateAreas.map(({ project, area }) => (
                       <a className="tech-modal-estimate" href={project.url} key={`${project.id}-${area.name}`} target="_blank" rel="noreferrer">
-                        <span className="tech-modal-estimate-project"><strong>{project.name}</strong><small>{area.name} · {area.stack}</small></span>
-                        <span className="tech-modal-estimate-lines"><strong><AnimatedNumber value={area.lines}/></strong><small>reported lines</small></span>
+                        <span className="tech-modal-estimate-project"><strong>{project.name}</strong><small>{area.name} · {area.stack} · {area.estimatedCharactersPerLine ?? LUNAR_X_CHARACTERS_PER_LINE[area.stack.trim()] ?? "—"} chars/line</small></span>
+                        <span className="tech-modal-estimate-lines">
+                          <strong><AnimatedNumber value={area.lines}/></strong><small>reported lines</small>
+                          <strong>≈ <AnimatedNumber value={estimateProjectCharacters(area) ?? 0}/></strong><small>estimated characters</small>
+                        </span>
                         <ArrowUpRight size={15} aria-hidden="true"/>
                       </a>
                     ))}
                   </div>
-                  <p className="tech-modal-footnote">Lunar X does not have a public scannable repository in this stats index. These supplied line estimates are included in the Total Lines tile above; other metrics remain scan-only and are not inferred.</p>
+                  <p className="tech-modal-footnote">Lunar X has no public scannable repository in this stats index. Line totals are supplied estimates; character totals are high-side estimates calculated from lines × the displayed stack-specific characters-per-line assumption. They are not scanned counts. File, word, and non-blank-line metrics remain scan-only.</p>
                 </section>
               )}
               {selectedRepositoryLanguages.length > 0 && (

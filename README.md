@@ -28,15 +28,15 @@
 
 These estimates are part of the website's clickable language statistics. They are not repository-scanned counts.
 
-| Project area | Stack | Reported lines |
-| --- | --- | ---: |
-| Backend | Rust | 265,856 |
-| Frontend | Next.js | 309,274 |
-| Gacha games | React | 40,751 |
-| Scraping and other tools | Python | 20,865 |
-| **Reported total** | | **636,746** |
+| Project area | Stack | Reported lines | Estimated characters* |
+| --- | --- | ---: | ---: |
+| Backend | Rust (60 chars/line) | 265,856 | ≈ 15,951,360 |
+| Frontend | Next.js (90 chars/line) | 309,274 | ≈ 27,834,660 |
+| Gacha games | React (90 chars/line) | 40,751 | ≈ 3,667,590 |
+| Scraping and other tools | Python (48 chars/line) | 20,865 | ≈ 1,001,520 |
+| **Reported total** | | **636,746** | **≈ 48,455,130** |
 
-The explorer adds each estimate to its matching scanned language count when available. Unprovided file, character, word, and non-blank-line totals are not inferred.
+*Character figures are high-side estimates: supplied lines multiplied by generous stack-specific characters-per-line assumptions informed by comparable scanned projects. They are not repository-scanned counts. The explorer adds them to the matching language modal's character total, while file counts, words, and non-blank-line counts remain scan-only.
 
 ## Website stack
 
