@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { createPortal } from "react-dom";
 import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Code2, Github, Menu, Orbit, X } from "lucide-react";
-import { AnimatedNumber, InkInteractionLayer, NothingSystemStrip, ThemeHeroArtwork, ThemeSwitcher, useCurrentTheme } from "./theme-system";
+import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork, ThemeSwitcher, useCurrentTheme } from "./theme-system";
 
 type Repo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; archived?: boolean; updated_at: string };
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
@@ -81,10 +81,10 @@ const techLogosByName: Record<string, string> = {
   JavaScript: "javascript", Ruby: "ruby", YAML: "yaml", Svelte: "svelte",
   HTML: "html5", Shell: "terminal", "Environment config": "terminal",
   "Git config": "git", Config: "terminal", Dockerfile: "docker", "Docker config": "docker",
-  "Go module": "go", "Next.js": "nextdotjs", React: "react",
+  "Go module": "go", "Next.js": "nextdotjs", React: "react", WebGL: "webgl", "Three.js": "threejs",
 };
 const formatLanguageNames = new Set(["Batch", "Markdown", "JSON", "Plain text", "YAML", "TOML", "Environment config", "Shell", "SVG", "Git config", "Config", "XML", "Dockerfile", "Docker config", "Go module", "Properties"]);
-const LUNAR_X_CHARACTERS_PER_LINE: Record<string, number> = { Rust: 60, "Next.js": 90, React: 90, Python: 48 };
+const LUNAR_X_CHARACTERS_PER_LINE: Record<string, number> = { Rust: 60, "Next.js": 90, React: 90, Python: 48, WebGL: 60, "Three.js": 60 };
 function estimateProjectCharacters(area: { stack: string; lines: number; characters?: number; estimatedCharactersPerLine?: number }): number | null {
   if (typeof area.characters === "number" && Number.isFinite(area.characters) && area.characters >= 0) {
     return Math.round(area.characters);
@@ -308,7 +308,7 @@ export default function Home() {
     }))),
   ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
-  return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><InkInteractionLayer /><a className="skip-link" href="#content-start">Skip to content</a>
+  return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
     <div className="atmosphere" aria-hidden="true"><div className="atmosphere-grid"/><motion.div className="aurora aurora-one" animate={reduce?{}:{x:[0,38,-18,0],y:[0,-22,16,0],rotate:[0,7,-4,0],scale:[1,1.08,.97,1]}} transition={{duration:25,repeat:Infinity,ease:"easeInOut"}}/><motion.div className="aurora aurora-two" animate={reduce?{}:{x:[0,-32,16,0],y:[0,20,-16,0],rotate:[0,-9,4,0]}} transition={{duration:31,repeat:Infinity,ease:"easeInOut"}}/><div className="grain"/></div>
     <header className="site-header"><a className="wordmark" href="#top" aria-label="Vireon — The Slop King, home" onClick={()=>setMenu(false)}><img className="wordmark-logo" src="/brands/vireon-mark.svg" alt="" width="42" height="42"/><span className="wordmark-copy"><strong>VIREON</strong><small>THE SLOP KING <span aria-hidden="true">👑</span></small></span></a><nav id="primary-navigation" className={menu?"navigation navigation-open":"navigation"} aria-label="Main navigation">{themeCopy.nav.map(([label,href],i)=><a key={href} href={href} onClick={()=>setMenu(false)}><span className="nav-index">0{i+1}</span>{label}</a>)}<a className="nav-contact" href="#contact" onClick={()=>setMenu(false)}>Get in touch <ArrowUpRight size={14}/></a></nav><ThemeSwitcher /><button className="menu-toggle" onClick={()=>setMenu(v=>!v)} aria-label={menu?"Close navigation":"Open navigation"} aria-controls="primary-navigation" aria-expanded={menu}>{menu?<X/>:<Menu/>}</button></header>
@@ -541,8 +541,10 @@ export default function Home() {
         {name:"C#",logo:"csharp",kind:"LANGUAGE",status:"PLANNED" as const,note:"Modern application development across the .NET ecosystem."},
         {name:"Dart",logo:"dart",kind:"LANGUAGE",status:"PLANNED" as const,note:"A strongly typed language for cross-platform applications."},
         {name:"Shell",logo:"terminal",kind:"LANGUAGE",status:"PLANNED" as const,note:"Command-line scripting, automation, and gluing tools together."},
+        {name:"WebGL",logo:"webgl",kind:"GRAPHICS API",status:"PLANNED" as const,note:"Browser-native GPU rendering for interactive visuals, shaders, and real-time graphics."},
+        {name:"Three.js",logo:"threejs",kind:"3D LIBRARY",status:"PLANNED" as const,note:"A JavaScript 3D library for scenes, materials, cameras, and WebGL experiences."},
       ].map((t,i)=><motion.button type="button" className="learning-card" key={t.name} aria-haspopup="dialog" aria-label={`Open ${t.name} details. Status: ${t.status}.`} onClick={()=>setSelectedTech({name:t.name,logo:t.logo,kind:"LEARNING",learningStatus:t.status,learningNote:t.note})} initial={reduce?false:{opacity:0,y:20}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.55,delay:i*.055}} whileHover={reduce?undefined:{y:-3}} whileTap={{scale:.99}}>
-        <div className="learning-card-top"><span className="learning-number">{String(i+1).padStart(2,"0")} / 07</span><span className="learning-kind">{t.kind}</span></div>
+        <div className="learning-card-top"><span className="learning-number">{String(i+1).padStart(2,"0")} / 09</span><span className="learning-kind">{t.kind}</span></div>
         <div className="learning-brand"><span className="learning-logo"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><div><h3>{t.name}</h3><span>{t.status==="IN USE"?"IN ACTIVE USE":"ON THE LEARNING LIST"}</span></div></div>
         <p>{t.note}</p>
         <div className="learning-card-bottom"><span className="learning-pulse"/><span>{t.status==="IN USE"?"ACTIVE TOOLKIT":"UP NEXT"}</span><ArrowUpRight size={15}/></div>
@@ -556,7 +558,7 @@ export default function Home() {
           <div className="deep-stats">
             <div><span>EPISODES WATCHED</span><strong>{live.animeEpisodes!==undefined?<AnimatedNumber value={live.animeEpisodes}/>:"—"}</strong></div><div><span>HOURS WATCHED</span><strong>{live.animeMinutes!==undefined?<AnimatedNumber value={Math.round(live.animeMinutes/60)}/>:"—"}</strong></div>
             <div><span>CHAPTERS READ</span><strong>{live.mangaChapters!==undefined?<AnimatedNumber value={live.mangaChapters}/>:"—"}</strong></div><div><span>VOLUMES READ</span><strong>{live.mangaVolumes!==undefined?<AnimatedNumber value={live.mangaVolumes}/>:"—"}</strong></div>
-            <div><span>ANIME MEAN SCORE</span><strong>{live.animeScore!==undefined?<><AnimatedNumber value={live.animeScore} decimals={1}/>/100</>:"—"}</strong></div><div><span>MANGA MEAN SCORE</span><strong>{live.mangaScore!==undefined?<><AnimatedNumber value={live.mangaScore} decimals={1}/>/100</>:"—"}</strong></div>
+            <div><span>ANIME MEAN SCORE</span><strong className="deep-stat-number deep-stat-score">{live.animeScore!==undefined?<><span className="deep-stat-value"><AnimatedNumber value={live.animeScore} decimals={1}/></span><small>/100</small></>:"—"}</strong></div><div><span>MANGA MEAN SCORE</span><strong className="deep-stat-number deep-stat-score">{live.mangaScore!==undefined?<><span className="deep-stat-value"><AnimatedNumber value={live.mangaScore} decimals={1}/></span><small>/100</small></>:"—"}</strong></div>
           </div>
           <div className="genre-columns"><div><span className="micro-label">ANIME GENRES</span>{(live.animeGenres??[]).map(g=><div className="genre-row" key={g.genre}><span>{g.genre}</span><div><i style={{width:(g.count/Math.max(1,...(live.animeGenres??[]).map(x=>x.count))*100)+"%"}}/></div><small><AnimatedNumber value={g.count}/></small></div>)}{!live.animeGenres?.length&&<p className="empty-data">Waiting for AniList statistics…</p>}</div>
             <div><span className="micro-label">MANGA GENRES</span>{(live.mangaGenres??[]).map(g=><div className="genre-row" key={g.genre}><span>{g.genre}</span><div><i style={{width:(g.count/Math.max(1,...(live.mangaGenres??[]).map(x=>x.count))*100)+"%"}}/></div><small><AnimatedNumber value={g.count}/></small></div>)}{!live.mangaGenres?.length&&<p className="empty-data">Waiting for AniList statistics…</p>}</div></div>
