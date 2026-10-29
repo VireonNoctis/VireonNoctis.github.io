@@ -138,6 +138,16 @@ html[data-theme="light"] .light-hero-sheet-back.ink-grabbing {
 
 /* Remove decorative micro-captions that repeat information rather than help. */
 .theme-signature-rail,
+.hero-meta,
+.hero-foot,
+.section-topline,
+.learning-heading > p,
+.work-heading > p,
+.archive-heading > p,
+.archive-card-bottom > p,
+.learning-card-bottom,
+.stack-footnote,
+.repo-live-heading,
 .hero-meta .coordinates,
 .art-caption,
 .slop-brand-overline,
