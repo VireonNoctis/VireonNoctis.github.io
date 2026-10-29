@@ -1,0 +1,172 @@
+/*
+  Ink interaction layer: cursor-drawn strokes, draggable scene details and
+  restrained perspective. Each theme keeps its own physical material.
+*/
+.ink-interaction-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 180;
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--theme-accent, var(--ice));
+}
+.ink-interaction-trail {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.ink-trail-path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0;
+  filter: drop-shadow(0 0 3px var(--theme-accent-soft, transparent));
+  vector-effect: non-scaling-stroke;
+}
+.ink-cursor-mark {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  border: 1px solid currentColor;
+  border-radius: 48% 52% 43% 57%;
+  opacity: 0;
+  transform: translate3d(-100px,-100px,0);
+  will-change: transform;
+  transition: opacity .16s ease, width .18s ease, height .18s ease, border-radius .18s ease;
+}
+.ink-cursor-mark.is-visible { opacity: .85; }
+.ink-cursor-mark.is-grabbing {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: var(--theme-accent-soft, rgba(255,255,255,.08));
+}
+.ink-cursor-center {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  left: 50%;
+  top: 50%;
+  border-radius: 50%;
+  background: currentColor;
+  transform: translate(-50%,-50%);
+}
+.ink-cursor-slash {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 13px;
+  height: 1px;
+  background: currentColor;
+  transform: translate(-50%,-50%) rotate(-44deg);
+}
+.ink-tilt-active { transition: transform .16s ease-out; }
+.ink-grabbing { cursor: grabbing !important; transition: none !important; }
+html[data-ink-grabbed="true"] { user-select: none; }
+
+.slop-orbit-dot, .slop-star, .orbit-point, .art-cross,
+.nothing-hero-ring, .nothing-hero-core, .nothing-hero-scan,
+.light-hero-sheet-front, .light-hero-sheet-back,
+.book-shape, .vinyl, .vinyl-label, .lunar-moon, .lunar-ring {
+  cursor: grab;
+  transition: translate .16s ease-out;
+}
+.slop-card-aura .slop-orbit-dot,
+.slop-card-aura .slop-star { pointer-events: auto; }
+.slop-orbit-dot::before, .slop-star::before, .orbit-point::before, .art-cross::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+}
+.slop-star::before, .art-cross::before { border-radius: 50%; }
+.ink-grabbing { z-index: 20 !important; }
+.nothing-hero-ring.ink-grabbing,
+.light-hero-sheet-front.ink-grabbing,
+.light-hero-sheet-back.ink-grabbing { filter: drop-shadow(0 16px 20px rgba(0,0,0,.2)); }
+
+/* Classic: an uneven, hand-inked pointer and restrained paper-like parallax. */
+html[data-theme="classic"] .ink-cursor-mark {
+  border-radius: 40% 60% 46% 54%;
+  border-width: 1.4px;
+}
+html[data-theme="classic"] .ink-trail-path { stroke-width: 2.2; }
+html[data-theme="classic"] .hero-art,
+html[data-theme="classic"] .project-art { transform-style: preserve-3d; }
+
+/* NothingOS: rigid reticle, precise white stroke and clean object manipulation. */
+html[data-theme="nothing"] .ink-cursor-mark {
+  width: 30px;
+  height: 30px;
+  border-radius: 0;
+  border-width: 1px;
+}
+html[data-theme="nothing"] .ink-cursor-slash {
+  width: 17px;
+  transform: translate(-50%,-50%);
+}
+html[data-theme="nothing"] .ink-trail-path {
+  stroke-width: 1;
+  filter: none;
+}
+html[data-theme="nothing"] .nothing-hero-ring,
+html[data-theme="nothing"] .nothing-hero-core,
+html[data-theme="nothing"] .nothing-hero-scan { transition: translate .12s steps(3,end); }
+
+/* Light Mode: gallery-card depth, softer graphite outline and paper movement. */
+html[data-theme="light"] .ink-cursor-mark {
+  border-radius: 50%;
+  border-color: #263b55;
+  color: #263b55;
+}
+html[data-theme="light"] .ink-trail-path {
+  stroke: #315d91;
+  stroke-width: 1.25;
+  filter: none;
+}
+html[data-theme="light"] .light-hero-sheet-front,
+html[data-theme="light"] .light-hero-sheet-back { transform-style: preserve-3d; }
+html[data-theme="light"] .book-shape.ink-grabbing,
+html[data-theme="light"] .light-hero-sheet-front.ink-grabbing,
+html[data-theme="light"] .light-hero-sheet-back.ink-grabbing {
+  box-shadow: 18px 24px 35px rgba(20,36,54,.22);
+}
+
+/* Remove decorative micro-captions that repeat information rather than help. */
+.theme-signature-rail,
+.hero-meta,
+.hero-foot,
+.section-topline,
+.learning-heading > p,
+.work-heading > p,
+.archive-heading > p,
+.archive-card-bottom > p,
+.learning-card-bottom,
+.stack-footnote,
+.repo-live-heading,
+.hero-meta .coordinates,
+.art-caption,
+.slop-brand-overline,
+.slop-brand-caption,
+.slop-panel-side,
+.slop-panel-top,
+.slop-panel-bottom,
+.project-art > span,
+.interlude-credit,
+.website-stack-visual-caption,
+.learning-note {
+  display: none !important;
+}
+.archive-card-top > span:not(.archive-brandmarks) { display: none !important; }
+.archive-card-top { justify-content: flex-end; }
+.archive-card-top img, .archive-card-top .archive-brandmarks { margin-right: auto; }
+.learning-card-top { display: none !important; }
+.learning-card-bottom { margin-top: 18px; }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .ink-interaction-layer { display: none; }
+  .ink-tilt-active { transition: none; }
+}

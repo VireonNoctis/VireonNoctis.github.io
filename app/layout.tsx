@@ -5,6 +5,7 @@ import "./themes/nothing.css";
 import "./themes/light.css";
 import "./themes/lunar.css";
 import "./theme-picker.css";
+import "./ink-interactions.css";
 import { ThemeProvider } from "./theme-system";
 
 export const metadata: Metadata = {

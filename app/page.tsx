@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { createPortal } from "react-dom";
 import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Code2, Github, Menu, Orbit, X } from "lucide-react";
-import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork, ThemeSignatureRail, ThemeSwitcher, useCurrentTheme } from "./theme-system";
+import { AnimatedNumber, InkInteractionLayer, NothingSystemStrip, ThemeHeroArtwork, ThemeSwitcher, useCurrentTheme } from "./theme-system";
 
 type Repo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; archived?: boolean; updated_at: string };
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
@@ -308,12 +308,11 @@ export default function Home() {
     }))),
   ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
-  return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
+  return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><InkInteractionLayer /><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
     <div className="atmosphere" aria-hidden="true"><div className="atmosphere-grid"/><motion.div className="aurora aurora-one" animate={reduce?{}:{x:[0,38,-18,0],y:[0,-22,16,0],rotate:[0,7,-4,0],scale:[1,1.08,.97,1]}} transition={{duration:25,repeat:Infinity,ease:"easeInOut"}}/><motion.div className="aurora aurora-two" animate={reduce?{}:{x:[0,-32,16,0],y:[0,20,-16,0],rotate:[0,-9,4,0]}} transition={{duration:31,repeat:Infinity,ease:"easeInOut"}}/><div className="grain"/></div>
     <header className="site-header"><a className="wordmark" href="#top" aria-label="Vireon — The Slop King, home" onClick={()=>setMenu(false)}><img className="wordmark-logo" src="/brands/vireon-mark.svg" alt="" width="42" height="42"/><span className="wordmark-copy"><strong>VIREON</strong><small>THE SLOP KING <span aria-hidden="true">👑</span></small></span></a><nav id="primary-navigation" className={menu?"navigation navigation-open":"navigation"} aria-label="Main navigation">{themeCopy.nav.map(([label,href],i)=><a key={href} href={href} onClick={()=>setMenu(false)}><span className="nav-index">0{i+1}</span>{label}</a>)}<a className="nav-contact" href="#contact" onClick={()=>setMenu(false)}>Get in touch <ArrowUpRight size={14}/></a></nav><ThemeSwitcher /><button className="menu-toggle" onClick={()=>setMenu(v=>!v)} aria-label={menu?"Close navigation":"Open navigation"} aria-controls="primary-navigation" aria-expanded={menu}>{menu?<X/>:<Menu/>}</button></header>
     <NothingSystemStrip />
-    <ThemeSignatureRail />
     <section className="hero section-shell" id="top"><span id="content-start" className="content-start" aria-hidden="true"/><div className="hero-meta"><Eyebrow>{themeCopy.heroMeta}</Eyebrow><span className="coordinates">{themeCopy.coordinatesTop}<br/>{themeCopy.coordinatesBottom}</span></div><div className="hero-main"><motion.div className="hero-copy" variants={sequence} initial="hidden" animate="show"><motion.p className="hero-kicker" variants={motionRise}>{themeCopy.kicker}</motion.p><motion.h1 variants={motionRise}>{themeCopy.lineOne}<br/>{themeCopy.lineTwo} <em>{themeCopy.emphasis}</em></motion.h1><motion.div className="hero-bottomline" variants={motionRise}><p>{themeCopy.description}</p><a className="round-link" href="#manifesto" aria-label="Discover the archive"><ArrowDownRight size={21}/></a></motion.div></motion.div><div className="hero-art editorial-index editorial-index-slop" role="group" aria-label="Vireon — The Slop King">
   <ThemeHeroArtwork />
   <div className="slop-card-aura" aria-hidden="true">
@@ -541,8 +540,9 @@ export default function Home() {
         {name:"PHP",logo:"php",kind:"LANGUAGE",status:"PLANNED" as const,note:"Server-side web development and the wider PHP ecosystem."},
         {name:"C#",logo:"csharp",kind:"LANGUAGE",status:"PLANNED" as const,note:"Modern application development across the .NET ecosystem."},
         {name:"Dart",logo:"dart",kind:"LANGUAGE",status:"PLANNED" as const,note:"A strongly typed language for cross-platform applications."},
+        {name:"Shell",logo:"terminal",kind:"LANGUAGE",status:"PLANNED" as const,note:"Command-line scripting, automation, and gluing tools together."},
       ].map((t,i)=><motion.button type="button" className="learning-card" key={t.name} aria-haspopup="dialog" aria-label={`Open ${t.name} details. Status: ${t.status}.`} onClick={()=>setSelectedTech({name:t.name,logo:t.logo,kind:"LEARNING",learningStatus:t.status,learningNote:t.note})} initial={reduce?false:{opacity:0,y:20}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.55,delay:i*.055}} whileHover={reduce?undefined:{y:-3}} whileTap={{scale:.99}}>
-        <div className="learning-card-top"><span className="learning-number">0{i+1} / 06</span><span className="learning-kind">{t.kind}</span></div>
+        <div className="learning-card-top"><span className="learning-number">{String(i+1).padStart(2,"0")} / 07</span><span className="learning-kind">{t.kind}</span></div>
         <div className="learning-brand"><span className="learning-logo"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><div><h3>{t.name}</h3><span>{t.status==="IN USE"?"IN ACTIVE USE":"ON THE LEARNING LIST"}</span></div></div>
         <p>{t.note}</p>
         <div className="learning-card-bottom"><span className="learning-pulse"/><span>{t.status==="IN USE"?"ACTIVE TOOLKIT":"UP NEXT"}</span><ArrowUpRight size={15}/></div>
