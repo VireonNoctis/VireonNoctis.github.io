@@ -281,8 +281,12 @@ html[data-theme="cinematic"] .theme-card.is-active { background:rgba(255,38,53,.
   html[data-theme="cinematic"] .website-stack-modules { grid-template-columns:minmax(0,1fr); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cinematic-comic-frame-back,
-  .cinematic-comic-frame-front,
-  .cinematic-ring-outer,
-  .cinematic-ring-inner { animation:none!important; }
+  .cinematic-scene,
+  .cinematic-scene *,
+  .cinematic-scene-controls button {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .cinematic-scene { transform: none; }
 }
