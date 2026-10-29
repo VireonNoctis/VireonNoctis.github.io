@@ -288,7 +288,7 @@ export default function Home() {
       logo: techLogosByName[area.stack] ?? "",
       kind: (area.stack === "Next.js" || area.stack === "React" ? "FRAMEWORK" : "LANGUAGE") as "FRAMEWORK" | "LANGUAGE",
     }))),
-  ].map((tech) => [tech.name.toLowerCase(), tech])).values());
+  ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
   return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
