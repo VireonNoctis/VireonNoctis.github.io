@@ -335,6 +335,194 @@ export function ThemeSignatureRail() {
   );
 }
 
+
+const INK_DRAGGABLE_SELECTOR = [
+  ".slop-orbit-dot",
+  ".slop-star",
+  ".orbit-point",
+  ".art-cross",
+  ".nothing-hero-ring",
+  ".nothing-hero-core",
+  ".nothing-hero-scan",
+  ".light-hero-sheet-front",
+  ".light-hero-sheet-back",
+  ".book-shape",
+  ".vinyl",
+  ".vinyl-label",
+  ".lunar-moon",
+  ".lunar-ring",
+].join(", ");
+
+export function InkInteractionLayer() {
+  const reduceMotion = useReducedMotion();
+  const trailRef = useRef<SVGPathElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (reduceMotion || !window.matchMedia("(pointer: fine)").matches) return;
+    const trail = trailRef.current;
+    const cursor = cursorRef.current;
+    if (!trail || !cursor) return;
+
+    const points: Array<{ x: number; y: number; at: number }> = [];
+    let frame = 0;
+    let lastMoveAt = 0;
+    let tiltTarget: HTMLElement | null = null;
+    let drag: {
+      element: HTMLElement;
+      pointerId: number;
+      startX: number;
+      startY: number;
+      baseX: number;
+      baseY: number;
+    } | null = null;
+
+    const drawTrail = () => {
+      const now = performance.now();
+      while (points.length > 0 && now - points[0].at > 360) points.shift();
+
+      if (points.length > 1) {
+        let path = "M " + points[0].x.toFixed(1) + " " + points[0].y.toFixed(1);
+        for (let index = 1; index < points.length; index += 1) {
+          const point = points[index];
+          if (!point) continue;
+          path += " L " + point.x.toFixed(1) + " " + point.y.toFixed(1);
+        }
+        trail.setAttribute("d", path);
+        trail.style.opacity = String(Math.max(0, 0.58 * (1 - (now - lastMoveAt) / 360)));
+      } else {
+        trail.setAttribute("d", "");
+        trail.style.opacity = "0";
+      }
+
+      if (points.length > 1 && now - lastMoveAt < 360) {
+        frame = window.requestAnimationFrame(drawTrail);
+      } else {
+        frame = 0;
+      }
+    };
+
+    const readTranslate = (element: HTMLElement) => {
+      const raw = getComputedStyle(element).translate;
+      if (!raw || raw === "none") return { x: 0, y: 0 };
+      const parts = raw.split(/\s+/);
+      return {
+        x: Number.parseFloat(parts[0] ?? "0") || 0,
+        y: Number.parseFloat(parts[1] ?? "0") || 0,
+      };
+    };
+
+    const clearTilt = () => {
+      if (!tiltTarget) return;
+      tiltTarget.style.removeProperty("transform");
+      tiltTarget.style.removeProperty("transform-origin");
+      tiltTarget.classList.remove("ink-tilt-active");
+      tiltTarget = null;
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
+      const x = event.clientX;
+      const y = event.clientY;
+      cursor.style.transform = "translate3d(" + x + "px," + y + "px,0) translate(-50%,-50%)";
+      cursor.classList.add("is-visible");
+
+      const now = performance.now();
+      points.push({ x, y, at: now });
+      while (points.length > 20) points.shift();
+      lastMoveAt = now;
+      if (!frame) frame = window.requestAnimationFrame(drawTrail);
+
+      if (drag && drag.pointerId === event.pointerId) {
+        drag.element.style.translate = (drag.baseX + x - drag.startX) + "px " + (drag.baseY + y - drag.startY) + "px";
+        cursor.classList.add("is-grabbing");
+        return;
+      }
+
+      const target = event.target instanceof Element
+        ? event.target.closest<HTMLElement>(".hero-art, .project-art")
+        : null;
+      if (target !== tiltTarget) {
+        clearTilt();
+        tiltTarget = target;
+      }
+
+      if (target) {
+        const bounds = target.getBoundingClientRect();
+        const offsetX = Math.max(-1, Math.min(1, ((x - bounds.left) / Math.max(1, bounds.width)) * 2 - 1));
+        const offsetY = Math.max(-1, Math.min(1, ((y - bounds.top) / Math.max(1, bounds.height)) * 2 - 1));
+        target.style.transformOrigin = (50 + offsetX * 18) + "% " + (50 + offsetY * 18) + "%";
+        target.style.transform = "perspective(1100px) rotateX(" + (-offsetY * 2.2).toFixed(2) + "deg) rotateY(" + (offsetX * 3).toFixed(2) + "deg)";
+        target.classList.add("ink-tilt-active");
+      }
+    };
+
+    const onDown = (event: PointerEvent) => {
+      if (event.button !== 0 || event.pointerType !== "mouse" || !(event.target instanceof Element)) return;
+      const element = event.target.closest<HTMLElement>(INK_DRAGGABLE_SELECTOR);
+      if (!element) return;
+      event.preventDefault();
+      const offset = readTranslate(element);
+      drag = {
+        element,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        baseX: offset.x,
+        baseY: offset.y,
+      };
+      element.classList.add("ink-grabbing");
+      cursor.classList.add("is-grabbing");
+      document.documentElement.setAttribute("data-ink-grabbed", "true");
+    };
+
+    const endDrag = (event?: PointerEvent) => {
+      if (drag && (!event || drag.pointerId === event.pointerId)) drag.element.classList.remove("ink-grabbing");
+      if (event && drag && drag.pointerId !== event.pointerId) return;
+      drag = null;
+      cursor.classList.remove("is-grabbing");
+      document.documentElement.removeAttribute("data-ink-grabbed");
+    };
+
+    const onOut = (event: PointerEvent) => {
+      if (event.relatedTarget !== null) return;
+      cursor.classList.remove("is-visible");
+      clearTilt();
+    };
+
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerdown", onDown);
+    window.addEventListener("pointerup", endDrag);
+    window.addEventListener("pointercancel", endDrag);
+    window.addEventListener("pointerout", onOut);
+
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerdown", onDown);
+      window.removeEventListener("pointerup", endDrag);
+      window.removeEventListener("pointercancel", endDrag);
+      window.removeEventListener("pointerout", onOut);
+      if (frame) window.cancelAnimationFrame(frame);
+      clearTilt();
+      endDrag();
+      cursor.classList.remove("is-visible");
+      trail.removeAttribute("d");
+    };
+  }, [reduceMotion]);
+
+  return (
+    <div className="ink-interaction-layer" aria-hidden="true">
+      <svg className="ink-interaction-trail" focusable="false" aria-hidden="true">
+        <path ref={trailRef} className="ink-trail-path" d="" />
+      </svg>
+      <div ref={cursorRef} className="ink-cursor-mark">
+        <span className="ink-cursor-center" />
+        <span className="ink-cursor-slash" />
+      </div>
+    </div>
+  );
+}
+
 export function useCurrentTheme() {
   return useThemeContext().theme;
 }
