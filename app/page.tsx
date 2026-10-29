@@ -492,7 +492,7 @@ export default function Home() {
                   <div className="tech-modal-estimate-list">
                     {selectedEstimateAreas.map(({ project, area }) => (
                       <a className="tech-modal-estimate" href={project.url} key={`${project.id}-${area.name}`} target="_blank" rel="noreferrer">
-                        <span className="tech-modal-estimate-project"><strong>{project.name}</strong><small>{area.name} · {area.stack}</small></span>
+                        <span className="tech-modal-estimate-project"><strong>{project.name}</strong><small>{area.name} · {area.stack} · {area.estimatedCharactersPerLine ?? LUNAR_X_CHARACTERS_PER_LINE[area.stack.trim()] ?? "—"} chars/line</small></span>
                         <span className="tech-modal-estimate-lines">
                           <strong><AnimatedNumber value={area.lines}/></strong><small>reported lines</small>
                           <strong>≈ <AnimatedNumber value={estimateProjectCharacters(area) ?? 0}/></strong><small>estimated characters</small>
