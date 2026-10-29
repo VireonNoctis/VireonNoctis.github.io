@@ -211,3 +211,14 @@
   .signal-live i,
   .genre-row > div > i { animation: none !important; }
 }
+
+/* Keep future-stack character estimates inside each existing learning card. */
+.learning-card-estimate {
+  display: block;
+  margin-top: 8px;
+  color: var(--theme-accent, #ff2635);
+  font: 600 9px/1.55 var(--mono);
+  letter-spacing: .015em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}

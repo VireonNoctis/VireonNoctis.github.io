@@ -546,7 +546,7 @@ export default function Home() {
       ].map((t,i)=><motion.button type="button" className="learning-card" key={t.name} aria-haspopup="dialog" aria-label={`Open ${t.name} details. Status: ${t.status}.`} onClick={()=>setSelectedTech({name:t.name,logo:t.logo,kind:"LEARNING",learningStatus:t.status,learningNote:t.note})} initial={reduce?false:{opacity:0,y:20}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.55,delay:i*.055}} whileHover={reduce?undefined:{y:-3}} whileTap={{scale:.99}}>
         <div className="learning-card-top"><span className="learning-number">{String(i+1).padStart(2,"0")} / 09</span><span className="learning-kind">{t.kind}</span></div>
         <div className="learning-brand"><span className="learning-logo"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><div><h3>{t.name}</h3><span>{t.status==="IN USE"?"IN ACTIVE USE":"ON THE LEARNING LIST"}</span></div></div>
-        <p>{t.note}</p>
+        <p>{t.note}{t.name === "WebGL" && <span className="learning-card-estimate">Lunar X estimate · 20,657 lines · ≈ 1,239,420 characters</span>}{t.name === "Three.js" && <span className="learning-card-estimate">Lunar X estimate · 18,685 lines · ≈ 1,121,100 characters</span>}</p>
         <div className="learning-card-bottom"><span className="learning-pulse"/><span>{t.status==="IN USE"?"ACTIVE TOOLKIT":"UP NEXT"}</span><ArrowUpRight size={15}/></div>
       </motion.button>)}
     </div><div className="learning-note"><span>VN / FIELD NOTES</span><p>Open any tile for its role and status in the current toolkit or future plans.</p></div></section>
