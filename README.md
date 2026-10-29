@@ -1,126 +1,58 @@
-# Vireon Noctis
+# Vireon Noctis — Personal Website
 
 <p align="center">
-  <strong>A personal digital universe for software, stories, sound, and experiments.</strong>
-  <br />
-  Built with care. Styled with intent. Kept in motion.
-</p>
-
-<p align="center">
-  <a href="https://vireonnoctis.github.io/"><strong>Visit the website ↗</strong></a>
-  ·
-  <a href="https://github.com/VireonNoctis">GitHub</a>
-  ·
-  <a href="https://anilist.co/user/Vireon">AniList</a>
-  ·
+  <strong>A personal digital archive for software, anime, music, and experiments.</strong><br/>
+  <a href="https://vireonnoctis.github.io/">Visit the live site ↗</a> ·
+  <a href="https://github.com/VireonNoctis">GitHub</a> ·
+  <a href="https://anilist.co/user/Vireon">AniList</a> ·
   <a href="https://last.fm/user/reasfeetadmirer">Last.fm</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/VireonNoctis/VireonNoctis.github.io/actions/workflows/pages.yml"><img alt="Website build and deployment" src="https://github.com/VireonNoctis/VireonNoctis.github.io/actions/workflows/pages.yml/badge.svg?branch=main" /></a>
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-15-000000?logo=nextdotjs&logoColor=white" />
-  <img alt="React" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" />
-  <img alt="Rust" src="https://img.shields.io/badge/Rust-companion%20API-DEA584?logo=rust&logoColor=black" />
-  <img alt="License" src="https://img.shields.io/badge/license-All%20Rights%20Reserved-8A2635" />
+  <a href="https://github.com/VireonNoctis/VireonNoctis.github.io/actions/workflows/pages.yml"><img alt="GitHub Pages build" src="https://github.com/VireonNoctis/VireonNoctis.github.io/actions/workflows/pages.yml/badge.svg?branch=main"/></a>
+  <img alt="Next.js 15" src="https://img.shields.io/badge/Next.js-15-000000?logo=nextdotjs&logoColor=white"/>
+  <img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white"/>
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white"/>
+  <img alt="Rust API" src="https://img.shields.io/badge/Rust-Axum%20companion-DEA584?logo=rust&logoColor=black"/>
 </p>
 
----
+## What the site does
 
-## About
+- **Projects and profiles:** curated project links alongside live GitHub, AniList, Last.fm, and optional Spotify data.
+- **Selectable themes:** Vireon Classic, NothingOS, and Light Mode. NothingOS uses a strict monochrome system with Unicode/Braille details and animated numeric readouts.
+- **Language explorer:** select a language tile to open a modal with tracked lines, files, characters, words, and repository breakdowns. The language mark animates into the modal.
+- **Lunar X estimates:** Lunar X is included in the main line totals for matching language/framework profiles even though no public scannable repository is available.
+- **Static deployment:** Next.js exports the site for GitHub Pages; the optional Rust API is deployed separately.
 
-**Vireon Noctis** is the personal website and digital archive of Vireon. It brings projects, development tools, media profiles, listening status, and current interests into one responsive, animated interface.
+## Lunar X — supplied project stats
 
-This is more than a static portfolio layout. It is a small design system with selectable visual identities, reusable motion patterns, a TypeScript-powered frontend, and an optional Rust companion service for API work.
+These estimates are part of the website's clickable language statistics. They are not repository-scanned counts.
 
-## At a glance
+| Project area | Stack | Reported lines |
+| --- | --- | ---: |
+| Backend | Rust | 265,856 |
+| Frontend | Next.js | 309,274 |
+| Gacha games | React | 40,751 |
+| Scraping and other tools | Python | 20,865 |
+| **Reported total** | | **636,746** |
 
-- **Projects:** Lemegeton, PrivaCage, Lunar X, and personal tools.
-- **Toolkit:** programming languages, frameworks, databases, editors, and terminal workflows.
-- **Profiles and media:** GitHub, AniList, Last.fm, Spotify, Discord, and related destinations.
-- **Theme selector:** eight design systems, with a first-visit picker and a persistent top-bar switcher.
-- **Live listening:** an optional Spotify snapshot refreshed by a scheduled Rust helper running in GitHub Actions.
-- **Deployment:** a Next.js static export served through GitHub Pages.
-- **Companion service:** a separate Rust/Axum API that can be hosted on a Rust-capable platform.
+The explorer adds each estimate to its matching scanned language count when available. Unprovided file, character, word, and non-blank-line totals are not inferred.
 
-## The eight design systems
+## Website stack
 
-Themes are intentionally different in layout, type, materials, information hierarchy, and motion. They are not a single page recoloured eight times.
-
-| Theme | Design language |
+| Layer | What it does |
 | --- | --- |
-| **Vireon Classic** | The original dark editorial identity, preserved as the baseline. |
-| **Nothing × Proton** | Strict monochrome, dot-matrix texture, Unicode/Braille signals, sharp modules, and rolling numeric readouts. |
-| **Liquid Glass** | Apple-inspired floating controls, translucent chrome, soft edge highlights, and a crisp content canvas. |
-| **Dimensional 3D** | CSS perspective, a rotating six-face cube, a shaded sphere, orbital geometry, and layered depth. |
-| **Light** | A bright gallery cover, architectural spacing, restrained blue-gray accents, and clear project groupings. |
-| **Universe / Space** | A star atlas, planet artwork, orbital geometry, and observatory-style telemetry. |
-| **Editorial Paper** | Warm paper texture, serif hierarchy, print-inspired details, and a magazine-like project spread. |
-| **Lunar** | Near-black surfaces, white type, indigo brand light, and clipped ghost-text glitch effects inspired by my Animanga/novel Website. |
+| Next.js + React | Pages, components, and site layout. |
+| TypeScript | Interactive state, public-data parsing, and safer UI changes. |
+| CSS | Responsive design and theme-specific visual systems. |
+| Framer Motion | Scroll reveals, counters, transitions, and shared-logo modal animation. |
+| Lucide React | Interface iconography. |
+| GitHub Actions + Pages | Type-checking, static export, and deployment. |
+| Rust + Axum | Optional companion API and scheduled Spotify snapshot helper. |
 
-Choose a theme when the site first opens, then switch at any time using the **Theme** control in the top bar. Theme styling lives in individual CSS files so each visual system can evolve independently.
+## Run locally
 
-## Technology
-
-### Frontend
-
-- **Next.js App Router** and **React** for the page structure and components.
-- **TypeScript** for application logic and static type checking.
-- **CSS** for layout, responsive rules, theme-specific visual systems, and custom effects.
-- **Framer Motion** for transitions, entrance effects, and carefully controlled animations.
-- **Lucide React** for interface icons.
-- **GitHub Pages** for static hosting and GitHub Actions for validation and deployment.
-
-### Rust companion
-
-The optional Rust workspace uses **Axum**, **Tokio**, **Reqwest**, **Serde**, and **Serde JSON** for HTTP routes and external-data handling. It also contains the command-line helpers used by the Spotify listening-status workflow.
-
-The frontend does **not** require the API to run locally. GitHub Pages serves the exported frontend only; the API must be deployed separately if you want to expose it as a public service.
-
-## Repository map
-
-```text
-.
-├── app/
-│   ├── page.tsx                    # Main website experience
-│   ├── layout.tsx                  # Root layout, metadata, provider and CSS imports
-│   ├── theme-system.tsx            # Theme catalog, theme picker and top-bar switcher
-│   ├── globals.css                 # Global foundations and shared layout
-│   ├── themes.css                  # Shared theme controls and preview primitives
-│   └── themes/
-│       ├── nothing.css             # Nothing × Proton
-│       ├── liquid-glass.css        # Liquid Glass
-│       ├── dimensional-3d.css      # Dimensional 3D
-│       ├── light.css               # Light
-│       ├── universe.css            # Universe / Space
-│       ├── paper.css               # Editorial Paper
-│       └── lunar.css               # Lunar
-├── backend/
-│   ├── src/main.rs                 # Rust/Axum companion API
-│   └── src/bin/
-│       ├── spotify_auth.rs         # One-time Spotify authorization helper
-│       └── spotify_now_playing.rs  # Scheduled listening-state helper
-├── public/
-│   ├── brands/                     # Brand marks and technology logos
-│   └── spotify-now-playing.json   # Public playback snapshot
-├── config/icons/                   # Source icon assets
-├── .github/workflows/
-│   ├── pages.yml                   # Type-check, export and GitHub Pages deployment
-│   └── spotify-now-playing.yml     # Scheduled Spotify snapshot refresh
-├── next.config.ts
-├── package.json
-├── LICENSE                         # Repository-wide proprietary license
-└── README.md
-```
-
-## Run the website locally
-
-### Requirements
-
-- **Node.js 20 or newer**
-- npm (included with Node.js)
-
-### Install and start
+**Requirements:** Node.js 20+ and npm.
 
 ```bash
 npm install
@@ -129,107 +61,56 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-### Available scripts
-
 | Command | Purpose |
 | --- | --- |
-| `npm run dev` | Start the local Next.js development server. |
-| `npm run lint` | Run TypeScript validation with `tsc --noEmit`. |
+| `npm run dev` | Start the development server. |
+| `npm run lint` | TypeScript validation. |
 | `npm run build` | Build the production static export into `out/`. |
 
-To verify a production export locally:
+Run `npm run lint` and `npm run build` before submitting a change. Pull requests run both checks; only non-PR deployment runs publish the site.
 
-```bash
-npm run lint
-npm run build
-```
+## Companion API
 
-The exported site is written to `out/`; the GitHub Pages workflow checks that `out/index.html` exists.
-
-## Spotify listening-status integration
-
-GitHub Pages is static, so the browser must not receive Spotify client secrets or a refresh token. The site therefore reads a public JSON playback snapshot produced by a scheduled Rust helper.
-
-The workflow runs every five minutes, updates `public/spotify-now-playing.json` when the playback state changes, and triggers a Pages deployment for changed data. It exits without changing the snapshot if the required secrets are missing.
-
-### One-time setup
-
-1. Create an app in the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-2. Add this exact redirect URI to the app settings: `http://127.0.0.1:8888/callback`.
-3. On your own computer, set `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` as local environment variables.
-4. Run the Rust authorization helper:
-
-   ```bash
-   cargo run --manifest-path backend/Cargo.toml --bin spotify-auth
-   ```
-
-5. Follow the printed authorization URL, approve the requested `user-read-currently-playing` permission, and copy the refresh token printed by the local helper.
-6. In **GitHub → Settings → Secrets and variables → Actions**, create these repository secrets:
-   - `SPOTIFY_CLIENT_ID`
-   - `SPOTIFY_CLIENT_SECRET`
-   - `SPOTIFY_REFRESH_TOKEN`
-7. Run **Actions → Refresh Spotify listening status → Run workflow** once to test the integration. The scheduled job then handles later refreshes.
-
-The authorization helper binds to `127.0.0.1`; keep the credentials and token private. Do not place them in source files, commits, or frontend environment variables. Spotify Development Mode may enforce account or endpoint restrictions; check the [official authorization guide](https://developer.spotify.com/documentation/web-api/concepts/authorization) and [currently-playing endpoint documentation](https://developer.spotify.com/documentation/web-api/reference/get-the-users-currently-playing-track) if requests are denied.
-
-## Rust companion API
-
-### Requirements
-
-- Rust stable toolchain
-- Cargo
-
-### Run and test
+The Rust application lives in `backend/` and can be tested or started with:
 
 ```bash
 cargo test --manifest-path backend/Cargo.toml
 cargo run --manifest-path backend/Cargo.toml
 ```
 
-By default, the API listens on `0.0.0.0:8080`. Override `HOST` and `PORT` for a different bind address.
-
-### Routes
+It listens on `HOST:PORT` (defaults to `0.0.0.0:8080`) and exposes:
 
 | Method | Route | Purpose |
 | --- | --- | --- |
-| `GET` | `/health` | Reports whether the service is responding. |
-| `GET` | `/api/v1/site` | Returns service metadata and integration names. |
-| `GET` | `/api/v1/archive` | Attempts to retrieve public GitHub, AniList, and Lunar X data and reports the Last.fm key configuration state. |
+| GET | `/health` | Service health. |
+| GET | `/api/v1/site` | Site and integration metadata. |
+| GET | `/api/v1/archive` | Best-effort GitHub, AniList, Lunar X, and Last.fm configuration data. |
 
-External services can fail or limit requests. The archive endpoint may therefore return partial data; it is not a guarantee that every provider is reachable or configured. Last.fm data requires a valid `LASTFM_API_KEY` wherever that integration is enabled.
+The archive response may be partial when an external provider is unavailable. GitHub Pages does not run this API; deploy it separately on Rust-capable infrastructure.
 
-GitHub Pages does not host this API. Deploy it independently on infrastructure that supports Rust, then configure the frontend or clients to use the API URL as appropriate.
+## Spotify snapshot
 
-## Deployment
+The site reads `public/spotify-now-playing.json`. A scheduled GitHub Actions workflow runs the Rust helper every five minutes and commits changed playback metadata. Spotify credentials must stay in local environment variables or repository Actions secrets and must never be placed in frontend code or the public JSON file.
 
-The `.github/workflows/pages.yml` workflow validates the TypeScript, builds the static website, checks the export entry point, and deploys the `out/` directory to GitHub Pages when triggered by the main branch workflow.
+To enable the workflow, add `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, and `SPOTIFY_REFRESH_TOKEN` as repository Actions secrets, then run **Actions → Refresh Spotify listening status** once. The local authorization helper is `cargo run --manifest-path backend/Cargo.toml --bin spotify-auth`; use the redirect URI `http://127.0.0.1:8888/callback` in your Spotify app settings.
 
-To enable deployment:
+## Key files
 
-1. Open the repository's **Settings → Pages**.
-2. Set **Build and deployment → Source** to **GitHub Actions**.
-3. Push a commit to `main`, or run the **Build and deploy Vireon Noctis** workflow manually.
+```text
+app/page.tsx                    Main site and language modal
+app/theme-system.tsx             Theme catalog, picker, and switcher
+app/globals.css                  Shared layout and global styles
+app/themes.css                   Shared components and language-modal styles
+app/themes/                      Theme-specific CSS
+backend/src/main.rs              Rust/Axum API
+backend/src/bin/                 Spotify helper binaries
+public/brands/                   Technology and brand marks
+public/spotify-now-playing.json  Public playback snapshot
+.github/workflows/pages.yml      Type-check, export, and Pages deployment
+.github/workflows/spotify-now-playing.yml
+                                Scheduled Spotify snapshot refresh
+```
 
-Pull requests run validation and the static export build but do not deploy the website.
+## License
 
-## External services and assets
-
-The website links to or may consume public data from external platforms, including GitHub, AniList, Last.fm, Spotify, Lunar X, and Discord. Their availability, APIs, branding, terms, and content are controlled by their respective providers. The use of a brand name or logo does not imply sponsorship or endorsement.
-
-Spotify credentials must only exist in local environment variables or GitHub Actions secrets. Any public JSON snapshot should contain playback metadata only, never authorization credentials.
-
-## Copyright and license
-
-**© 2026 VireonNoctis. All rights reserved.**
-
-This repository is published for public visibility, but it is **not offered under an open-source license**. The original source code, styles, theme implementations, layout compositions, project-specific assets, and documentation are proprietary. No general permission is granted to copy, modify, redistribute, sublicense, or create derivative works without prior written permission, subject to the limited rights necessary to access the repository through GitHub and any rights that cannot be excluded by law.
-
-Third-party dependencies, trademarks, logos, provider content, and other materials not owned by VireonNoctis remain subject to their respective owners' terms and licenses.
-
-See [LICENSE](LICENSE) for the full notice. The Rust crate's package metadata also points to its included proprietary license file so it does not advertise an MIT license.
-
----
-
-<p align="center">
-  <sub>Made in the quiet hours. Kept in motion.</sub>
-</p>
+© 2026 VireonNoctis. All rights reserved. This repository is published for visibility and is not offered under an open-source license. See [LICENSE](LICENSE); third-party dependencies and trademarks remain subject to their owners' terms.
