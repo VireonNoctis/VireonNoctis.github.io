@@ -10,7 +10,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import { createPortal } from "react-dom";
 import { ArrowRight, Check, Palette, X } from "lucide-react";
 
@@ -216,11 +216,13 @@ export function AnimatedNumber({
   suffix?: string;
 }) {
   const reduceMotion = useReducedMotion();
+  const numberRef = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(numberRef, { once: true, amount: 0.25 });
   const [displayed, setDisplayed] = useState(0);
   const current = useRef(0);
 
   useEffect(() => {
-    if (!Number.isFinite(value)) return;
+    if (!Number.isFinite(value) || !isInView) return;
     if (reduceMotion || current.current === value) {
       current.current = value;
       setDisplayed(value);
@@ -248,7 +250,7 @@ export function AnimatedNumber({
 
     frame = window.requestAnimationFrame(tick);
     return () => window.cancelAnimationFrame(frame);
-  }, [value, duration, reduceMotion]);
+  }, [value, duration, reduceMotion, isInView]);
 
   const formatter = useMemo(
     () => new Intl.NumberFormat("en-US", {
@@ -261,6 +263,7 @@ export function AnimatedNumber({
 
   return (
     <span
+      ref={numberRef}
       className="animated-number"
       aria-label={`${prefix}${targetText}${suffix}`}
       aria-live="off"
