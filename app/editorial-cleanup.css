@@ -1,0 +1,20 @@
+/* Remove repeated decorative micro-copy, while preserving useful section headings and descriptions. */
+.theme-signature-rail,
+.hero-meta .coordinates,
+.art-caption,
+.slop-brand-overline,
+.slop-brand-caption,
+.slop-panel-side,
+.slop-panel-top,
+.slop-panel-bottom,
+.project-art > span,
+.interlude-credit,
+.website-stack-visual-caption,
+.learning-note,
+.learning-card-top,
+.archive-card-top > span:not(.archive-brandmarks) {
+  display: none !important;
+}
+.archive-card-top { justify-content: flex-end; }
+.archive-card-top img,
+.archive-card-top .archive-brandmarks { margin-right: auto; }

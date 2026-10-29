@@ -59,7 +59,7 @@
   transition: background .2s, border-color .2s, transform .2s;
 }
 .theme-picker-close:hover { border-color: var(--theme-accent); background: var(--theme-accent-soft); transform: rotate(4deg); }
-.theme-picker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.theme-picker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 185px), 1fr)); gap: 12px; }
 .theme-card {
   position: relative;
   display: flex;

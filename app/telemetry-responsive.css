@@ -1,0 +1,213 @@
+/* Readable telemetry and hard bounds for long language counts on all widths. */
+.signal-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+  align-items: start;
+  gap: clamp(28px, 3.5vw, 48px);
+}
+.signal-panel,
+.anilist-detail,
+.lastfm-detail,
+.project-language-explorer,
+.project-language-grid,
+.project-language-tile,
+.tech-modal,
+.tech-modal-section,
+.tech-modal-estimate,
+.tech-modal-estimate-project,
+.tech-modal-estimate-lines,
+.deep-stats,
+.deep-stats > div,
+.deep-stats strong,
+.genre-columns,
+.genre-columns > div {
+  min-width: 0;
+  max-width: 100%;
+}
+.deep-stats {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+}
+.deep-stats > div {
+  padding: clamp(14px, 1.7vw, 22px);
+  overflow: hidden;
+}
+.deep-stats span,
+.discord-metrics > div > span {
+  min-height: 2.6em;
+  font-size: clamp(9px, .72vw, 11px);
+  line-height: 1.5;
+  letter-spacing: .045em;
+  overflow-wrap: anywhere;
+}
+.deep-stats strong {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 3px;
+  font-size: clamp(26px, 2.7vw, 38px);
+  line-height: 1.08;
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.deep-stats strong .animated-number,
+.deep-stat-value .animated-number,
+.deep-stat-value {
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.deep-stats strong.deep-stat-score {
+  flex-wrap: nowrap;
+  gap: 5px;
+  white-space: nowrap;
+}
+.deep-stat-score .deep-stat-value {
+  flex: 0 1 auto;
+  font-size: inherit;
+  letter-spacing: inherit;
+}
+.deep-stat-score > small {
+  display: inline-block;
+  flex: 0 0 auto;
+  font: 500 clamp(11px, 1vw, 14px)/1.2 var(--mono);
+  letter-spacing: 0;
+  color: var(--muted);
+}
+.genre-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(12px, 2vw, 22px);
+}
+.genre-columns > div { overflow: hidden; }
+.genre-row {
+  grid-template-columns: minmax(0, 1.2fr) minmax(30px, 1fr) minmax(24px, auto);
+  gap: 8px;
+  font-size: 11px;
+}
+.genre-row > span { min-width: 0; }
+.genre-row small { font-size: 10px; }
+
+.project-language-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+}
+.project-language-tile {
+  grid-template-columns: 28px minmax(0, 1fr) minmax(0, 9ch);
+  gap: 6px 10px;
+  padding: 16px clamp(12px, 1.25vw, 18px);
+}
+.project-language-logo {
+  width: 28px;
+  height: 28px;
+}
+.project-language-logo > img {
+  max-width: 25px;
+  max-height: 25px;
+}
+.project-language-copy { overflow: hidden; }
+.project-language-copy > strong {
+  font-size: 13px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+.project-language-copy > small {
+  font-size: 9px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.project-language-lines {
+  grid-column: 3;
+  grid-row: 1 / span 2;
+  align-self: center;
+  max-width: 100%;
+  overflow: hidden;
+}
+.project-language-lines > strong {
+  display: block;
+  max-width: 100%;
+  font-size: clamp(9px, .8vw, 12px);
+  line-height: 1.25;
+  letter-spacing: -.045em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+.project-language-lines > small { font-size: 9px; }
+
+.tech-modal-estimate,
+.tech-modal-repository {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 37%) 16px;
+  gap: clamp(7px, 1vw, 14px);
+}
+.tech-modal-estimate-lines,
+.tech-modal-repository-stats {
+  min-width: 0;
+  max-width: 100%;
+}
+.tech-modal-estimate-lines > strong,
+.tech-modal-repository-stats > strong {
+  max-width: 100%;
+  font-size: clamp(10px, 1vw, 13px);
+  line-height: 1.3;
+  letter-spacing: -.045em;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  font-variant-numeric: tabular-nums;
+}
+.tech-modal-estimate-project > small,
+.tech-modal-repository-copy > small {
+  font-size: 9px;
+  line-height: 1.5;
+}
+@media (max-width: 760px) {
+  .signal-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .deep-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .deep-stats > div { padding: 14px 12px; }
+  .deep-stats strong { font-size: clamp(25px, 6.7vw, 34px); }
+  .deep-stats span,
+  .discord-metrics > div > span { font-size: 10px; }
+  .genre-columns { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+  .genre-row { grid-template-columns: minmax(0, 1.3fr) minmax(40px, 1fr) auto; font-size: 12px; }
+  .genre-row small { font-size: 10px; }
+  .project-language-grid { grid-template-columns: minmax(0, 1fr); }
+  .project-language-tile { grid-template-columns: 30px minmax(0, 1fr) minmax(0, 9ch); }
+  .project-language-lines > strong { font-size: 11px; }
+  .tech-modal-estimate,
+  .tech-modal-repository { grid-template-columns: minmax(0, 1fr); gap: 9px; }
+  .tech-modal-estimate > svg,
+  .tech-modal-repository > svg { display: none; }
+  .tech-modal-estimate-lines,
+  .tech-modal-repository-stats {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: baseline;
+    gap: 3px 12px;
+    text-align: left;
+  }
+  .tech-modal-estimate-lines > strong,
+  .tech-modal-repository-stats > strong { font-size: 13px; }
+}
+@media (max-width: 390px) {
+  .deep-stats > div { padding: 12px 9px; }
+  .deep-stats strong { font-size: 25px; }
+  .deep-stats strong.deep-stat-score { gap: 3px; }
+  .deep-stat-score > small { font-size: 10px; }
+  .project-language-tile { grid-template-columns: 24px minmax(0, 1fr) minmax(0, 8ch); gap: 5px 7px; padding: 13px 8px; }
+  .project-language-copy > strong { font-size: 12px; }
+  .project-language-copy > small { font-size: 8px; }
+  .project-language-lines > strong { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .signal-panel:before,
+  .signal-live i,
+  .genre-row > div > i { animation: none !important; }
+}
