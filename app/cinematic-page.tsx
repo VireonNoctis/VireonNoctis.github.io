@@ -51,7 +51,6 @@ const chapters: { id: string; label: string; number: string; scene: SceneKind }[
 ];
 
 function CinematicIllustration({ scene }: { scene: SceneKind }) {
-  const prefix = "ink-" + scene;
   const hatching = "url(#hatch-" + scene + ")";
   const stripes = "url(#stripes-" + scene + ")";
   return (
