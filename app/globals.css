@@ -348,10 +348,10 @@ button, [role="button"], a { overflow-wrap: anywhere; }
 .learning-heading h2 em{font-family:Georgia,serif;font-weight:400;color:#a9c9e8}
 .learning-heading>p{max-width:390px;margin:0 0 5px;color:#929cab;font-size:13px;line-height:1.95}
 .learning-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.learning-card{position:relative;display:flex;flex-direction:column;min-width:0;min-height:242px;padding:22px;border:1px solid rgba(169,201,232,.16);background:linear-gradient(145deg,rgba(169,201,232,.055),rgba(12,16,24,.48) 56%,rgba(7,10,16,.6));overflow:hidden;transition:border-color .25s,transform .25s,background .25s}
+.learning-card{appearance:none;width:100%;position:relative;display:flex;flex-direction:column;min-width:0;min-height:242px;padding:22px;border:1px solid rgba(169,201,232,.16);font:inherit;text-align:left;color:inherit;cursor:pointer;background:linear-gradient(145deg,rgba(169,201,232,.055),rgba(12,16,24,.48) 56%,rgba(7,10,16,.6));overflow:hidden;transition:border-color .25s,transform .25s,background .25s}
 .learning-card:before{content:"";position:absolute;left:0;top:0;width:42px;height:1px;background:#a9c9e8;box-shadow:0 0 16px rgba(169,201,232,.4);opacity:.65}
 .learning-card:after{content:"";position:absolute;right:-35px;top:-45px;width:100px;height:100px;border:1px solid rgba(169,201,232,.09);border-radius:50%;box-shadow:0 0 0 15px rgba(169,201,232,.018),0 0 0 31px rgba(169,201,232,.012);pointer-events:none}
-.learning-card:hover{transform:translateY(-3px);border-color:rgba(169,201,232,.4);background:linear-gradient(145deg,rgba(169,201,232,.09),rgba(12,16,24,.55) 56%,rgba(7,10,16,.7))}
+.learning-card:hover{transform:translateY(-3px);border-color:rgba(169,201,232,.4);background:linear-gradient(145deg,rgba(169,201,232,.09),rgba(12,16,24,.55) 56%,rgba(7,10,16,.7))}.learning-card:focus-visible{outline:2px solid #a9c9e8;outline-offset:3px}
 .learning-card-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
 .learning-number,.learning-kind{font:8px var(--mono);letter-spacing:.09em;color:#8095aa}
 .learning-kind{padding:6px 7px;border:1px solid rgba(169,201,232,.15);color:#a9c9e8}
