@@ -52,10 +52,14 @@
   word-break: normal;
 }
 .deep-stats strong .animated-number,
+.deep-stat-value .animated-number,
 .deep-stat-value {
   display: inline-block;
   min-width: 0;
   max-width: 100%;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
