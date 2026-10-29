@@ -107,7 +107,7 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const [menu, setMenu] = useState(false);
-  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "FORMAT" | "WORKFLOW" } | null>(null);
+  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "FORMAT" | "WORKFLOW" | "LEARNING"; learningStatus?: "IN USE" | "PLANNED"; learningNote?: string } | null>(null);
   const [portalReady, setPortalReady] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
   const [codeStats, setCodeStats] = useState<CodeStats | null>(null);
@@ -235,7 +235,7 @@ export default function Home() {
         liveLabel:"GITHUB / LIVE ENDPOINT",repoUnit:"public repos",followersUnit:"followers",repoFallback:"Awaiting public repository metadata",repoCta:"QUERY REPOSITORIES",
         footprintLabel:"TEXT TELEMETRY / AUTO-SYNCED",contributorsLabel:"EXTERNAL MODULES INCLUDED",footprintScope:"Whole-repository text totals for public projects owned or contributed to; this is repository size, not personal line attribution.",metricLabels:["CHARACTER BUFFER","LINE COUNT","WORD TOKENS","TEXT FILES","OWNED / CONTRIBUTED","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-empty source rows","Source, config and docs","Generated from text files","Scanned projects and failures","Across scanned projects"],
         stackIndex:"03 / TOOLCHAIN",stackLabel:"THE WEBSITE STACK",stackEyebrow:"WHAT POWERS THIS SITE",stackTop:"WHAT POWERS",stackBottom:"THIS WEBSITE.",stackDescription:"The actual technologies behind this website: what renders the interface, controls the animations, styles each theme, and deploys the result.",stackSubheading:"The website, explained",stackBody:"A Next.js and React site with TypeScript interactions, a custom CSS theme system, Framer Motion transitions, and public data integrations. GitHub Actions validates and exports it for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"Next.js and React handle the interface; TypeScript keeps its behaviour predictable; CSS owns the visual systems; GitHub Actions builds and publishes a static site without needing a long-running server.",
-        learningIndex:"04 / NEXT BUILDS",learningLabel:"CAPABILITIES IN PROGRESS",learningEyebrow:"NEXT IN THE QUEUE",learningTop:"NOT YET",learningBottom:"INSTALLED.",learningDescription:"Technologies on the test bench: skills to practice in real builds, not trophies for a profile.",
+        learningIndex:"04 / NEXT BUILDS",learningLabel:"CAPABILITIES IN PROGRESS",learningEyebrow:"NEXT IN THE QUEUE",learningTop:"NOT YET",learningBottom:"INSTALLED.",learningDescription:"Open any technology card for details. Svelte is already in active use; the others are planned areas to explore.",
         interludeTop:"LESS TALK.",interludeBottom:"MORE ITERATION.",interludeCredit:"RULE 001 / SHIP, THEN IMPROVE",
         archiveIndex:"05 / TELEMETRY",archiveLabel:"CURRENT INPUTS",archiveEyebrow:"SIGNALS STILL ACTIVE",archiveTop:"WHAT THE",archiveBottom:"SYSTEM IS READING.",archiveDescription:"Live profile data and the media feeds that keep running alongside the work.",
         contactIndex:"06 / OPEN PORT",contactLabel:"CONNECTION AVAILABLE",contactEyebrow:"CHANNEL READY",contactTop:"HAVE A",contactBottom:"USEFUL SIGNAL?",contactCopy:"Project proposals, technical questions, and thoughtful collaborations can start here.",contactCta:"OPEN PORT"
@@ -252,7 +252,7 @@ export default function Home() {
           liveLabel:"THE PUBLIC WORKSHELF",repoUnit:"public repositories",followersUnit:"people following",repoFallback:"The collection is still being indexed",repoCta:"BROWSE THE SHELF",
           footprintLabel:"TEXT INDEX / REFRESHED AUTOMATICALLY",contributorsLabel:"COLLABORATIVE WORKS IN THIS COLLECTION",footprintScope:"Text-based source and documentation totals across public projects. Shared project totals describe the whole work, not individual authorship.",metricLabels:["CHARACTERS IN THE COLLECTION","LINES ON THE PAGE","WORDS IN THE ARCHIVE","TEXT DOCUMENTS","OWNED / CONTRIBUTED","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-empty lines","Source, config and documentation","Tracked text files","Projects scanned and scan issues","Across scanned projects"],
           stackIndex:"03 / MATERIALS",stackLabel:"THE WEBSITE STACK",stackEyebrow:"WHAT POWERS THIS SITE",stackTop:"WHAT POWERS",stackBottom:"THIS WEBSITE.",stackDescription:"A tour of this website’s real stack—from its interface and animation system to its styling and deployment pipeline.",stackSubheading:"The website, explained",stackBody:"Next.js and React build the interface; TypeScript handles interactive behaviour; CSS drives the themes; and GitHub Actions checks and exports the site for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"Every piece has a job: render the page, make interactions reliable, give each theme its own identity, animate transitions, or ship the finished static site.",
-          learningIndex:"04 / STUDIES",learningLabel:"WHAT I'M EXPLORING",learningEyebrow:"ON THE READING TABLE",learningTop:"THERE'S ALWAYS",learningBottom:"ANOTHER SUBJECT.",learningDescription:"A shortlist of languages and frameworks to explore through small, deliberate projects.",
+          learningIndex:"04 / STUDIES",learningLabel:"WHAT I'M EXPLORING",learningEyebrow:"ON THE READING TABLE",learningTop:"THERE'S ALWAYS",learningBottom:"ANOTHER SUBJECT.",learningDescription:"Open any technology card for details. Svelte is already in active use; the others are planned areas to explore.",
           interludeTop:"MAKE ROOM",interludeBottom:"FOR WONDER.",interludeCredit:"A REMINDER TO STAY CURIOUS",
           archiveIndex:"05 / COLLECTION",archiveLabel:"CURRENT FAVOURITES",archiveEyebrow:"OPEN ON THE DESK",archiveTop:"A FEW THINGS",archiveBottom:"I RETURN TO.",archiveDescription:"Anime, manga, books, and music that have earned a place in the ongoing collection.",
           contactIndex:"06 / CORRESPONDENCE",contactLabel:"GET IN TOUCH",contactEyebrow:"GOOD CONVERSATIONS START SIMPLY",contactTop:"LET'S",contactBottom:"COMPARE NOTES.",contactCopy:"Ideas, collaborations, questions, or a recommendation for something worth discovering are all welcome.",contactCta:"WRITE A NOTE"
@@ -268,7 +268,7 @@ export default function Home() {
           liveLabel:"LIVE FROM GITHUB",repoUnit:"public repositories",followersUnit:"followers",repoFallback:"A growing collection of open work",repoCta:"EXPLORE REPOSITORIES",
           footprintLabel:"CODE FOOTPRINT / AUTO-SYNCED",contributorsLabel:"CONTRIBUTOR PROJECTS INCLUDED",footprintScope:"Current text footprint across public projects I own or contribute to. Whole-repository totals are project size, not a claim about personal authorship.",metricLabels:["TEXT CHARACTERS","TEXT LINES","WORDS","TRACKED FILES","OWNED / CONTRIBUTED REPOS","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-blank lines","Code, config and docs","Text files only","Scanned projects and scan failures","Across scanned projects"],
           stackIndex:"03 / 06",stackLabel:"THE WEBSITE STACK",stackEyebrow:"HOW THE WEBSITE WORKS",stackTop:"What powers",stackBottom:"this website.",stackDescription:"The technologies behind this site, explained in plain English: the interface, the visual themes, the animation layer, live public data, and deployment.",stackSubheading:"The website, explained",stackBody:"Next.js and React render the experience, TypeScript powers its interactions, CSS gives each theme a distinct visual language, and GitHub Actions builds the static site for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"The goal is a fast, reliable static site with expressive motion—not an unnecessary server or a pile of tools with no clear purpose.",
-          learningIndex:"04 / 06",learningLabel:"THE NEXT FRONTIER",learningEyebrow:"ALWAYS A STUDENT OF THE CRAFT",learningTop:"Still becoming.",learningBottom:"Never finished.",learningDescription:"Six technologies on my learning shortlist. Not badges collected — skills to explore, build with, and earn through practice.",
+          learningIndex:"04 / 06",learningLabel:"THE NEXT FRONTIER",learningEyebrow:"ALWAYS A STUDENT OF THE CRAFT",learningTop:"Still becoming.",learningBottom:"Never finished.",learningDescription:"Open any technology card for details. Svelte is already in active use; the others are planned areas to explore.",
           interludeTop:"Make it because",interludeBottom:"you care about it.",interludeCredit:"A PRINCIPLE, NOT A SLOGAN",
           archiveIndex:"05 / 06",archiveLabel:"THE OPEN TABS",archiveEyebrow:"WHAT STAYS IN ROTATION",archiveTop:"What's open",archiveBottom:"in another tab.",archiveDescription:"The stuff I read, watch, and listen to when I'm not building.",
           contactIndex:"06 / 06",contactLabel:"OPEN CHANNEL",contactEyebrow:"EVERY GOOD THING STARTS SOMEWHERE",contactTop:"Have a good",contactBottom:"reason to talk?",contactCopy:"Ideas, collaborations, questions, or a conversation about something worth making. The channel is open.",contactCta:"START HERE"
@@ -417,7 +417,7 @@ export default function Home() {
           </motion.button>;
         })}
       </div>
-      <p className="project-language-note">Lunar X character figures are high-side estimates calculated from the supplied lines using generous stack-specific ratios: Rust 60, Next.js 90, React 90, and Python 48 characters per line. The assumptions are informed by the higher character densities in comparable scanned projects. Estimated characters are shown separately from scanned counts; files, words, and non-blank-line totals remain scan-only.</p>
+      <p className="project-language-note">Lunar X is included in the totals for Rust, Next.js, React, and Python. Approximate character totals use the per-stack rates shown in the breakdown.</p>
     </div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div>
     {portalReady && createPortal(
       <AnimatePresence initial={false}>
@@ -444,19 +444,21 @@ export default function Home() {
               onClick={(event) => event.stopPropagation()}
             >
               <div className="tech-modal-topline">
-                <span className="micro-label">{selectedTech.kind} / SOURCE STATISTICS</span>
+                <span className="micro-label">{selectedTech.learningStatus ? "LANGUAGE / " + selectedTech.learningStatus : selectedTech.kind + " / SOURCE STATISTICS"}</span>
                 <button type="button" className="tech-modal-close" autoFocus onClick={() => setSelectedTech(null)} aria-label={`Close ${selectedTech.name} statistics`}><X size={17}/></button>
               </div>
               <div className="tech-modal-identity">
                 {selectedTech.logo ? <motion.img layoutId={`tech-logo-${selectedTech.name}`} src={`/brands/tech-${selectedTech.logo}.svg`} alt="" /> : <motion.span layoutId={`tech-logo-${selectedTech.name}`} className="tech-modal-generic-logo"><Code2 size={24}/></motion.span>}
                 <div>
-                  <span className="micro-label">{selectedEstimateAreas.length > 0 ? "COMBINED TOTAL / LUNAR X INCLUDED" : selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : "NO SOURCE DATA FOUND"}</span>
+                  <span className="micro-label">{selectedTech.learningStatus ? (selectedTech.learningStatus === "IN USE" ? "ACTIVE TOOLKIT" : "LEARNING ROADMAP") : selectedEstimateAreas.length > 0 ? "COMBINED TOTAL / LUNAR X INCLUDED" : selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : "NO SOURCE DATA FOUND"}</span>
                   <h2 id="tech-modal-title">{selectedTech.name}</h2>
-                  <p>{selectedEstimateAreas.length > 0
-                    ? "The headline totals combine scanned repository data with Lunar X's high-side character estimate. Estimated characters are labeled as estimates, never as measured data; file, word, and non-blank-line counts remain scan-only."
-                    : selectedLanguage
-                      ? "Whole-repository totals from the latest public-project scan. These counts describe project contents, not individual authorship."
-                      : "No tracked language counts or Lunar X estimates have been recorded for this technology yet."}</p>
+                  <p>{selectedTech.learningStatus
+                    ? (selectedTech.learningNote ?? (selectedTech.learningStatus === "IN USE" ? "Part of the current toolkit." : "On the learning shortlist."))
+                    : selectedEstimateAreas.length > 0
+                      ? "The totals include Lunar X's estimates for this technology alongside tracked project data."
+                      : selectedLanguage
+                        ? "Whole-repository totals from the current project scan."
+                        : "No tracked statistics are available for this technology yet."}</p>
                 </div>
               </div>
               {(selectedLanguage || selectedEstimateAreas.length > 0) && (
@@ -466,13 +468,13 @@ export default function Home() {
                     ...(selectedEstimateAreas.length > 0 ? [
                       { label: "LUNAR X LINES", value: selectedManualLines, note: "Supplied project line estimate" },
                       { label: "TOTAL CHARACTERS", value: selectedTotalCharacters, note: "Scanned text + high-side estimate" },
-                      { label: "LUNAR X CHARACTERS", value: selectedManualCharacters, note: "Estimated · not scanned" },
+                      { label: "LUNAR X CHARACTERS", value: selectedManualCharacters, note: "Approximate" },
                     ] : []),
                     ...(selectedLanguage ? [
                       { label: "SCANNED LINES", value: selectedLanguage.lines, note: "Public repositories only" },
                       { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Scanned repositories" },
                       { label: "FILES", value: selectedLanguage.files, note: "Tracked text files" },
-                      { label: selectedEstimateAreas.length > 0 ? "SCANNED CHARACTERS" : "CHARACTERS", value: selectedLanguage.characters, note: "Measured text · line breaks excluded" },
+                      { label: selectedEstimateAreas.length > 0 ? "SCANNED CHARACTERS" : "CHARACTERS", value: selectedLanguage.characters, note: "Project text" },
                       { label: "WORDS", value: selectedLanguage.words, note: "Scanned repository text" },
                     ] : []),
                   ].map((metric) => <div className="tech-modal-stat" key={metric.label}>
@@ -481,7 +483,9 @@ export default function Home() {
                 </div>
               )}
               {!selectedLanguage && selectedEstimateAreas.length === 0 && (
-                <div className="tech-modal-empty">No automated counts have been recorded for {selectedTech.name}. The profile remains available here so future scan results can appear without changing the layout.</div>
+                <div className="tech-modal-empty">{selectedTech.learningStatus
+                  ? <><strong>{selectedTech.learningStatus === "IN USE" ? "In active use" : "On the learning shortlist"}</strong><p>{selectedTech.learningNote}</p></>
+                  : <>No tracked statistics are available for {selectedTech.name} yet.</>}</div>
               )}
               {selectedEstimateAreas.length > 0 && (
                 <section className="tech-modal-section" aria-label="Manual project estimates">
@@ -501,7 +505,7 @@ export default function Home() {
                       </a>
                     ))}
                   </div>
-                  <p className="tech-modal-footnote">Lunar X has no public scannable repository in this stats index. Line totals are supplied estimates; character totals are high-side estimates calculated from lines × the displayed stack-specific characters-per-line assumption. They are not scanned counts. File, word, and non-blank-line metrics remain scan-only.</p>
+                  <p className="tech-modal-footnote">Approximate character totals use the per-stack rate shown beside each area.</p>
                 </section>
               )}
               {selectedRepositoryLanguages.length > 0 && (
@@ -529,7 +533,21 @@ export default function Home() {
       document.body,
     )}
     </section>
-    <section className="learning section-shell section-space" id="learning"><div className="section-topline"><IndexLabel n={themeCopy.learningIndex} label={themeCopy.learningLabel}/><Eyebrow>{themeCopy.learningEyebrow}</Eyebrow></div><div className="learning-heading"><div><span className="eyebrow"><i/> {themeCopy.learningEyebrow}</span><h2>{themeCopy.learningTop}<br/><em>{themeCopy.learningBottom}</em></h2></div><p>{themeCopy.learningDescription}</p></div><div className="learning-grid">{[{name:"Svelte",logo:"svelte",kind:"FRONTEND",note:"A lean, compiler-first way to build interfaces."},{name:"Vue.js",logo:"vuedotjs",kind:"FRONTEND",note:"A progressive approach to reactive UI."},{name:"Angular",logo:"angular",kind:"FRAMEWORK",note:"A full framework for structured web apps."},{name:"PHP",logo:"php",kind:"LANGUAGE",note:"Server-side web development and the wider PHP ecosystem."},{name:"C#",logo:"csharp",kind:"LANGUAGE",note:"Modern application development across the .NET ecosystem."},{name:"Dart",logo:"dart",kind:"LANGUAGE",note:"A strongly typed language for cross-platform applications."}].map((t,i)=><motion.article className="learning-card" key={t.name} initial={reduce?false:{opacity:0,y:20}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.55,delay:i*.055}}><div className="learning-card-top"><span className="learning-number">0{i+1} / 06</span><span className="learning-kind">{t.kind}</span></div><div className="learning-brand"><span className="learning-logo"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><div><h3>{t.name}</h3><span>ON THE LEARNING LIST</span></div></div><p>{t.note}</p><div className="learning-card-bottom"><span className="learning-pulse"/><span>UP NEXT</span><ArrowUpRight size={15}/></div></motion.article>)}</div><div className="learning-note"><span>VN / FIELD NOTES</span><p>Learning status is intentionally honest: these are planned explorations, not claims of proficiency.</p></div></section>
+    <section className="learning section-shell section-space" id="learning"><div className="section-topline"><IndexLabel n={themeCopy.learningIndex} label={themeCopy.learningLabel}/><Eyebrow>{themeCopy.learningEyebrow}</Eyebrow></div><div className="learning-heading"><div><span className="eyebrow"><i/> {themeCopy.learningEyebrow}</span><h2>{themeCopy.learningTop}<br/><em>{themeCopy.learningBottom}</em></h2></div><p>{themeCopy.learningDescription}</p></div><div className="learning-grid">
+      {[
+        {name:"Svelte",logo:"svelte",kind:"FRONTEND",status:"IN USE" as const,note:"Used in active frontend work, including PrivaCage."},
+        {name:"Vue.js",logo:"vuedotjs",kind:"FRONTEND",status:"PLANNED" as const,note:"A progressive approach to reactive UI."},
+        {name:"Angular",logo:"angular",kind:"FRAMEWORK",status:"PLANNED" as const,note:"A full framework for structured web apps."},
+        {name:"PHP",logo:"php",kind:"LANGUAGE",status:"PLANNED" as const,note:"Server-side web development and the wider PHP ecosystem."},
+        {name:"C#",logo:"csharp",kind:"LANGUAGE",status:"PLANNED" as const,note:"Modern application development across the .NET ecosystem."},
+        {name:"Dart",logo:"dart",kind:"LANGUAGE",status:"PLANNED" as const,note:"A strongly typed language for cross-platform applications."},
+      ].map((t,i)=><motion.button type="button" className="learning-card" key={t.name} aria-haspopup="dialog" aria-label={`Open ${t.name} details. Status: ${t.status}.`} onClick={()=>setSelectedTech({name:t.name,logo:t.logo,kind:"LEARNING",learningStatus:t.status,learningNote:t.note})} initial={reduce?false:{opacity:0,y:20}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.55,delay:i*.055}} whileHover={reduce?undefined:{y:-3}} whileTap={{scale:.99}}>
+        <div className="learning-card-top"><span className="learning-number">0{i+1} / 06</span><span className="learning-kind">{t.kind}</span></div>
+        <div className="learning-brand"><span className="learning-logo"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><div><h3>{t.name}</h3><span>{t.status==="IN USE"?"IN ACTIVE USE":"ON THE LEARNING LIST"}</span></div></div>
+        <p>{t.note}</p>
+        <div className="learning-card-bottom"><span className="learning-pulse"/><span>{t.status==="IN USE"?"ACTIVE TOOLKIT":"UP NEXT"}</span><ArrowUpRight size={15}/></div>
+      </motion.button>)}
+    </div><div className="learning-note"><span>VN / FIELD NOTES</span><p>Open any tile for its role and status in the current toolkit or future plans.</p></div></section>
     <section className="interlude" aria-label="A moment of stillness"><div className="interlude-lines"/><motion.div className="interlude-inner" initial={reduce?false:{opacity:0,y:28}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.4}} transition={{duration:1.2}}><span className="interlude-mark">“</span><p>{themeCopy.interludeTop}<br/><em>{themeCopy.interludeBottom}</em></p><span className="interlude-credit">{themeCopy.interludeCredit}</span></motion.div><motion.div className="interlude-orbit" animate={reduce?{}:{rotate:-360}} transition={{duration:65,repeat:Infinity,ease:"linear"}}><Orbit strokeWidth={.6}/></motion.div></section>
     <section className="archive section-shell section-space" id="archive"><div className="section-topline"><IndexLabel n={themeCopy.archiveIndex} label={themeCopy.archiveLabel}/><Eyebrow>{themeCopy.archiveEyebrow}</Eyebrow></div><motion.div className="archive-heading" initial="hidden" whileInView="show" viewport={{once:true}} variants={sequence}><motion.h2 variants={motionRise}>{themeCopy.archiveTop}<br/><em>{themeCopy.archiveBottom}</em></motion.h2><motion.p variants={motionRise}>{themeCopy.archiveDescription}</motion.p></motion.div><div className="archive-grid"><motion.a className="archive-card archive-anime" href="https://anilist.co/user/Vireon" target="_blank" rel="noreferrer" initial={reduce?false:{opacity:0,y:35}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.85}}><div className="archive-card-top"><img className="social-logo" src="/brands/anilist.svg" alt="" width="22" height="22"/><span>READ / WATCH</span><ArrowUpRight size={16}/></div><div className="archive-illustration anime-illustration"><div className="book-shape book-one"/><div className="book-shape book-two"/><div className="book-shape book-three"/><span className="illustration-star">✳</span></div><div className="archive-card-bottom"><h3>Stories &amp; worlds</h3><p>Anime, manga, long arcs, impossible worlds.</p><div className="archive-stats"><span><strong>{live.anime!==undefined?<AnimatedNumber value={live.anime}/>:"—"}</strong> anime</span><span><strong>{live.manga!==undefined?<AnimatedNumber value={live.manga}/>:"—"}</strong> manga</span></div><span className="archive-link">OPEN ANILIST <ArrowUpRight size={14}/></span></div></motion.a><motion.div className="archive-card archive-music" initial={reduce?false:{opacity:0,y:35}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.85,delay:.14}}><div className="archive-card-top"><div className="archive-brandmarks"><img src="/brands/lastfm.svg" alt="Last.fm" width="22" height="22"/><img src="/brands/spotify.svg" alt="Spotify" width="22" height="22"/></div><span>LISTEN / RETURN</span><ArrowUpRight size={16}/></div><div className="archive-illustration music-illustration"><motion.div className="vinyl" animate={reduce?{}:{rotate:360}} transition={{duration:18,repeat:Infinity,ease:"linear"}}><div className="vinyl-label"/></motion.div><div className="sound-wave">{Array.from({length:21},(_,i)=><i key={i} style={{"--i":i, "--h":(12+(i%7)*11)+"px"} as React.CSSProperties}/>)}</div></div><div className="archive-card-bottom"><h3>Soundtrack to anything</h3><p>Spotify for the live moment; Last.fm for the long memory.</p><div className="now-playing"><i className={spotify.isPlaying||(!spotify.track&&live.playing)?"live-dot":"idle-dot"}/><span>{spotify.track?(spotify.isPlaying?"SPOTIFY · PLAYING NOW":"SPOTIFY · PAUSED")+" — "+spotify.track+" — "+(spotify.artist??"Unknown artist"):live.track?(live.playing?"LAST.FM · PLAYING NOW":"LAST.FM · LAST SCROBBLE")+" — "+live.track+" — "+(live.artist??"Unknown artist"):spotify.configured?"NOTHING PLAYING ON SPOTIFY · LAST.FM IS QUIET":"SPOTIFY LIVE STATUS NEEDS SETUP"}</span></div>{spotify.track&&spotify.albumImage&&<div className="spotify-track"><img src={spotify.albumImage} alt={`Cover art for ${spotify.album??spotify.track}`} loading="lazy"/><div><span className="micro-label">{spotify.isPlaying?"ON SPOTIFY NOW":"SPOTIFY / LAST TRACK"}</span><strong>{spotify.track}</strong><small>{spotify.artist??"Unknown artist"}{spotify.album?" · "+spotify.album:""}</small></div>{spotify.url&&<a href={spotify.url} target="_blank" rel="noreferrer" aria-label={`Open ${spotify.track} on Spotify`}><ArrowUpRight size={14}/></a>}</div>}<div className="archive-stats"><span><strong>{live.scrobbles!==undefined?<AnimatedNumber value={live.scrobbles}/>:"—"}</strong> plays logged on Last.fm</span></div><div className="archive-actions"><a className="archive-link" href="https://open.spotify.com/user/313455ps4aa6ouotajxcn34mwh4a" target="_blank" rel="noreferrer">OPEN SPOTIFY PROFILE <ArrowUpRight size={14}/></a><a className="archive-link" href="https://last.fm/user/reasfeetadmirer" target="_blank" rel="noreferrer">OPEN LAST.FM HISTORY <ArrowUpRight size={14}/></a></div></div></motion.div></div><div className="signal-grid">
         <motion.section className="signal-panel anilist-detail" initial={reduce?false:{opacity:0,y:24}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.12}} transition={{duration:.8}}>
