@@ -403,7 +403,7 @@ export function InkInteractionLayer() {
     };
 
     const readTranslate = (element: HTMLElement) => {
-      const raw = getComputedStyle(element).translate;
+      const raw = getComputedStyle(element).getPropertyValue("translate");
       if (!raw || raw === "none") return { x: 0, y: 0 };
       const parts = raw.split(/\s+/);
       return {
@@ -434,7 +434,7 @@ export function InkInteractionLayer() {
       if (!frame) frame = window.requestAnimationFrame(drawTrail);
 
       if (drag && drag.pointerId === event.pointerId) {
-        drag.element.style.translate = (drag.baseX + x - drag.startX) + "px " + (drag.baseY + y - drag.startY) + "px";
+        drag.element.style.setProperty("translate", (drag.baseX + x - drag.startX) + "px " + (drag.baseY + y - drag.startY) + "px");
         cursor.classList.add("is-grabbing");
         return;
       }
