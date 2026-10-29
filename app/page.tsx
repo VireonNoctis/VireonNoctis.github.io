@@ -464,18 +464,18 @@ export default function Home() {
               {(selectedLanguage || selectedEstimateAreas.length > 0) && (
                 <div className="tech-modal-grid" aria-label={`${selectedTech.name} combined statistics`}>
                   {[
-                    { label: "TOTAL LINES", value: selectedTotalLines, note: selectedEstimateAreas.length > 0 ? "Repository scan + Lunar X estimate" : "Across scanned repositories" },
+                    { label: "TOTAL LINES", value: selectedTotalLines, note: selectedEstimateAreas.length > 0 ? "Includes Lunar X" : "Across scanned repositories" },
                     ...(selectedEstimateAreas.length > 0 ? [
-                      { label: "LUNAR X LINES", value: selectedManualLines, note: "Supplied project line estimate" },
-                      { label: "TOTAL CHARACTERS", value: selectedTotalCharacters, note: "Scanned text + high-side estimate" },
-                      { label: "LUNAR X CHARACTERS", value: selectedManualCharacters, note: "Approximate" },
+                      { label: "LUNAR X LINES", value: selectedManualLines, note: "Project estimate" },
                     ] : []),
                     ...(selectedLanguage ? [
-                      { label: "SCANNED LINES", value: selectedLanguage.lines, note: "Public repositories only" },
-                      { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Scanned repositories" },
+                      { label: "SCANNED LINES", value: selectedLanguage.lines, note: "Tracked project lines" },
+                      { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Tracked project lines" },
                       { label: "FILES", value: selectedLanguage.files, note: "Tracked text files" },
-                      { label: selectedEstimateAreas.length > 0 ? "SCANNED CHARACTERS" : "CHARACTERS", value: selectedLanguage.characters, note: "Project text" },
-                      { label: "WORDS", value: selectedLanguage.words, note: "Scanned repository text" },
+                      { label: "WORDS", value: selectedLanguage.words, note: "Tracked project text" },
+                    ] : []),
+                    ...((selectedLanguage || selectedEstimateAreas.length > 0) ? [
+                      { label: "CHARACTERS", value: selectedTotalCharacters, note: selectedEstimateAreas.length > 0 ? "Includes Lunar X estimate" : "Tracked project text" },
                     ] : []),
                   ].map((metric) => <div className="tech-modal-stat" key={metric.label}>
                     <span>{metric.label}</span><strong><AnimatedNumber value={metric.value}/></strong><small>{metric.note}</small>
