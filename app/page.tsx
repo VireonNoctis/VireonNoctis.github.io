@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { createPortal } from "react-dom";
 import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Github, Menu, Orbit, X } from "lucide-react";
 import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork, ThemeSignatureRail, ThemeSwitcher, useCurrentTheme } from "./theme-system";
 
@@ -82,6 +83,8 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const [menu, setMenu] = useState(false);
+  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "FORMAT" | "WORKFLOW" } | null>(null);
+  const [portalReady, setPortalReady] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
   const [codeStats, setCodeStats] = useState<CodeStats | null>(null);
   const [codeStatsStatus, setCodeStatsStatus] = useState<"loading" | "ready" | "unavailable">("loading");
@@ -90,6 +93,7 @@ export default function Home() {
   const [year, setYear] = useState("2026");
   useEffect(() => {
     setYear(String(new Date().getFullYear()));
+    setPortalReady(true);
     const controller = new AbortController();
     async function loadCodeStats() {
       try {
@@ -181,6 +185,19 @@ export default function Home() {
     const spotifyRefresh = window.setInterval(() => { void loadSpotify(); }, 60_000);
     return () => { controller.abort(); window.clearInterval(spotifyRefresh); };
   }, []);
+  useEffect(() => {
+    if (!selectedTech) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setSelectedTech(null);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [selectedTech]);
   const activeTheme = useCurrentTheme();
   const themeCopy = activeTheme === "nothing"
     ? {
@@ -234,7 +251,20 @@ export default function Home() {
         };
   const languages = codeStats?.languages ?? [];
   const estimates = codeStats?.manualProjectEstimates ?? [];
-  const largestLanguageLines = Math.max(1, ...languages.map((language) => language.lines));
+  const selectedLanguage = selectedTech
+    ? languages.find((language) => language.language.toLowerCase() === selectedTech.name.toLowerCase())
+    : undefined;
+  const selectedRepositoryLanguages = selectedLanguage && codeStats
+    ? codeStats.repositories.flatMap((project) => {
+        const language = project.languages.find((item) => item.language.toLowerCase() === selectedLanguage.language.toLowerCase());
+        return language ? [{ project, language }] : [];
+      }).sort((a, b) => b.language.lines - a.language.lines)
+    : [];
+  const selectedEstimateAreas = selectedTech
+    ? estimates.flatMap((project) => project.areas
+        .filter((area) => area.stack.trim().toLowerCase() === selectedTech.name.trim().toLowerCase())
+        .map((area) => ({ project, area })))
+    : [];
   const motionRise = reduce ? {} : rise;
   return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
@@ -284,42 +314,10 @@ export default function Home() {
 <a className="project-row" href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer">
   <span className="project-index">04 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/vireon-mark.svg" alt="" width="34" height="34"/><div><h3>Personal systems</h3><p>Small utilities, profile tooling, automation, and experiments made to reduce friction and make digital life more considered.</p></div></div><span className="project-type">TOOLS / EXPERIMENTS</span><ArrowUpRight className="row-arrow" size={19}/>
 </a>
-</div><div className="github-live"><div className="github-live-icon"><Github size={19}/></div><div><span className="micro-label">{themeCopy.liveLabel}</span><p>{live.repos!==undefined?<><AnimatedNumber value={live.repos}/> {themeCopy.repoUnit}</>:themeCopy.repoFallback}{live.followers!==undefined?<> · <AnimatedNumber value={live.followers}/> {themeCopy.followersUnit}</>:""}</p></div><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">{themeCopy.repoCta} <ArrowUpRight size={15}/></a></div><section className="code-footprint" aria-label="Automated public repository code footprint" aria-busy={codeStatsStatus === "loading"}>
-  <div className="code-footprint-heading"><span className="micro-label">{themeCopy.footprintLabel}</span><span className="code-footprint-updated">{codeStats ? "UPDATED " + new Date(codeStats.generatedAt).toLocaleDateString("en-IE", { day: "2-digit", month: "short", year: "numeric" }).toUpperCase() : codeStatsStatus === "loading" ? "FETCHING LATEST SNAPSHOT" : "FIRST SNAPSHOT PENDING"}</span></div>
-  {codeStats ? <><div className="code-footprint-grid">
-    {[
-      { label: themeCopy.metricLabels[0], value: <AnimatedNumber value={codeStats.totals.characters}/>, note: themeCopy.metricNotes[0] },
-      { label: themeCopy.metricLabels[1], value: <AnimatedNumber value={codeStats.totals.lines}/>, note: <><AnimatedNumber value={codeStats.totals.nonblankLines}/> {activeTheme==="nothing"?"NON-EMPTY LINES":activeTheme==="light"?"non-empty lines":"non-blank"}</> },
-      { label: themeCopy.metricLabels[2], value: <AnimatedNumber value={codeStats.totals.words}/>, note: themeCopy.metricNotes[2] },
-      { label: themeCopy.metricLabels[3], value: <AnimatedNumber value={codeStats.totals.files}/>, note: themeCopy.metricNotes[3] },
-      { label: themeCopy.metricLabels[4], value: <><AnimatedNumber value={codeStats.totals.ownedRepositories}/> / <AnimatedNumber value={codeStats.totals.contributorRepositories}/></>, note: <><AnimatedNumber value={codeStats.totals.repositories}/> {activeTheme==="nothing"?"TOTAL ·":activeTheme==="light"?"total ·":"total ·"} <AnimatedNumber value={codeStats.totals.failedRepositories}/> {activeTheme==="nothing"?"SCAN FAILURES":activeTheme==="light"?"scan issues":"scan failures"}</> },
-      { label: themeCopy.metricLabels[5], value: <><AnimatedNumber value={codeStats.totals.stars}/> / <AnimatedNumber value={codeStats.totals.forks}/></>, note: themeCopy.metricNotes[5] },
-    ].map(metric => <div className="code-footprint-metric" key={metric.label}><span>{metric.label}</span><strong>{metric.value}</strong><small>{metric.note}</small></div>)}
-  </div>
-  {languages.length > 0 && <section className="language-footprint" aria-label="Lines and characters by language or file format">
-    <div className="language-footprint-heading"><span className="micro-label">{activeTheme === "nothing" ? "LANGUAGE TELEMETRY / TRACKED SOURCES" : activeTheme === "light" ? "LANGUAGES IN THE COLLECTION" : "LANGUAGES & FORMATS / AUTO-SCANNED"}</span><span>{languages.length} LANGUAGES / FORMATS</span></div>
-    <div className="language-footprint-columns"><span>LANGUAGE / FILE FORMAT</span><span>LINES / FILES</span><span>CHARACTERS / WORDS</span></div>
-    {languages.map((language) => <div className="language-footprint-row" key={language.language}>
-      <div className="language-footprint-primary"><strong>{language.language}</strong><div className="language-footprint-bar" aria-hidden="true"><i style={{width: (language.lines / largestLanguageLines * 100) + "%"}} /></div></div>
-      <div className="language-footprint-stat"><strong><AnimatedNumber value={language.lines}/></strong><small><AnimatedNumber value={language.files}/> files</small></div>
-      <div className="language-footprint-stat"><strong><AnimatedNumber value={language.characters}/></strong><small><AnimatedNumber value={language.words}/> words</small></div>
-    </div>)}
-    <p className="language-footprint-note">Tracked file extensions are grouped into languages and formats (for example, TS and TSX under TypeScript, JS and JSX under JavaScript). Documentation and configuration are listed separately where their format is identifiable. These are whole-repository counts, not line-by-line authorship claims.</p>
-  </section>}
-  {estimates.map((estimate) => <section className="manual-project-estimate" key={estimate.id} aria-label={estimate.name + " user-provided line estimates"}>
-    <div className="manual-project-heading"><div><span className="micro-label">{activeTheme === "nothing" ? "MANUAL TELEMETRY / UNINDEXED REPOSITORY" : activeTheme === "light" ? "A PROJECT ESTIMATE" : "PROJECT ESTIMATE / MANUALLY SUPPLIED"}</span><h3><a href={estimate.url} target="_blank" rel="noreferrer">{estimate.name}</a></h3></div><strong><AnimatedNumber value={estimate.areas.reduce((total, area) => total + area.lines, 0)}/> <small>reported lines</small></strong></div>
-    <div className="manual-project-areas">{estimate.areas.map((area) => <div className="manual-project-area" key={area.name}><span>{area.name}</span><small>{area.stack}</small><strong><AnimatedNumber value={area.lines}/></strong><em>lines</em></div>)}</div>
-    <p className="language-footprint-note">{estimate.classification} Only line counts were provided, so character and word totals are not inferred.</p>
-  </section>)}
-  {codeStats.repositories.filter(project => project.relationship === "contributor").length > 0 && <div className="code-footprint-projects">
-    <div className="code-footprint-projects-heading"><span className="micro-label">{themeCopy.contributorsLabel}</span><span><AnimatedNumber value={codeStats.totals.contributorRepositories}/> PUBLIC PROJECTS</span></div>
-    {codeStats.repositories.filter(project => project.relationship === "contributor").map(project => <a className="code-footprint-project" href={project.url} key={project.fullName} target="_blank" rel="noreferrer">
-      <span className="code-footprint-project-name"><strong>{project.name}</strong><small>{project.role ?? (project.relationship === "contributor" ? "Major contributor" : "Repository owner")}</small><small>{project.fullName}</small></span>
-      <span className="code-footprint-project-stats"><strong><AnimatedNumber value={project.lines}/></strong> lines <i>·</i> <strong><AnimatedNumber value={project.characters}/></strong> characters</span>
-      <ArrowUpRight size={14} aria-hidden="true"/>
-    </a>)}
-  </div>}<p className="code-footprint-note">{themeCopy.footprintScope} Dependency/build output, lockfiles, binaries, and files over 1 MB are excluded.</p></> : <p className="code-footprint-note">{codeStatsStatus === "loading" ? "The repository scan is being fetched from the profile repository." : "The automated scan has not published its first snapshot yet. GitHub Actions will populate this panel automatically."}</p>}
-  <a className="code-footprint-link" href="https://github.com/VireonNoctis/VireonNoctis#codebase-footprint-automatically-refreshed" target="_blank" rel="noreferrer">OPEN GENERATED BREAKDOWN <ArrowUpRight size={13}/></a>
+</div><div className="github-live"><div className="github-live-icon"><Github size={19}/></div><div><span className="micro-label">{themeCopy.liveLabel}</span><p>{live.repos!==undefined?<><AnimatedNumber value={live.repos}/> {themeCopy.repoUnit}</>:themeCopy.repoFallback}{live.followers!==undefined?<> · <AnimatedNumber value={live.followers}/> {themeCopy.followersUnit}</>:""}</p></div><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">{themeCopy.repoCta} <ArrowUpRight size={15}/></a></div><section className="code-footprint-teaser" aria-label="Language code statistics">
+  <div className="code-footprint-teaser-head"><span className="micro-label">CODE TELEMETRY / OPEN ON A LANGUAGE</span><span className="code-footprint-updated">{codeStats ? `${languages.length} LANGUAGE GROUPS · ${codeStats.totals.repositories} REPOSITORIES IN SNAPSHOT` : codeStatsStatus === "loading" ? "FETCHING LANGUAGE DATA" : "LANGUAGE DATA TEMPORARILY UNAVAILABLE"}</span></div>
+  <p>Language details now live in the Toolchain. Select a language or framework to inspect tracked lines, files, characters, repository breakdowns, and separately reported Lunar X estimates.</p>
+  <a className="code-footprint-link" href="#stack">OPEN LANGUAGE INDEX <ArrowUpRight size={13}/></a>
 </section>{repos.length>0&&<div className="repo-live-area">
   <div className="repo-live-heading"><span className="micro-label">LATEST PUBLIC REPOSITORIES · AUTO-SYNCED</span><span className="repo-live-count">Sorted by latest update</span></div>
   <div className="repo-live-list">{repos.map((repo,i)=><motion.a key={repo.name} href={repo.html_url} target="_blank" rel="noreferrer" aria-label={`Open GitHub repository ${repo.name}`} initial="hidden" whileInView="show" viewport={{once:true}} variants={motionRise} transition={{delay:i*.06}}>
@@ -328,7 +326,106 @@ export default function Home() {
     <span className="repo-stars">✳ <AnimatedNumber value={repo.stargazers_count}/></span><ArrowUpRight size={15} aria-hidden="true"/>
   </motion.a>)}</div>
 </div>}</section>
-    <section className="stack section-shell section-space" id="stack"><div className="section-topline"><IndexLabel n={themeCopy.stackIndex} label={themeCopy.stackLabel}/><Eyebrow>{themeCopy.stackEyebrow}</Eyebrow></div><div className="stack-heading"><motion.div initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} variants={sequence}><motion.span variants={motionRise} className="eyebrow"><i/> {themeCopy.stackEyebrow}</motion.span><motion.h2 variants={motionRise}>{themeCopy.stackTop}<br/><em>{themeCopy.stackBottom}</em></motion.h2></motion.div><p>{themeCopy.stackDescription}</p></div><div className="stack-site"><div className="stack-site-top"><div><span className="micro-label">{activeTheme==="nothing"?"01 / FRONT-END NODE":activeTheme==="light"?"01 / THE GALLERY":"01 / THIS WEBSITE"}</span><h3>{themeCopy.stackSubheading}</h3></div><span className="stack-status"><i/> STATIC / DEPLOYED</span></div><p className="stack-site-copy">{themeCopy.stackBody}</p><div className="stack-site-grid">{[{name:"Next.js",detail:"Framework",logo:"nextdotjs"},{name:"React",detail:"UI library",logo:"react"},{name:"TypeScript",detail:"Typed JavaScript",logo:"typescript"},{name:"Framer Motion",detail:"Motion design",logo:"framer"},{name:"CSS",detail:"Visual system",logo:"css3"},{name:"Lucide",detail:"Iconography",logo:"lucide"},{name:"GitHub Pages",detail:"Static hosting",logo:"github"}].map((t,i)=><div className="stack-site-item" key={t.name}><span className="stack-brand-mark"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><span><strong>{t.name}</strong><small>{t.detail}</small></span><span className="stack-item-index">{String(i+1).padStart(2,"0")}</span></div>)}</div></div><div className="stack-categories"><div className="stack-category"><div className="stack-category-head"><span>02</span><div><h3>Languages &amp; workflow</h3><p>Programming languages plus YAML-based automation workflows.</p></div></div><div className="stack-brand-chips">{[{name:"C++",logo:"cplusplus"},{name:"Rust",logo:"rust"},{name:"Java",logo:"openjdk"},{name:"JavaScript",logo:"javascript"},{name:"Python",logo:"python"},{name:"Lua",logo:"lua"},{name:"Swift",logo:"swift"},{name:"Go",logo:"go"},{name:"Batch",logo:"windowsterminal"},{name:"HTML",logo:"html5"},{name:"CSS",logo:"css3"},{name:"Kotlin",logo:"kotlin"},{name:"Ruby",logo:"ruby"},{name:"YAML",logo:"yaml"},{name:"GitHub Actions",logo:"githubactions"}].map((t,i)=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span><i>{String(i+1).padStart(2,"0")}</i></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>03</span><div><h3>Frameworks &amp; interfaces</h3><p>From web experiences to application logic.</p></div></div><div className="stack-brand-chips">{[{name:"Next.js",logo:"nextdotjs"},{name:"React",logo:"react"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>04</span><div><h3>Data &amp; storage</h3><p>Relational, embedded, and distributed systems.</p></div></div><div className="stack-brand-chips">{[{name:"PostgreSQL",logo:"postgresql"},{name:"SQLite",logo:"sqlite"},{name:"aiosqlite",logo:"python"},{name:"ScyllaDB",logo:"scylladb"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>05</span><div><h3>Editors &amp; terminal</h3><p>Command-line navigation, keyboard-driven editing, and a full-project editor.</p></div></div><div className="stack-brand-chips">{[{name:"Terminal / CLI",logo:"terminal"},{name:"Vim",logo:"vim"},{name:"Neovim",logo:"neovim"},{name:"Visual Studio Code",logo:"vscode"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>06</span><div><h3>Infrastructure &amp; tooling</h3><p>Packaging, shipping, and keeping things running.</p></div></div><div className="stack-brand-chips">{[{name:"Docker",logo:"docker"},{name:"Git",logo:"git"},{name:"GitHub Actions · YAML",logo:"githubactions"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div></div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div></section>
+    <section className="stack section-shell section-space" id="stack"><div className="section-topline"><IndexLabel n={themeCopy.stackIndex} label={themeCopy.stackLabel}/><Eyebrow>{themeCopy.stackEyebrow}</Eyebrow></div><div className="stack-heading"><motion.div initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} variants={sequence}><motion.span variants={motionRise} className="eyebrow"><i/> {themeCopy.stackEyebrow}</motion.span><motion.h2 variants={motionRise}>{themeCopy.stackTop}<br/><em>{themeCopy.stackBottom}</em></motion.h2></motion.div><p>{themeCopy.stackDescription}</p></div><div className="stack-site"><div className="stack-site-top"><div><span className="micro-label">{activeTheme==="nothing"?"01 / FRONT-END NODE":activeTheme==="light"?"01 / THE GALLERY":"01 / THIS WEBSITE"}</span><h3>{themeCopy.stackSubheading}</h3></div><span className="stack-status"><i/> STATIC / DEPLOYED</span></div><p className="stack-site-copy">{themeCopy.stackBody}</p><div className="stack-site-grid">{[{name:"Next.js",detail:"Framework",logo:"nextdotjs"},{name:"React",detail:"UI library",logo:"react"},{name:"TypeScript",detail:"Typed JavaScript",logo:"typescript"},{name:"Framer Motion",detail:"Motion design",logo:"framer"},{name:"CSS",detail:"Visual system",logo:"css3"},{name:"Lucide",detail:"Iconography",logo:"lucide"},{name:"GitHub Pages",detail:"Static hosting",logo:"github"}].map((t,i)=><div className="stack-site-item" key={t.name}><span className="stack-brand-mark"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><span><strong>{t.name}</strong><small>{t.detail}</small></span><span className="stack-item-index">{String(i+1).padStart(2,"0")}</span></div>)}</div></div><div className="stack-categories"><div className="stack-category"><div className="stack-category-head"><span>02</span><div><h3>Languages &amp; workflow</h3><p>Select a language to inspect tracked code metrics and per-repository detail.</p></div></div><div className="stack-brand-chips">{[{name:"C++",logo:"cplusplus"},{name:"Rust",logo:"rust"},{name:"Java",logo:"openjdk"},{name:"JavaScript",logo:"javascript"},{name:"TypeScript",logo:"typescript"},{name:"Python",logo:"python"},{name:"Lua",logo:"lua"},{name:"Swift",logo:"swift"},{name:"Go",logo:"go"},{name:"R",logo:"r"},{name:"Batch",logo:"windowsterminal"},{name:"HTML",logo:"html5"},{name:"CSS",logo:"css3"},{name:"Kotlin",logo:"kotlin"},{name:"Ruby",logo:"ruby"},{name:"YAML",logo:"yaml"},{name:"GitHub Actions",logo:"githubactions"}].map((t,i)=>t.name==="GitHub Actions" ? <span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span><i>{String(i+1).padStart(2,"0")}</i></span> : <button type="button" className="stack-chip stack-branded-chip stack-stat-trigger" key={t.name} aria-haspopup="dialog" aria-label={`View ${t.name} statistics`} onClick={() => setSelectedTech({name:t.name,logo:t.logo,kind:t.name==="YAML" ? "FORMAT" : "LANGUAGE"})}><motion.img layoutId={`tech-logo-${t.name}`} src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span><i>{String(i+1).padStart(2,"0")}</i></button>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>03</span><div><h3>Frameworks &amp; interfaces</h3><p>Framework profiles also surface manual project estimates when no repository is available.</p></div></div><div className="stack-brand-chips">{[{name:"Next.js",logo:"nextdotjs"},{name:"React",logo:"react"}].map(t=><button type="button" className="stack-chip stack-branded-chip stack-stat-trigger" key={t.name} aria-haspopup="dialog" aria-label={`View ${t.name} project statistics`} onClick={() => setSelectedTech({name:t.name,logo:t.logo,kind:"FRAMEWORK"})}><motion.img layoutId={`tech-logo-${t.name}`} src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></button>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>04</span><div><h3>Data &amp; storage</h3><p>Relational, embedded, and distributed systems.</p></div></div><div className="stack-brand-chips">{[{name:"PostgreSQL",logo:"postgresql"},{name:"SQLite",logo:"sqlite"},{name:"aiosqlite",logo:"python"},{name:"ScyllaDB",logo:"scylladb"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>05</span><div><h3>Editors &amp; terminal</h3><p>Command-line navigation, keyboard-driven editing, and a full-project editor.</p></div></div><div className="stack-brand-chips">{[{name:"Terminal / CLI",logo:"terminal"},{name:"Vim",logo:"vim"},{name:"Neovim",logo:"neovim"},{name:"Visual Studio Code",logo:"vscode"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>06</span><div><h3>Infrastructure &amp; tooling</h3><p>Packaging, shipping, and keeping things running.</p></div></div><div className="stack-brand-chips">{[{name:"Docker",logo:"docker"},{name:"Git",logo:"git"},{name:"GitHub Actions · YAML",logo:"githubactions"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div></div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div>
+    {portalReady && createPortal(
+      <AnimatePresence initial={false}>
+        {selectedTech && (
+          <motion.div
+            className="tech-modal-backdrop"
+            key={selectedTech.name}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: reduce ? 0 : 0.22 }}
+            onClick={() => setSelectedTech(null)}
+          >
+            <motion.section
+              className="tech-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="tech-modal-title"
+              tabIndex={-1}
+              initial={reduce ? false : { opacity: 0, y: 18, scale: 0.985, filter: "blur(8px)" }}
+              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+              exit={reduce ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.99, filter: "blur(5px)" }}
+              transition={{ duration: reduce ? 0 : 0.32, ease: "easeOut" }}
+              onClick={(event) => event.stopPropagation()}
+            >
+              <div className="tech-modal-topline">
+                <span className="micro-label">{selectedTech.kind} / SOURCE STATISTICS</span>
+                <button type="button" className="tech-modal-close" autoFocus onClick={() => setSelectedTech(null)} aria-label={`Close ${selectedTech.name} statistics`}><X size={17}/></button>
+              </div>
+              <div className="tech-modal-identity">
+                <motion.img layoutId={`tech-logo-${selectedTech.name}`} src={`/brands/tech-${selectedTech.logo}.svg`} alt="" />
+                <div>
+                  <span className="micro-label">{selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : selectedEstimateAreas.length > 0 ? "MANUAL PROJECT ESTIMATE" : "NO SOURCE DATA FOUND"}</span>
+                  <h2 id="tech-modal-title">{selectedTech.name}</h2>
+                  <p>{selectedLanguage
+                    ? "Whole-repository totals from the latest public-project scan. These counts describe project contents, not individual authorship."
+                    : selectedEstimateAreas.length > 0
+                      ? "Reported project work without a public scannable repository. These estimates remain separate from automated totals."
+                      : "There are no tracked language counts or manually supplied project estimates for this technology yet."}</p>
+                </div>
+              </div>
+              {selectedLanguage && (
+                <div className="tech-modal-grid" aria-label={`${selectedTech.name} aggregate statistics`}>
+                  {[
+                    { label: "TOTAL LINES", value: selectedLanguage.lines, note: "Across scanned repositories" },
+                    { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Non-empty lines" },
+                    { label: "FILES", value: selectedLanguage.files, note: "Tracked text files" },
+                    { label: "CHARACTERS", value: selectedLanguage.characters, note: "Line breaks excluded" },
+                    { label: "WORDS", value: selectedLanguage.words, note: "Whitespace-separated terms" },
+                  ].map((metric) => <div className="tech-modal-stat" key={metric.label}>
+                    <span>{metric.label}</span><strong><AnimatedNumber value={metric.value}/></strong><small>{metric.note}</small>
+                  </div>)}
+                </div>
+              )}
+              {!selectedLanguage && selectedEstimateAreas.length === 0 && (
+                <div className="tech-modal-empty">No automated counts have been recorded for {selectedTech.name}. The profile remains available here so future scan results can appear without changing the layout.</div>
+              )}
+              {selectedEstimateAreas.length > 0 && (
+                <section className="tech-modal-section" aria-label="Manual project estimates">
+                  <div className="tech-modal-section-heading">
+                    <div><span className="micro-label">UNINDEXED PROJECT WORK</span><h3>Reported estimates</h3></div>
+                    <span className="tech-modal-source-label">KEPT SEPARATE FROM SCAN TOTALS</span>
+                  </div>
+                  <div className="tech-modal-estimate-list">
+                    {selectedEstimateAreas.map(({ project, area }) => (
+                      <a className="tech-modal-estimate" href={project.url} key={`${project.id}-${area.name}`} target="_blank" rel="noreferrer">
+                        <span className="tech-modal-estimate-project"><strong>{project.name}</strong><small>{area.name} · {area.stack}</small></span>
+                        <span className="tech-modal-estimate-lines"><strong><AnimatedNumber value={area.lines}/></strong><small>reported lines</small></span>
+                        <ArrowUpRight size={15} aria-hidden="true"/>
+                      </a>
+                    ))}
+                  </div>
+                  <p className="tech-modal-footnote">{selectedEstimateAreas[0].project.classification}</p>
+                </section>
+              )}
+              {selectedRepositoryLanguages.length > 0 && (
+                <section className="tech-modal-section" aria-label="Repository-level breakdown">
+                  <div className="tech-modal-section-heading">
+                    <div><span className="micro-label">REPOSITORY-LEVEL DETAIL</span><h3>Where it appears</h3></div>
+                    <span className="tech-modal-source-label">{selectedRepositoryLanguages.length} repositories</span>
+                  </div>
+                  <div className="tech-modal-repository-list">
+                    {selectedRepositoryLanguages.map(({ project, language }) => (
+                      <a className="tech-modal-repository" href={project.url} key={project.fullName} target="_blank" rel="noreferrer">
+                        <span className="tech-modal-repository-copy"><strong>{project.name}</strong><small>{project.role ?? (project.relationship === "contributor" ? "Major contributor" : `Owned · ${project.branch}`)}</small></span>
+                        <span className="tech-modal-repository-stats"><strong><AnimatedNumber value={language.lines}/></strong><small>lines · {language.files} files</small></span>
+                        <ArrowUpRight size={15} aria-hidden="true"/>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
+              <p className="tech-modal-footnote">Automated language counts include scanned public repositories and remain separate from user-provided estimates. Repository totals are not line-by-line authorship claims.</p>
+            </motion.section>
+          </motion.div>
+        )}
+      </AnimatePresence>,
+      document.body,
+    )}
+    </section>
     <section className="learning section-shell section-space" id="learning"><div className="section-topline"><IndexLabel n={themeCopy.learningIndex} label={themeCopy.learningLabel}/><Eyebrow>{themeCopy.learningEyebrow}</Eyebrow></div><div className="learning-heading"><div><span className="eyebrow"><i/> {themeCopy.learningEyebrow}</span><h2>{themeCopy.learningTop}<br/><em>{themeCopy.learningBottom}</em></h2></div><p>{themeCopy.learningDescription}</p></div><div className="learning-grid">{[{name:"Svelte",logo:"svelte",kind:"FRONTEND",note:"A lean, compiler-first way to build interfaces."},{name:"Vue.js",logo:"vuedotjs",kind:"FRONTEND",note:"A progressive approach to reactive UI."},{name:"Angular",logo:"angular",kind:"FRAMEWORK",note:"A full framework for structured web apps."},{name:"PHP",logo:"php",kind:"LANGUAGE",note:"Server-side web development and the wider PHP ecosystem."},{name:"C#",logo:"csharp",kind:"LANGUAGE",note:"Modern application development across the .NET ecosystem."},{name:"Dart",logo:"dart",kind:"LANGUAGE",note:"A strongly typed language for cross-platform applications."}].map((t,i)=><motion.article className="learning-card" key={t.name} initial={reduce?false:{opacity:0,y:20}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.15}} transition={{duration:.55,delay:i*.055}}><div className="learning-card-top"><span className="learning-number">0{i+1} / 06</span><span className="learning-kind">{t.kind}</span></div><div className="learning-brand"><span className="learning-logo"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><div><h3>{t.name}</h3><span>ON THE LEARNING LIST</span></div></div><p>{t.note}</p><div className="learning-card-bottom"><span className="learning-pulse"/><span>UP NEXT</span><ArrowUpRight size={15}/></div></motion.article>)}</div><div className="learning-note"><span>VN / FIELD NOTES</span><p>Learning status is intentionally honest: these are planned explorations, not claims of proficiency.</p></div></section>
     <section className="interlude" aria-label="A moment of stillness"><div className="interlude-lines"/><motion.div className="interlude-inner" initial={reduce?false:{opacity:0,y:28}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.4}} transition={{duration:1.2}}><span className="interlude-mark">“</span><p>{themeCopy.interludeTop}<br/><em>{themeCopy.interludeBottom}</em></p><span className="interlude-credit">{themeCopy.interludeCredit}</span></motion.div><motion.div className="interlude-orbit" animate={reduce?{}:{rotate:-360}} transition={{duration:65,repeat:Infinity,ease:"linear"}}><Orbit strokeWidth={.6}/></motion.div></section>
     <section className="archive section-shell section-space" id="archive"><div className="section-topline"><IndexLabel n={themeCopy.archiveIndex} label={themeCopy.archiveLabel}/><Eyebrow>{themeCopy.archiveEyebrow}</Eyebrow></div><motion.div className="archive-heading" initial="hidden" whileInView="show" viewport={{once:true}} variants={sequence}><motion.h2 variants={motionRise}>{themeCopy.archiveTop}<br/><em>{themeCopy.archiveBottom}</em></motion.h2><motion.p variants={motionRise}>{themeCopy.archiveDescription}</motion.p></motion.div><div className="archive-grid"><motion.a className="archive-card archive-anime" href="https://anilist.co/user/Vireon" target="_blank" rel="noreferrer" initial={reduce?false:{opacity:0,y:35}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.85}}><div className="archive-card-top"><img className="social-logo" src="/brands/anilist.svg" alt="" width="22" height="22"/><span>READ / WATCH</span><ArrowUpRight size={16}/></div><div className="archive-illustration anime-illustration"><div className="book-shape book-one"/><div className="book-shape book-two"/><div className="book-shape book-three"/><span className="illustration-star">✳</span></div><div className="archive-card-bottom"><h3>Stories &amp; worlds</h3><p>Anime, manga, long arcs, impossible worlds.</p><div className="archive-stats"><span><strong>{live.anime!==undefined?<AnimatedNumber value={live.anime}/>:"—"}</strong> anime</span><span><strong>{live.manga!==undefined?<AnimatedNumber value={live.manga}/>:"—"}</strong> manga</span></div><span className="archive-link">OPEN ANILIST <ArrowUpRight size={14}/></span></div></motion.a><motion.div className="archive-card archive-music" initial={reduce?false:{opacity:0,y:35}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.2}} transition={{duration:.85,delay:.14}}><div className="archive-card-top"><div className="archive-brandmarks"><img src="/brands/lastfm.svg" alt="Last.fm" width="22" height="22"/><img src="/brands/spotify.svg" alt="Spotify" width="22" height="22"/></div><span>LISTEN / RETURN</span><ArrowUpRight size={16}/></div><div className="archive-illustration music-illustration"><motion.div className="vinyl" animate={reduce?{}:{rotate:360}} transition={{duration:18,repeat:Infinity,ease:"linear"}}><div className="vinyl-label"/></motion.div><div className="sound-wave">{Array.from({length:21},(_,i)=><i key={i} style={{"--i":i, "--h":(12+(i%7)*11)+"px"} as React.CSSProperties}/>)}</div></div><div className="archive-card-bottom"><h3>Soundtrack to anything</h3><p>Spotify for the live moment; Last.fm for the long memory.</p><div className="now-playing"><i className={spotify.isPlaying||(!spotify.track&&live.playing)?"live-dot":"idle-dot"}/><span>{spotify.track?(spotify.isPlaying?"SPOTIFY · PLAYING NOW":"SPOTIFY · PAUSED")+" — "+spotify.track+" — "+(spotify.artist??"Unknown artist"):live.track?(live.playing?"LAST.FM · PLAYING NOW":"LAST.FM · LAST SCROBBLE")+" — "+live.track+" — "+(live.artist??"Unknown artist"):spotify.configured?"NOTHING PLAYING ON SPOTIFY · LAST.FM IS QUIET":"SPOTIFY LIVE STATUS NEEDS SETUP"}</span></div>{spotify.track&&spotify.albumImage&&<div className="spotify-track"><img src={spotify.albumImage} alt={`Cover art for ${spotify.album??spotify.track}`} loading="lazy"/><div><span className="micro-label">{spotify.isPlaying?"ON SPOTIFY NOW":"SPOTIFY / LAST TRACK"}</span><strong>{spotify.track}</strong><small>{spotify.artist??"Unknown artist"}{spotify.album?" · "+spotify.album:""}</small></div>{spotify.url&&<a href={spotify.url} target="_blank" rel="noreferrer" aria-label={`Open ${spotify.track} on Spotify`}><ArrowUpRight size={14}/></a>}</div>}<div className="archive-stats"><span><strong>{live.scrobbles!==undefined?<AnimatedNumber value={live.scrobbles}/>:"—"}</strong> plays logged on Last.fm</span></div><div className="archive-actions"><a className="archive-link" href="https://open.spotify.com/user/313455ps4aa6ouotajxcn34mwh4a" target="_blank" rel="noreferrer">OPEN SPOTIFY PROFILE <ArrowUpRight size={14}/></a><a className="archive-link" href="https://last.fm/user/reasfeetadmirer" target="_blank" rel="noreferrer">OPEN LAST.FM HISTORY <ArrowUpRight size={14}/></a></div></div></motion.div></div><div className="signal-grid">
