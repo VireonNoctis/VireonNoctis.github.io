@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { createPortal } from "react-dom";
-import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Github, Menu, Orbit, X } from "lucide-react";
+import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Code2, Github, Menu, Orbit, X } from "lucide-react";
 import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork, ThemeSignatureRail, ThemeSwitcher, useCurrentTheme } from "./theme-system";
 
 type Repo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; archived?: boolean; updated_at: string };
@@ -75,6 +75,15 @@ const socials = [
 ];
 const rise = { hidden: { opacity: 0, y: 32, filter: "blur(10px)" }, show: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1, ease: "easeOut" } } };
 const sequence = { hidden: {}, show: { transition: { staggerChildren: 0.12, delayChildren: 0.12 } } };
+const techLogosByName: Record<string, string> = {
+  Python: "python", Batch: "windowsterminal", Kotlin: "kotlin", CSS: "css3",
+  TypeScript: "typescript", Rust: "rust", R: "r", Go: "go",
+  JavaScript: "javascript", Ruby: "ruby", YAML: "yaml", Svelte: "svelte",
+  HTML: "html5", Shell: "terminal", "Environment config": "terminal",
+  "Git config": "git", Config: "terminal", Dockerfile: "docker", "Docker config": "docker",
+  "Go module": "go", "Next.js": "nextdotjs", React: "react",
+};
+const formatLanguageNames = new Set(["Batch", "Markdown", "JSON", "Plain text", "YAML", "TOML", "Environment config", "Shell", "SVG", "Git config", "Config", "XML", "Dockerfile", "Docker config", "Go module", "Properties"]);
 function Eyebrow({ children }: { children: React.ReactNode }) { return <span className="eyebrow"><i />{children}</span>; }
 function IndexLabel({ n, label }: { n: string; label: string }) { return <div className="index-label"><span>{n}</span><span>{label}</span></div>; }
 
@@ -210,7 +219,7 @@ export default function Home() {
         workIndex:"02 / MODULES",workLabel:"DEPLOYED & IN PROGRESS",workEyebrow:"PROJECT REGISTRY",workTop:"TOOLS THAT",workBottom:"DO THE WORK.",workDescription:"Active systems, community infrastructure, and experiments with a job to do.",
         liveLabel:"GITHUB / LIVE ENDPOINT",repoUnit:"public repos",followersUnit:"followers",repoFallback:"Awaiting public repository metadata",repoCta:"QUERY REPOSITORIES",
         footprintLabel:"TEXT TELEMETRY / AUTO-SYNCED",contributorsLabel:"EXTERNAL MODULES INCLUDED",footprintScope:"Whole-repository text totals for public projects owned or contributed to; this is repository size, not personal line attribution.",metricLabels:["CHARACTER BUFFER","LINE COUNT","WORD TOKENS","TEXT FILES","OWNED / CONTRIBUTED","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-empty source rows","Source, config and docs","Generated from text files","Scanned projects and failures","Across scanned projects"],
-        stackIndex:"03 / TOOLCHAIN",stackLabel:"THE BUILD ENVIRONMENT",stackEyebrow:"UNDER THE HOOD",stackTop:"BUILT TO",stackBottom:"SHIP RELIABLY.",stackDescription:"The frameworks, languages, and services behind the interface and the wider project network.",stackSubheading:"This node's stack",stackBody:"A React and Next.js interface exported for static hosting, with client-side motion and live public data kept separate from build-time output.",stackFootnoteTitle:"SYSTEM RULE:",stackFootnoteBody:"Use the simplest reliable tool. Measure what matters. Keep the moving parts understandable.",
+        stackIndex:"03 / TOOLCHAIN",stackLabel:"THE WEBSITE STACK",stackEyebrow:"WHAT POWERS THIS SITE",stackTop:"WHAT POWERS",stackBottom:"THIS WEBSITE.",stackDescription:"The actual technologies behind this website: what renders the interface, controls the animations, styles each theme, and deploys the result.",stackSubheading:"The website, explained",stackBody:"A Next.js and React site with TypeScript interactions, a custom CSS theme system, Framer Motion transitions, and public data integrations. GitHub Actions validates and exports it for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"Next.js and React handle the interface; TypeScript keeps its behaviour predictable; CSS owns the visual systems; GitHub Actions builds and publishes a static site without needing a long-running server.",
         learningIndex:"04 / NEXT BUILDS",learningLabel:"CAPABILITIES IN PROGRESS",learningEyebrow:"NEXT IN THE QUEUE",learningTop:"NOT YET",learningBottom:"INSTALLED.",learningDescription:"Technologies on the test bench: skills to practice in real builds, not trophies for a profile.",
         interludeTop:"LESS TALK.",interludeBottom:"MORE ITERATION.",interludeCredit:"RULE 001 / SHIP, THEN IMPROVE",
         archiveIndex:"05 / TELEMETRY",archiveLabel:"CURRENT INPUTS",archiveEyebrow:"SIGNALS STILL ACTIVE",archiveTop:"WHAT THE",archiveBottom:"SYSTEM IS READING.",archiveDescription:"Live profile data and the media feeds that keep running alongside the work.",
@@ -227,7 +236,7 @@ export default function Home() {
           workIndex:"02 / PORTFOLIO",workLabel:"A SELECTION OF PROJECTS",workEyebrow:"IN THE WORKROOM",workTop:"MADE, TESTED,",workBottom:"MADE BETTER.",workDescription:"A curated selection of tools and community projects, from practical infrastructure to ongoing experiments.",
           liveLabel:"THE PUBLIC WORKSHELF",repoUnit:"public repositories",followersUnit:"people following",repoFallback:"The collection is still being indexed",repoCta:"BROWSE THE SHELF",
           footprintLabel:"TEXT INDEX / REFRESHED AUTOMATICALLY",contributorsLabel:"COLLABORATIVE WORKS IN THIS COLLECTION",footprintScope:"Text-based source and documentation totals across public projects. Shared project totals describe the whole work, not individual authorship.",metricLabels:["CHARACTERS IN THE COLLECTION","LINES ON THE PAGE","WORDS IN THE ARCHIVE","TEXT DOCUMENTS","OWNED / CONTRIBUTED","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-empty lines","Source, config and documentation","Tracked text files","Projects scanned and scan issues","Across scanned projects"],
-          stackIndex:"03 / MATERIALS",stackLabel:"TOOLS & MATERIALS",stackEyebrow:"THE WORKROOM",stackTop:"A GOOD TOOL",stackBottom:"GETS OUT OF THE WAY.",stackDescription:"The languages, libraries, and services used to give each idea the right shape.",stackSubheading:"Inside this website",stackBody:"A Next.js and React gallery, exported for GitHub Pages and finished with considered motion, responsive layouts, and live public data.",stackFootnoteTitle:"A curator's note:",stackFootnoteBody:"Choose a material for the problem it solves. The best stack is the one that lets the work speak.",
+          stackIndex:"03 / MATERIALS",stackLabel:"THE WEBSITE STACK",stackEyebrow:"WHAT POWERS THIS SITE",stackTop:"WHAT POWERS",stackBottom:"THIS WEBSITE.",stackDescription:"A tour of this website’s real stack—from its interface and animation system to its styling and deployment pipeline.",stackSubheading:"The website, explained",stackBody:"Next.js and React build the interface; TypeScript handles interactive behaviour; CSS drives the themes; and GitHub Actions checks and exports the site for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"Every piece has a job: render the page, make interactions reliable, give each theme its own identity, animate transitions, or ship the finished static site.",
           learningIndex:"04 / STUDIES",learningLabel:"WHAT I'M EXPLORING",learningEyebrow:"ON THE READING TABLE",learningTop:"THERE'S ALWAYS",learningBottom:"ANOTHER SUBJECT.",learningDescription:"A shortlist of languages and frameworks to explore through small, deliberate projects.",
           interludeTop:"MAKE ROOM",interludeBottom:"FOR WONDER.",interludeCredit:"A REMINDER TO STAY CURIOUS",
           archiveIndex:"05 / COLLECTION",archiveLabel:"CURRENT FAVOURITES",archiveEyebrow:"OPEN ON THE DESK",archiveTop:"A FEW THINGS",archiveBottom:"I RETURN TO.",archiveDescription:"Anime, manga, books, and music that have earned a place in the ongoing collection.",
@@ -243,7 +252,7 @@ export default function Home() {
           workIndex:"02 / 06",workLabel:"SELECTED WORK",workEyebrow:"BUILT, MAINTAINED, ITERATED",workTop:"Projects, not",workBottom:"case studies.",workDescription:"A few things I've spent real time on. Some are polished; some are still becoming.",
           liveLabel:"LIVE FROM GITHUB",repoUnit:"public repositories",followersUnit:"followers",repoFallback:"A growing collection of open work",repoCta:"EXPLORE REPOSITORIES",
           footprintLabel:"CODE FOOTPRINT / AUTO-SYNCED",contributorsLabel:"CONTRIBUTOR PROJECTS INCLUDED",footprintScope:"Current text footprint across public projects I own or contribute to. Whole-repository totals are project size, not a claim about personal authorship.",metricLabels:["TEXT CHARACTERS","TEXT LINES","WORDS","TRACKED FILES","OWNED / CONTRIBUTED REPOS","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-blank lines","Code, config and docs","Text files only","Scanned projects and scan failures","Across scanned projects"],
-          stackIndex:"03 / 06",stackLabel:"THE TOOLKIT",stackEyebrow:"TOOLS ARE A MEANS, NOT A PERSONALITY",stackTop:"Built with intent.",stackBottom:"Powered by curiosity.",stackDescription:"The languages, frameworks, and systems I reach for — plus the stack that brings this little corner of the internet to life.",stackSubheading:"The Vireon stack",stackBody:"A React-powered Next.js experience, exported for GitHub Pages, with motion kept purposeful and the interface tuned to the details.",stackFootnoteTitle:"A living toolkit.",stackFootnoteBody:"Not every tool belongs in every project. The point is to choose deliberately, learn constantly, and make the result feel considered.",
+          stackIndex:"03 / 06",stackLabel:"THE WEBSITE STACK",stackEyebrow:"HOW THE WEBSITE WORKS",stackTop:"What powers",stackBottom:"this website.",stackDescription:"The technologies behind this site, explained in plain English: the interface, the visual themes, the animation layer, live public data, and deployment.",stackSubheading:"The website, explained",stackBody:"Next.js and React render the experience, TypeScript powers its interactions, CSS gives each theme a distinct visual language, and GitHub Actions builds the static site for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"The goal is a fast, reliable static site with expressive motion—not an unnecessary server or a pile of tools with no clear purpose.",
           learningIndex:"04 / 06",learningLabel:"THE NEXT FRONTIER",learningEyebrow:"ALWAYS A STUDENT OF THE CRAFT",learningTop:"Still becoming.",learningBottom:"Never finished.",learningDescription:"Six technologies on my learning shortlist. Not badges collected — skills to explore, build with, and earn through practice.",
           interludeTop:"Make it because",interludeBottom:"you care about it.",interludeCredit:"A PRINCIPLE, NOT A SLOGAN",
           archiveIndex:"05 / 06",archiveLabel:"THE OPEN TABS",archiveEyebrow:"WHAT STAYS IN ROTATION",archiveTop:"What's open",archiveBottom:"in another tab.",archiveDescription:"The stuff I read, watch, and listen to when I'm not building.",
@@ -265,6 +274,21 @@ export default function Home() {
         .filter((area) => area.stack.trim().toLowerCase() === selectedTech.name.trim().toLowerCase())
         .map((area) => ({ project, area })))
     : [];
+  const selectedManualLines = selectedEstimateAreas.reduce((total, entry) => total + entry.area.lines, 0);
+  const selectedScannedLines = selectedLanguage?.lines ?? 0;
+  const selectedTotalLines = selectedScannedLines + selectedManualLines;
+  const statTechOptions = Array.from(new Map([
+    ...languages.map((language) => ({
+      name: language.language,
+      logo: techLogosByName[language.language] ?? "",
+      kind: formatLanguageNames.has(language.language) ? "FORMAT" as const : "LANGUAGE" as const,
+    })),
+    ...estimates.flatMap((project) => project.areas.map((area) => ({
+      name: area.stack,
+      logo: techLogosByName[area.stack] ?? "",
+      kind: (area.stack === "Next.js" || area.stack === "React" ? "FRAMEWORK" : "LANGUAGE") as "FRAMEWORK" | "LANGUAGE",
+    }))),
+  ].map((tech) => [tech.name.toLowerCase(), tech])).values());
   const motionRise = reduce ? {} : rise;
   return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
@@ -326,7 +350,55 @@ export default function Home() {
     <span className="repo-stars">✳ <AnimatedNumber value={repo.stargazers_count}/></span><ArrowUpRight size={15} aria-hidden="true"/>
   </motion.a>)}</div>
 </div>}</section>
-    <section className="stack section-shell section-space" id="stack"><div className="section-topline"><IndexLabel n={themeCopy.stackIndex} label={themeCopy.stackLabel}/><Eyebrow>{themeCopy.stackEyebrow}</Eyebrow></div><div className="stack-heading"><motion.div initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} variants={sequence}><motion.span variants={motionRise} className="eyebrow"><i/> {themeCopy.stackEyebrow}</motion.span><motion.h2 variants={motionRise}>{themeCopy.stackTop}<br/><em>{themeCopy.stackBottom}</em></motion.h2></motion.div><p>{themeCopy.stackDescription}</p></div><div className="stack-site"><div className="stack-site-top"><div><span className="micro-label">{activeTheme==="nothing"?"01 / FRONT-END NODE":activeTheme==="light"?"01 / THE GALLERY":"01 / THIS WEBSITE"}</span><h3>{themeCopy.stackSubheading}</h3></div><span className="stack-status"><i/> STATIC / DEPLOYED</span></div><p className="stack-site-copy">{themeCopy.stackBody}</p><div className="stack-site-grid">{[{name:"Next.js",detail:"Framework",logo:"nextdotjs"},{name:"React",detail:"UI library",logo:"react"},{name:"TypeScript",detail:"Typed JavaScript",logo:"typescript"},{name:"Framer Motion",detail:"Motion design",logo:"framer"},{name:"CSS",detail:"Visual system",logo:"css3"},{name:"Lucide",detail:"Iconography",logo:"lucide"},{name:"GitHub Pages",detail:"Static hosting",logo:"github"}].map((t,i)=><div className="stack-site-item" key={t.name}><span className="stack-brand-mark"><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/></span><span><strong>{t.name}</strong><small>{t.detail}</small></span><span className="stack-item-index">{String(i+1).padStart(2,"0")}</span></div>)}</div></div><div className="stack-categories"><div className="stack-category"><div className="stack-category-head"><span>02</span><div><h3>Languages &amp; workflow</h3><p>Select a language to inspect tracked code metrics and per-repository detail.</p></div></div><div className="stack-brand-chips">{[{name:"C++",logo:"cplusplus"},{name:"Rust",logo:"rust"},{name:"Java",logo:"openjdk"},{name:"JavaScript",logo:"javascript"},{name:"TypeScript",logo:"typescript"},{name:"Python",logo:"python"},{name:"Lua",logo:"lua"},{name:"Swift",logo:"swift"},{name:"Go",logo:"go"},{name:"R",logo:"r"},{name:"Batch",logo:"windowsterminal"},{name:"HTML",logo:"html5"},{name:"CSS",logo:"css3"},{name:"Kotlin",logo:"kotlin"},{name:"Ruby",logo:"ruby"},{name:"YAML",logo:"yaml"},{name:"GitHub Actions",logo:"githubactions"}].map((t,i)=>t.name==="GitHub Actions" ? <span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span><i>{String(i+1).padStart(2,"0")}</i></span> : <button type="button" className="stack-chip stack-branded-chip stack-stat-trigger" key={t.name} aria-haspopup="dialog" aria-label={`View ${t.name} statistics`} onClick={() => setSelectedTech({name:t.name,logo:t.logo,kind:t.name==="YAML" ? "FORMAT" : "LANGUAGE"})}><motion.img layoutId={`tech-logo-${t.name}`} src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span><i>{String(i+1).padStart(2,"0")}</i></button>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>03</span><div><h3>Frameworks &amp; interfaces</h3><p>Framework profiles also surface manual project estimates when no repository is available.</p></div></div><div className="stack-brand-chips">{[{name:"Next.js",logo:"nextdotjs"},{name:"React",logo:"react"}].map(t=><button type="button" className="stack-chip stack-branded-chip stack-stat-trigger" key={t.name} aria-haspopup="dialog" aria-label={`View ${t.name} project statistics`} onClick={() => setSelectedTech({name:t.name,logo:t.logo,kind:"FRAMEWORK"})}><motion.img layoutId={`tech-logo-${t.name}`} src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></button>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>04</span><div><h3>Data &amp; storage</h3><p>Relational, embedded, and distributed systems.</p></div></div><div className="stack-brand-chips">{[{name:"PostgreSQL",logo:"postgresql"},{name:"SQLite",logo:"sqlite"},{name:"aiosqlite",logo:"python"},{name:"ScyllaDB",logo:"scylladb"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>05</span><div><h3>Editors &amp; terminal</h3><p>Command-line navigation, keyboard-driven editing, and a full-project editor.</p></div></div><div className="stack-brand-chips">{[{name:"Terminal / CLI",logo:"terminal"},{name:"Vim",logo:"vim"},{name:"Neovim",logo:"neovim"},{name:"Visual Studio Code",logo:"vscode"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div><div className="stack-category"><div className="stack-category-head"><span>06</span><div><h3>Infrastructure &amp; tooling</h3><p>Packaging, shipping, and keeping things running.</p></div></div><div className="stack-brand-chips">{[{name:"Docker",logo:"docker"},{name:"Git",logo:"git"},{name:"GitHub Actions · YAML",logo:"githubactions"}].map(t=><span className="stack-chip stack-branded-chip" key={t.name}><img src={`/brands/tech-${t.logo}.svg`} alt="" loading="lazy"/><span>{t.name}</span></span>)}</div></div></div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div>
+    <section className="stack section-shell section-space" id="stack"><div className="section-topline"><IndexLabel n={themeCopy.stackIndex} label={themeCopy.stackLabel}/><Eyebrow>{themeCopy.stackEyebrow}</Eyebrow></div><div className="stack-heading"><motion.div initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} variants={sequence}><motion.span variants={motionRise} className="eyebrow"><i/> {themeCopy.stackEyebrow}</motion.span><motion.h2 variants={motionRise}>{themeCopy.stackTop}<br/><em>{themeCopy.stackBottom}</em></motion.h2></motion.div><p>{themeCopy.stackDescription}</p></div><div className="website-stack-overview">
+      <div className="website-stack-feature">
+        <div className="website-stack-visual">
+          <div className="website-stack-visual-top"><span>V / WEB SYSTEMS</span><span>BUILD 001</span></div>
+          <div className="website-stack-visual-center">
+            <div className="website-stack-logo-stack">
+              <span className="website-stack-logo website-stack-logo-next"><img src="/brands/tech-nextdotjs.svg" alt="Next.js" loading="lazy"/></span>
+              <span className="website-stack-logo website-stack-logo-react"><img src="/brands/tech-react.svg" alt="React" loading="lazy"/></span>
+              <span className="website-stack-logo website-stack-logo-ts"><img src="/brands/tech-typescript.svg" alt="TypeScript" loading="lazy"/></span>
+            </div>
+            <span className="website-stack-visual-word">VIREON<span> / INTERFACE</span></span>
+            <span className="website-stack-visual-caption">COMPONENTS · DATA · MOTION · THEMES</span>
+          </div>
+          <div className="website-stack-visual-bottom"><span>RENDER / INTERACT / DEPLOY</span><span><i/> STATIC SITE</span></div>
+        </div>
+        <div className="website-stack-feature-copy">
+          <span className="micro-label">01 / THE FRONT END</span>
+          <h3>Not just a list of logos.<br/><em>Every layer has a job.</em></h3>
+          <p>Next.js and React render the interface. TypeScript handles interactive behaviour and public data. CSS gives the theme system its distinct identities. Motion connects the pieces, and the deployment workflow publishes the finished site.</p>
+          <div className="website-stack-pipeline"><span>01 <b>BUILD</b></span><i/><span>02 <b>CHECK</b></span><i/><span>03 <b>PUBLISH</b></span></div>
+        </div>
+      </div>
+      <div className="website-stack-modules" aria-label="Technologies used by this website">
+        {[{name:"Next.js + React",logo:"nextdotjs",kind:"INTERFACE",copy:"The page framework and component system that render the site and its reusable sections."},{name:"TypeScript",logo:"typescript",kind:"BEHAVIOUR",copy:"Typed UI state, data parsing, modal interactions, and safer updates across the app."},{name:"CSS theme system",logo:"css3",kind:"VISUAL DESIGN",copy:"Responsive layouts and separate Classic, NothingOS, and Light visual systems—not one layout with a recoloured background."},{name:"Framer Motion",logo:"framer",kind:"ANIMATION",copy:"Scroll reveals, animated counters, theme transitions, and the language-logo-to-modal movement."},{name:"Rust + GitHub Actions",logo:"rust",kind:"LIVE DATA",copy:"A scheduled Rust helper refreshes the optional Spotify snapshot; Actions runs validation and the site build."},{name:"GitHub Pages",logo:"github",kind:"HOSTING",copy:"The website is exported as static files, so it can be served without a permanently running application server."}].map((item,i)=><article className="website-stack-module" key={item.name}>
+          <div className="website-stack-module-top"><span>{String(i+1).padStart(2,"0")} / {item.kind}</span><img src={`/brands/tech-${item.logo}.svg`} alt="" loading="lazy"/></div>
+          <h3>{item.name}</h3><p>{item.copy}</p>
+        </article>)}
+      </div>
+    </div>
+    <div className="project-language-explorer">
+      <div className="project-language-heading">
+        <div><span className="micro-label">02 / CODEBASE EXPLORER</span><h3>Language statistics, on demand.</h3><p>These are tracked project languages and the supplied Lunar X estimates. Select any tile to open the full breakdown—the headline line total includes Lunar X wherever that estimate applies.</p></div>
+        <span className="project-language-count">{statTechOptions.length} PROFILES</span>
+      </div>
+      <div className="project-language-grid">
+        {statTechOptions.map((tech,i)=>{
+          const scanned=languages.find((language)=>language.language.toLowerCase()===tech.name.toLowerCase());
+          const lunarLines=estimates.reduce((total,project)=>total+project.areas.filter((area)=>area.stack.trim().toLowerCase()===tech.name.toLowerCase()).reduce((sum,area)=>sum+area.lines,0),0);
+          const totalLines=(scanned?.lines??0)+lunarLines;
+          return <motion.button type="button" className="project-language-tile" key={tech.name} aria-haspopup="dialog" aria-label={`Open ${tech.name} language statistics, ${totalLines.toLocaleString()} total lines`} onClick={()=>setSelectedTech({name:tech.name,logo:tech.logo,kind:tech.kind})} initial={reduce?false:{opacity:0,y:12}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.12}} transition={{duration:.35,delay:Math.min(i*.018,.25)}}>
+            <span className="project-language-logo">{tech.logo ? <motion.img layoutId={`tech-logo-${tech.name}`} src={`/brands/tech-${tech.logo}.svg`} alt="" loading="lazy"/> : <motion.span layoutId={`tech-logo-${tech.name}`} className="project-language-generic"><Code2 size={16}/></motion.span>}</span>
+            <span className="project-language-copy"><strong>{tech.name}</strong><small>{lunarLines>0?"includes Lunar X estimate":"tracked repository data"}</small></span>
+            <span className="project-language-lines"><strong>{totalLines.toLocaleString()}</strong><small>lines</small></span>
+            <ArrowUpRight size={14} className="project-language-arrow" aria-hidden="true"/>
+          </motion.button>;
+        })}
+      </div>
+      <p className="project-language-note">Lunar X is included in the main line count for Rust, Python, Next.js, and React using the supplied estimates. Its estimated counts are not fabricated into file, character, word, or non-blank-line totals.</p>
+    </div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div>
     {portalReady && createPortal(
       <AnimatePresence initial={false}>
         {selectedTech && (
@@ -356,25 +428,29 @@ export default function Home() {
                 <button type="button" className="tech-modal-close" autoFocus onClick={() => setSelectedTech(null)} aria-label={`Close ${selectedTech.name} statistics`}><X size={17}/></button>
               </div>
               <div className="tech-modal-identity">
-                <motion.img layoutId={`tech-logo-${selectedTech.name}`} src={`/brands/tech-${selectedTech.logo}.svg`} alt="" />
+                {selectedTech.logo ? <motion.img layoutId={`tech-logo-${selectedTech.name}`} src={`/brands/tech-${selectedTech.logo}.svg`} alt="" /> : <motion.span layoutId={`tech-logo-${selectedTech.name}`} className="tech-modal-generic-logo"><Code2 size={24}/></motion.span>}
                 <div>
-                  <span className="micro-label">{selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : selectedEstimateAreas.length > 0 ? "MANUAL PROJECT ESTIMATE" : "NO SOURCE DATA FOUND"}</span>
+                  <span className="micro-label">{selectedEstimateAreas.length > 0 ? "COMBINED TOTAL / LUNAR X INCLUDED" : selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : "NO SOURCE DATA FOUND"}</span>
                   <h2 id="tech-modal-title">{selectedTech.name}</h2>
-                  <p>{selectedLanguage
-                    ? "Whole-repository totals from the latest public-project scan. These counts describe project contents, not individual authorship."
-                    : selectedEstimateAreas.length > 0
-                      ? "Reported project work without a public scannable repository. These estimates remain separate from automated totals."
-                      : "There are no tracked language counts or manually supplied project estimates for this technology yet."}</p>
+                  <p>{selectedEstimateAreas.length > 0
+                    ? "The headline line total combines the public-repository scan with the supplied Lunar X estimate for this technology. Only measured fields are shown—no file, character, word, or non-blank counts are invented."
+                    : selectedLanguage
+                      ? "Whole-repository totals from the latest public-project scan. These counts describe project contents, not individual authorship."
+                      : "No tracked language counts or Lunar X estimates have been recorded for this technology yet."}</p>
                 </div>
               </div>
-              {selectedLanguage && (
-                <div className="tech-modal-grid" aria-label={`${selectedTech.name} aggregate statistics`}>
+              {(selectedLanguage || selectedEstimateAreas.length > 0) && (
+                <div className="tech-modal-grid" aria-label={`${selectedTech.name} combined statistics`}>
                   {[
-                    { label: "TOTAL LINES", value: selectedLanguage.lines, note: "Across scanned repositories" },
-                    { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Non-empty lines" },
-                    { label: "FILES", value: selectedLanguage.files, note: "Tracked text files" },
-                    { label: "CHARACTERS", value: selectedLanguage.characters, note: "Line breaks excluded" },
-                    { label: "WORDS", value: selectedLanguage.words, note: "Whitespace-separated terms" },
+                    { label: "TOTAL LINES", value: selectedTotalLines, note: selectedEstimateAreas.length > 0 ? "Repository scan + Lunar X estimate" : "Across scanned repositories" },
+                    ...(selectedEstimateAreas.length > 0 ? [{ label: "LUNAR X LINES", value: selectedManualLines, note: "Supplied project estimate" }] : []),
+                    ...(selectedLanguage ? [
+                      { label: "SCANNED LINES", value: selectedLanguage.lines, note: "Public repositories only" },
+                      { label: "NON-BLANK LINES", value: selectedLanguage.nonblankLines, note: "Scanned repositories" },
+                      { label: "FILES", value: selectedLanguage.files, note: "Tracked text files" },
+                      { label: "CHARACTERS", value: selectedLanguage.characters, note: "Line breaks excluded" },
+                      { label: "WORDS", value: selectedLanguage.words, note: "Scanned repository text" },
+                    ] : []),
                   ].map((metric) => <div className="tech-modal-stat" key={metric.label}>
                     <span>{metric.label}</span><strong><AnimatedNumber value={metric.value}/></strong><small>{metric.note}</small>
                   </div>)}
@@ -386,8 +462,8 @@ export default function Home() {
               {selectedEstimateAreas.length > 0 && (
                 <section className="tech-modal-section" aria-label="Manual project estimates">
                   <div className="tech-modal-section-heading">
-                    <div><span className="micro-label">UNINDEXED PROJECT WORK</span><h3>Reported estimates</h3></div>
-                    <span className="tech-modal-source-label">KEPT SEPARATE FROM SCAN TOTALS</span>
+                    <div><span className="micro-label">LUNAR X / INCLUDED ABOVE</span><h3>Source breakdown</h3></div>
+                    <span className="tech-modal-source-label">ALREADY INCLUDED IN TOTAL LINES</span>
                   </div>
                   <div className="tech-modal-estimate-list">
                     {selectedEstimateAreas.map(({ project, area }) => (
@@ -398,7 +474,7 @@ export default function Home() {
                       </a>
                     ))}
                   </div>
-                  <p className="tech-modal-footnote">{selectedEstimateAreas[0].project.classification}</p>
+                  <p className="tech-modal-footnote">Lunar X does not have a public scannable repository in this stats index. These supplied line estimates are included in the Total Lines tile above; other metrics remain scan-only and are not inferred.</p>
                 </section>
               )}
               {selectedRepositoryLanguages.length > 0 && (
