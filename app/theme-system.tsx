@@ -343,31 +343,97 @@ export function useCurrentTheme() {
 
 export function ThemeHeroArtwork() {
   const theme = useCurrentTheme();
+  const reduceMotion = useReducedMotion();
+  const [cinematicScene, setCinematicScene] = useState(0);
+  const sceneNames = ["Objects", "Curtain call", "The arrival", "The witness", "Title sequence", "The eyes", "Reach", "The pour"];
+
+  useEffect(() => {
+    if (theme !== "cinematic" || reduceMotion) return;
+    const interval = window.setInterval(() => {
+      setCinematicScene((current) => (current + 1) % sceneNames.length);
+    }, 4000);
+    return () => window.clearInterval(interval);
+  }, [theme, reduceMotion, sceneNames.length]);
 
   if (theme === "cinematic") return (
-    <div className="theme-hero-artwork theme-hero-artwork-cinematic" aria-hidden="true">
-      <div className="cinematic-comic-frame cinematic-comic-frame-back">
-        <div className="cinematic-curtain cinematic-curtain-left" />
-        <div className="cinematic-curtain cinematic-curtain-right" />
-        <div className="cinematic-panel-cut cinematic-panel-cut-one" />
-        <div className="cinematic-panel-cut cinematic-panel-cut-two" />
-        <div className="cinematic-ring cinematic-ring-outer" />
-        <div className="cinematic-ring cinematic-ring-inner" />
-        <div className="cinematic-figure">
-          <span className="cinematic-figure-head" />
-          <span className="cinematic-figure-body" />
-          <span className="cinematic-figure-arm" />
+    <div className="theme-hero-artwork theme-hero-artwork-cinematic" role="group" aria-label="Cinematic Ink illustrated scene sequence">
+      <div className={`cinematic-scene cinematic-scene-bottles${cinematicScene === 0 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-bottle cinematic-bottle-blue"><i className="cinematic-bottle-neck"/><i className="cinematic-bottle-cap"/></div>
+        <div className="cinematic-bottle cinematic-bottle-yellow"><i className="cinematic-bottle-neck"/><i className="cinematic-bottle-cap"/></div>
+        <div className="cinematic-bottle cinematic-bottle-lime"><i className="cinematic-bottle-neck"/><i className="cinematic-bottle-cap"/></div>
+        <span className="cinematic-shelf cinematic-shelf-top"/>
+        <span className="cinematic-shelf cinematic-shelf-bottom"/>
+        <span className="cinematic-scene-stamp">OBJECT STUDY / 001</span>
+      </div>
+
+      <div className={`cinematic-scene cinematic-scene-curtain${cinematicScene === 1 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-theatre-curtain cinematic-theatre-curtain-left"/>
+        <div className="cinematic-theatre-curtain cinematic-theatre-curtain-right"/>
+        <div className="cinematic-stage-opening"><span className="cinematic-stage-orb"/><span className="cinematic-stage-person"><i/><b/></span></div>
+        <span className="cinematic-curtain-floor"/>
+        <span className="cinematic-scene-stamp">ACT I / THE OPENING</span>
+      </div>
+
+      <div className={`cinematic-scene cinematic-scene-arrival${cinematicScene === 2 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-arrival-paper"/>
+        <div className="cinematic-arrival-red"/>
+        <div className="cinematic-person cinematic-person-front">
+          <span className="cinematic-person-hair"/><span className="cinematic-person-face"/><span className="cinematic-person-neck"/>
+          <span className="cinematic-person-coat"/><span className="cinematic-person-shirt"/><span className="cinematic-person-trousers"/>
+          <span className="cinematic-person-arm"/>
         </div>
-        <span className="cinematic-ink-stroke cinematic-ink-stroke-one" />
-        <span className="cinematic-ink-stroke cinematic-ink-stroke-two" />
+        <span className="cinematic-arrival-caption">A FIGURE ENTERS THE FRAME.</span>
+        <span className="cinematic-scene-stamp">CAST / 002</span>
       </div>
-      <div className="cinematic-comic-frame cinematic-comic-frame-front">
-        <span className="cinematic-panel-number">04</span>
-        <span className="cinematic-panel-mark" />
-        <span className="cinematic-panel-silhouette" />
+
+      <div className={`cinematic-scene cinematic-scene-witness${cinematicScene === 3 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-red-velvet"/>
+        <div className="cinematic-back-figure"><span className="cinematic-back-hair"/><span className="cinematic-back-coat"/><span className="cinematic-back-trousers"/><span className="cinematic-back-arm"/></div>
+        <span className="cinematic-witness-light"/>
+        <span className="cinematic-scene-stamp">ACT II / THE WITNESS</span>
       </div>
-      <span className="cinematic-frame-rule cinematic-frame-rule-top" />
-      <span className="cinematic-frame-rule cinematic-frame-rule-bottom" />
+
+      <div className={`cinematic-scene cinematic-scene-title${cinematicScene === 4 ? " is-active" : ""}`} aria-hidden="true">
+        <span className="cinematic-title-ornament cinematic-title-ornament-left"/>
+        <span className="cinematic-title-ornament cinematic-title-ornament-right"/>
+        <div className="cinematic-title-lockup"><small>A VIREON ORIGINAL</small><strong>THE</strong><strong>NOCTURNE</strong><strong>EXPERIENCE</strong><i/><span>SOFTWARE · STORIES · SOUND</span></div>
+        <div className="cinematic-title-paper"><span/><span/><span/><span/><span/></div>
+        <span className="cinematic-scene-stamp">INTERMISSION / 003</span>
+      </div>
+
+      <div className={`cinematic-scene cinematic-scene-eyes${cinematicScene === 5 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-eye-hair"/>
+        <div className="cinematic-eye-face">
+          <div className="cinematic-eye cinematic-eye-left"><i/><b/></div>
+          <div className="cinematic-eye cinematic-eye-right"><i/><b/></div>
+        </div>
+        <div className="cinematic-eye-shadow"/>
+        <span className="cinematic-scene-stamp">CLOSE-UP / 004</span>
+      </div>
+
+      <div className={`cinematic-scene cinematic-scene-reach${cinematicScene === 6 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-reach-velvet"/>
+        <div className="cinematic-red-spiral"><i/><i/><i/></div>
+        <div className="cinematic-reaching-arm"><span className="cinematic-reaching-hand"><i/><i/><i/><i/><b/></span></div>
+        <span className="cinematic-scene-stamp">MOTION / 005</span>
+      </div>
+
+      <div className={`cinematic-scene cinematic-scene-pour${cinematicScene === 7 ? " is-active" : ""}`} aria-hidden="true">
+        <div className="cinematic-pour-red"/>
+        <div className="cinematic-pour-arm"><span className="cinematic-pour-hand"/></div>
+        <div className="cinematic-pour-stream"/>
+        <div className="cinematic-pour-glass"><i/></div>
+        <span className="cinematic-scene-stamp">FINAL FRAME / 006</span>
+      </div>
+
+      <span className="cinematic-scene-index" aria-live="off">SCENE {String(cinematicScene + 1).padStart(2, "0")} / 08</span>
+      <span className="cinematic-scene-name" aria-live="polite">{sceneNames[cinematicScene]}</span>
+      <div className="cinematic-scene-controls" aria-label="Navigate illustrated scenes">
+        <button type="button" onClick={() => setCinematicScene((current) => (current + sceneNames.length - 1) % sceneNames.length)} aria-label="Previous cinematic scene"><span aria-hidden="true">←</span></button>
+        <button type="button" onClick={() => setCinematicScene((current) => (current + 1) % sceneNames.length)} aria-label="Next cinematic scene"><span aria-hidden="true">→</span></button>
+      </div>
+      <span className="cinematic-frame-rule cinematic-frame-rule-top" aria-hidden="true"/>
+      <span className="cinematic-frame-rule cinematic-frame-rule-bottom" aria-hidden="true"/>
     </div>
   );
 
