@@ -5,6 +5,7 @@ import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } fr
 import { createPortal } from "react-dom";
 import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Code2, Github, Menu, Orbit, X } from "lucide-react";
 import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork, ThemeSwitcher, useCurrentTheme } from "./theme-system";
+import CinematicPage from "./cinematic-page";
 
 type Repo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; archived?: boolean; updated_at: string };
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
@@ -308,6 +309,7 @@ export default function Home() {
     }))),
   ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
+  if (activeTheme === "cinematic") return <CinematicPage live={live} repos={repos} codeStats={codeStats} spotify={spotify} />;
   return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
     <div className="atmosphere" aria-hidden="true"><div className="atmosphere-grid"/><motion.div className="aurora aurora-one" animate={reduce?{}:{x:[0,38,-18,0],y:[0,-22,16,0],rotate:[0,7,-4,0],scale:[1,1.08,.97,1]}} transition={{duration:25,repeat:Infinity,ease:"easeInOut"}}/><motion.div className="aurora aurora-two" animate={reduce?{}:{x:[0,-32,16,0],y:[0,20,-16,0],rotate:[0,-9,4,0]}} transition={{duration:31,repeat:Infinity,ease:"easeInOut"}}/><div className="grain"/></div>
