@@ -50,6 +50,14 @@ Lunar X's figures feed directly into the website's clickable language statistics
 | GitHub Actions + Pages | Type-checking, static export, and deployment. |
 | Rust + Axum | Optional companion API and scheduled Spotify snapshot helper. |
 
+## Planned learning
+
+| Technology | Category | Planned focus |
+| --- | --- | --- |
+| Tokio | Rust asynchronous runtime | High-concurrency networking, Discord event handling, and efficient game-session workloads. |
+
+*Tokio is a runtime, not a programming language; it is listed separately from languages and frameworks.*
+
 ## Run locally
 
 **Requirements:** Node.js 20+ and npm.
