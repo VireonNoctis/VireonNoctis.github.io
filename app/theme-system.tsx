@@ -18,7 +18,8 @@ export const THEMES = [
   { id: "classic", name: "Vireon Classic", shortName: "Classic", category: "EDITORIAL NOIR", description: "The signature Vireon look: literary display type, restrained details, and deliberate negative space." },
   { id: "nothing", name: "NothingOS", shortName: "NothingOS", category: "MONOCHROME SYSTEM", description: "A hard monochrome interface with IBM Plex Mono labels, rolling number wheels, and an animated signal grid." },
   { id: "light", name: "Light Mode", shortName: "Light", category: "MODERN GALLERY", description: "A bright editorial gallery with centered typography, architectural spacing, and ink-blue details." },
-  { id: "cinematic", name: "Cinematic Ink", shortName: "Ink", category: "COMIC CINEMA", description: "A red, black, and paper-white comic world built around moving panels and bold illustrated scenes." },
+  { id: "cinematic", name: "Cinematic Ink", shortName: "Ink", category: "COMIC CINEMA", description: "A tactile, scroll-led graphic novel with atmospheric artwork, layered ink reveals, and editorial pacing." },
+  { id: "glass", name: "Liquid Glass", shortName: "Glass", category: "REFRACTIVE INTERFACE", description: "A bright, spatial interface with translucent controls, optical highlights, and soft depth." },
 ] as const;
 
 export type ThemeId = (typeof THEMES)[number]["id"];
@@ -75,7 +76,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
     document.body.dataset.theme = theme;
-    document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark";
+    document.documentElement.style.colorScheme = theme === "light" || theme === "glass" ? "light" : "dark";
   }, [theme]);
 
   const previewTheme = useCallback((nextTheme: ThemeId) => {
@@ -449,6 +450,19 @@ export function ThemeHeroArtwork() {
     </div>
   );
 
+  if (theme === "glass") return (
+    <div className="theme-hero-artwork theme-hero-artwork-glass" aria-hidden="true">
+      <div className="glass-artfield" />
+      <div className="glass-art-orbit glass-art-orbit-a" />
+      <div className="glass-art-orbit glass-art-orbit-b" />
+      <div className="glass-object"><i /><b /></div>
+      <div className="glass-pane glass-pane-a"><span>VIREON / 001</span><i /><span>BUSINESS · SOFTWARE</span></div>
+      <div className="glass-pane glass-pane-b"><span>PROPERTY / DIGITAL</span><i /><span>IDEAS INTO SYSTEMS</span></div>
+      <div className="glass-pane glass-pane-c"><span>CREATIVE DIRECTION</span><i /></div>
+      <div className="glass-art-reflection" />
+    </div>
+  );
+
   if (theme === "light") return (
     <div className="theme-hero-artwork theme-hero-artwork-light" aria-hidden="true">
       <div className="light-hero-grid" />
@@ -483,6 +497,15 @@ function ThemePreview({ theme }: { theme: ThemeId }) {
           <span>01 <b>BOOT</b></span><span>02 <b>BUILD</b></span><span>03 <b>SHIP</b></span>
         </div>
         <div className="preview-system-readout"><strong>83.6</strong><span> SIGNAL STABLE / RUNNING</span></div>
+      </div>
+    );
+  }
+  if (theme === "glass") {
+    return (
+      <div className="theme-preview theme-preview-glass" aria-hidden="true">
+        <div className="glass-preview-orb" />
+        <div className="glass-preview-window"><span>V / N</span><i /><i /><b /></div>
+        <div className="glass-preview-dock"><i /><i /><i /></div>
       </div>
     );
   }

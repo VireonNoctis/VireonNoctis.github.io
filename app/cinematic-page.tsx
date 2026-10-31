@@ -155,6 +155,12 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
 
   return (
     <div className="cinema-site">
+      <svg className="cinema-filter-defs" aria-hidden="true" focusable="false">
+        <filter id="cinema-ink-edge" x="-12%" y="-12%" width="124%" height="124%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.018 0.075" numOctaves="2" seed="17" result="ink-noise" />
+          <feDisplacementMap in="SourceGraphic" in2="ink-noise" scale="34" xChannelSelector="R" yChannelSelector="G" />
+        </filter>
+      </svg>
       <a className="cinema-skip" href="#ink-work">Skip to the work</a>
       <header className="cinema-header">
         <a className="cinema-brand" href="#ink-top" onClick={closeMenu} aria-label="Vireon Noctis, back to opening">
@@ -179,7 +185,8 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
           <div className="cinema-scene-art"><CinematicScene scene="hero" /><div className="cinema-hero-vertical">SOFTWARE / STORIES / SOUND</div><a className="cinema-round-down" href="#ink-work" aria-label="Scroll to selected work"><ArrowDownRight size={24} /></a></div>
           <div className="cinema-paper-band cinema-paper-hero">
             <div className="cinema-paper-kicker"><PaperIndex number="00" eyebrow="A PERSONAL UNIVERSE" /><span>VIREON NOCTIS / DIGITAL EDITION</span></div>
-            <div className="cinema-paper-headline"><h1>MADE OF<br /><em>INK &amp; INTENT.</em></h1><div className="cinema-paper-copy"><p>Software, stories, sound, and the systems between them. A living archive of what I build, what I study, and what stays with me.</p><a className="cinema-text-link" href="#ink-work">ENTER THE ARCHIVE <ArrowUpRight size={15} /></a></div></div>
+            <div className="cinema-paper-headline"><h1>MADE OF<br /><em>INK &amp; INTENT.</em></h1><div className="cinema-paper-copy"><p>Businessman, full-stack developer, and real estate developer. I work across business, software, and property—building digital products, developing systems, and taking ideas from concept toward execution.</p><a className="cinema-text-link" href="#ink-work">ENTER THE ARCHIVE <ArrowUpRight size={15} /></a></div></div>
+            <div className="cinema-role-strip" aria-label="Professional roles"><span>BUSINESSMAN</span><i /><span>FULL-STACK DEVELOPER</span><i /><span>REAL ESTATE DEVELOPER</span></div>
           </div>
         </section>
 

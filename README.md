@@ -16,10 +16,14 @@
   <img alt="Rust API" src="https://img.shields.io/badge/Rust-Axum%20companion-DEA584?logo=rust&logoColor=black"/>
 </p>
 
+## Professional identity
+
+Vireon presents as a **Businessman, Full-stack Developer, and Real Estate Developer**, with a portfolio spanning business, software systems, and property development.
+
 ## What the site does
 
 - **Projects and profiles:** curated project links alongside live GitHub, AniList, Last.fm, and optional Spotify data.
-- **Selectable themes:** Vireon Classic, NothingOS, and Light Mode. NothingOS uses a strict monochrome system with Unicode/Braille details and animated numeric readouts.
+- **Selectable themes:** Vireon Classic, NothingOS, Light Mode, Cinematic Ink, and Liquid Glass. NothingOS uses a strict monochrome system with Unicode/Braille details and animated numeric readouts; Cinematic Ink uses a textured scroll-led art direction; Liquid Glass reserves optical surfaces for selected interface elements.
 - **Language explorer:** select a language tile to open a modal with tracked lines, files, characters, words, and repository breakdowns. The language mark animates into the modal.
 - **Lunar X:** project line and approximate character totals are included in the matching language/framework profiles.
 - **Static deployment:** Next.js exports the site for GitHub Pages; the optional Rust API is deployed separately.
@@ -37,6 +41,10 @@ Lunar X's figures feed directly into the website's clickable language statistics
 | **Reported total** | | **636,746** | **≈ 48,455,130** |
 
 *Approximate character totals use the per-stack characters-per-line assumptions shown above.*
+
+## Design references
+
+The portfolio's motion and component research includes [ReactVibe](https://reactvibe.com/), [Dqnamo Kitchen](https://www.dqnamo.com/kitchen), [SmoothUI](https://smoothui.dev/), [Unlumen UI](https://ui.unlumen.com/), and the [Animmaster portfolio repository collection](https://github.com/Animmaster). 3D and visual-effect research includes [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [Drei](https://github.com/pmndrs/drei), [ShaderGradient](https://github.com/ruucm/shadergradient), and [Liquid Glass JS](https://github.com/dashersw/liquid-glass-js). See [docs/DESIGN_REFERENCES.md](docs/DESIGN_REFERENCES.md) for where each belongs and the implementation constraints.
 
 ## Website stack
 

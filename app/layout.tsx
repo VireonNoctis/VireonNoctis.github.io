@@ -6,22 +6,24 @@ import "./themes/light.css";
 import "./themes/lunar.css";
 import "./theme-picker.css";
 import "./themes/cinematic.css";
+import "./themes/liquid-glass.css";
+import "./profile-identity.css";
 import "./editorial-cleanup.css";
 import "./telemetry-responsive.css";
 import { ThemeProvider } from "./theme-system";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://vireonnoctis.github.io"),
-  title: "Vireon — The Slop King 👑 | Software, Stories, Sound",
-  description: "Vireon — The Slop King. Software, anime, music, and the creative chaos behind them.",
+  title: "Vireon — Businessman, Full-stack Developer & Real Estate Developer",
+  description: "The personal portfolio of Vireon: businessman, full-stack developer, and real estate developer. Explore software, business ventures, property, and creative projects.",
   applicationName: "Vireon",
   authors: [{ name: "Vireon", url: "https://github.com/VireonNoctis" }],
-  keywords: ["Vireon", "The Slop King", "developer", "creative studio", "AniList", "Lunar X"],
+  keywords: ["Vireon", "businessman", "full-stack developer", "real estate developer", "software", "property development", "AniList", "Lunar X"],
   openGraph: {
     type: "website",
     url: "https://vireonnoctis.github.io/",
-    title: "Vireon — The Slop King 👑",
-    description: "A personal world of software, anime, music, and creative chaos.",
+    title: "Vireon — Business, Software & Property",
+    description: "Businessman, full-stack developer, and real estate developer. A portfolio spanning software, business, property, and creative work.",
     siteName: "Vireon",
     images: [
       {
@@ -34,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Vireon — The Slop King 👑 | Software, Stories, Sound",
-    description: "Vireon — The Slop King. Software, anime, music, and creative projects.",
+    title: "Vireon — Businessman, Full-stack Developer & Real Estate Developer",
+    description: "Business, software, property, and creative projects by Vireon.",
     images: ["/vireon-preview.svg"],
   },
   icons: { icon: "/vireon-mark.svg" },
