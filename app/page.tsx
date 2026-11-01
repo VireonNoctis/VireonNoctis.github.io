@@ -109,7 +109,7 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const [menu, setMenu] = useState(false);
-  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "FORMAT" | "WORKFLOW" | "LEARNING"; learningStatus?: "IN USE" | "PLANNED"; learningNote?: string } | null>(null);
+  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "LIBRARY" | "GRAPHICS API" | "RUNTIME" | "FORMAT" | "WORKFLOW" | "LEARNING"; learningStatus?: "IN USE" | "PLANNED"; learningNote?: string } | null>(null);
   const [portalReady, setPortalReady] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
   const [codeStats, setCodeStats] = useState<CodeStats | null>(null);
@@ -310,7 +310,13 @@ export default function Home() {
     ...estimates.flatMap((project) => project.areas.map((area) => ({
       name: area.stack,
       logo: techLogosByName[area.stack] ?? "",
-      kind: (area.stack === "Next.js" || area.stack === "React" ? "FRAMEWORK" : "LANGUAGE") as "FRAMEWORK" | "LANGUAGE",
+      kind: (
+        area.stack === "Next.js" ? "FRAMEWORK"
+          : area.stack === "React" || area.stack === "Three.js" ? "LIBRARY"
+            : area.stack === "WebGL" ? "GRAPHICS API"
+              : area.stack === "Tokio" ? "RUNTIME"
+                : "LANGUAGE"
+      ) as "FRAMEWORK" | "LIBRARY" | "GRAPHICS API" | "RUNTIME" | "LANGUAGE",
     }))),
   ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
