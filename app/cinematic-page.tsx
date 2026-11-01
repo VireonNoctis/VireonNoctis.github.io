@@ -195,7 +195,7 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
           <div className="cinema-paper-band cinema-paper-work">
             <div className="cinema-section-intro"><PaperIndex number="01" eyebrow="SELECTED WORK" /><h2>PROJECTS<br /><em>WITH A PULSE.</em></h2><p>Tools and communities shaped through iteration, contribution, and a lot of late nights.</p></div>
             <div className="cinema-project-list">
-              <details className="cinema-project-expand" open>
+              <details className="cinema-project-expand">
                 <summary><span>01 / COMMUNITY SYSTEMS</span><strong>Lemegeton</strong><small>Multi-guild Discord bot · AniList · Steam · discovery</small><i>＋</i></summary>
                 <div className="cinema-project-expanded"><p>A community media-discovery system with server-aware recommendations, browsing, panels, leaderboards, moderation utilities, and multi-guild configuration.</p><span>MAJOR CONTRIBUTOR · CO-OWNER</span><a href="https://github.com/Kyerstorm/Lemegeton" target="_blank" rel="noreferrer">OPEN REPOSITORY <ArrowUpRight size={14}/></a></div>
               </details>
@@ -227,7 +227,8 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
               <Stat label="REPOSITORIES" value={codeStats?.totals.repositories ?? live.repos ?? 0} />
               <Stat label="OWNED PROJECTS" value={codeStats?.totals.ownedRepositories ?? 0} />
               <Stat label="CONTRIBUTOR PROJECTS" value={codeStats?.totals.contributorRepositories ?? 0} />
-              <Stat label="STARS / FORKS" value={(codeStats?.totals.stars ?? 0) + (codeStats?.totals.forks ?? 0)} />
+              <Stat label="STARS" value={codeStats?.totals.stars ?? 0} />
+              <Stat label="FORKS" value={codeStats?.totals.forks ?? 0} />
               <div className="cinema-estimate-strip"><span>LUNAR X / REPORTED ESTIMATES</span><div><strong>WebGL <b>20,657 lines</b></strong><small>≈ <AnimatedNumber value={webglCharacters} /> characters</small></div><div><strong>Three.js <b>18,685 lines</b></strong><small>≈ <AnimatedNumber value={threeCharacters} /> characters</small></div></div>
             </div>
           </div>
