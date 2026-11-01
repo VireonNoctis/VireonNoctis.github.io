@@ -34,6 +34,7 @@ type CodeStatsRepository = {
   relationship: "owned" | "contributor";
   role?: string;
   contributionNote?: string;
+  frameworks?: string[];
   files: number;
   lines: number;
   characters: number;
@@ -108,7 +109,7 @@ export default function Home() {
   const { scrollYProgress } = useScroll();
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const [menu, setMenu] = useState(false);
-  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "FORMAT" | "WORKFLOW" | "LEARNING"; learningStatus?: "IN USE" | "PLANNED"; learningNote?: string } | null>(null);
+  const [selectedTech, setSelectedTech] = useState<{ name: string; logo: string; kind: "LANGUAGE" | "FRAMEWORK" | "LIBRARY" | "GRAPHICS API" | "RUNTIME" | "FORMAT" | "WORKFLOW" | "LEARNING"; learningStatus?: "IN USE" | "PLANNED"; learningNote?: string } | null>(null);
   const [portalReady, setPortalReady] = useState(false);
   const [repos, setRepos] = useState<Repo[]>([]);
   const [codeStats, setCodeStats] = useState<CodeStats | null>(null);
@@ -279,6 +280,10 @@ export default function Home() {
   const selectedLanguage = selectedTech
     ? languages.find((language) => language.language.toLowerCase() === selectedTech.name.toLowerCase())
     : undefined;
+  const selectedFrameworkRepositories = selectedTech && codeStats
+    ? codeStats.repositories.filter((project) =>
+        (project.frameworks ?? []).some((framework) => framework.toLowerCase() === selectedTech.name.toLowerCase()))
+    : [];
   const selectedRepositoryLanguages = selectedLanguage && codeStats
     ? codeStats.repositories.flatMap((project) => {
         const language = project.languages.find((item) => item.language.toLowerCase() === selectedLanguage.language.toLowerCase());
@@ -305,7 +310,13 @@ export default function Home() {
     ...estimates.flatMap((project) => project.areas.map((area) => ({
       name: area.stack,
       logo: techLogosByName[area.stack] ?? "",
-      kind: (area.stack === "Next.js" || area.stack === "React" ? "FRAMEWORK" : "LANGUAGE") as "FRAMEWORK" | "LANGUAGE",
+      kind: (
+        area.stack === "Next.js" ? "FRAMEWORK"
+          : area.stack === "React" || area.stack === "Three.js" ? "LIBRARY"
+            : area.stack === "WebGL" ? "GRAPHICS API"
+              : area.stack === "Tokio" ? "RUNTIME"
+                : "LANGUAGE"
+      ) as "FRAMEWORK" | "LIBRARY" | "GRAPHICS API" | "RUNTIME" | "LANGUAGE",
     }))),
   ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
@@ -351,20 +362,27 @@ export default function Home() {
     </section>
     <div className="marquee" aria-label={themeCopy.marquee.join(", ")}><div className="marquee-track" aria-hidden="true">{Array.from({length:4},(_,i)=><span key={i}>{themeCopy.marquee.join("  ✳  ")} <b>✳</b> </span>)}</div></div>
     <section className="manifesto section-shell section-space" id="manifesto"><IndexLabel n={themeCopy.manifestoIndex} label={themeCopy.manifestoLabel}/><div className="manifesto-content"><motion.div className="section-heading" initial="hidden" whileInView="show" viewport={{once:true,amount:.25}} variants={sequence}><motion.div variants={motionRise}><Eyebrow>{themeCopy.manifestoEyebrow}</Eyebrow></motion.div><motion.h2 variants={motionRise}>{themeCopy.manifestoTop}<br/><em>{themeCopy.manifestoBottom}</em></motion.h2></motion.div><motion.div className="manifesto-text" initial="hidden" whileInView="show" viewport={{once:true,amount:.2}} variants={sequence}><motion.p className="lead" variants={motionRise}>{themeCopy.manifestoLead}</motion.p><motion.p variants={motionRise}>{themeCopy.manifestoBody}</motion.p><motion.a className="text-link" variants={motionRise} href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer">{themeCopy.manifestoLink} <ArrowUpRight size={16}/></motion.a></motion.div></div><div className="manifesto-aside"><span className="aside-rule"/><p>{themeCopy.manifestoAsideTitle}</p><p>{themeCopy.manifestoAsideText}</p></div></section>
-    <section className="work section-shell section-space" id="work"><div className="section-topline"><IndexLabel n={themeCopy.workIndex} label={themeCopy.workLabel}/><Eyebrow>{themeCopy.workEyebrow}</Eyebrow></div><div className="work-heading"><motion.h2 initial="hidden" whileInView="show" viewport={{once:true}} variants={motionRise}>{themeCopy.workTop}<br/><em>{themeCopy.workBottom}</em></motion.h2><p>{themeCopy.workDescription}</p></div><div className="project-list">
-<a className="project-feature" href="https://github.com/Kyerstorm/Lemegeton" target="_blank" rel="noreferrer">
-  <div className="project-art lunar-art"><div className="lunar-moon"/><div className="lunar-ring"/><span>01 — COMMUNITY SYSTEMS</span><motion.div className="lunar-star" animate={reduce?{}:{rotate:360}} transition={{duration:45,repeat:Infinity,ease:"linear"}}>✳</motion.div></div>
-  <div className="project-detail"><div className="project-index">01 <span>/ SOFTWARE</span></div><div><div className="project-title-row"><img className="project-logo project-logo-large" src="/brands/lemegeton.svg" alt="" width="44" height="44"/><div><h3>Lemegeton</h3><p><em>One bot. Many communities. More ways to discover.</em><br/>A multi-guild Discord bot bringing anime, manga, light novels, general novels, and Steam discovery together. It combines AniList-linked profiles, recommendations, media browsing, leaderboards, custom roles, per-server dashboards, moderation utilities, notifications, and automated GitHub commit updates.</p></div></div><div className="tag-row"><span>MULTI-GUILD</span><span>ANILIST + STEAM</span><span>MEDIA DISCOVERY</span><span>SERVER AUTOMATION</span></div></div><span className="project-arrow"><ArrowUpRight/></span></div>
-</a>
-<a className="project-row" href="https://github.com/VireonNoctis/PrivaCage" target="_blank" rel="noreferrer">
-  <span className="project-index">02 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/privacage.svg" alt="" width="34" height="34"/><div><h3>PrivaCage</h3><p><em>Understand what your device exposes. Block what you can. Know what you cannot.</em><br/>A local-first privacy auditor for Android and Windows, backed by a Svelte + Rust web console. It brings together tracker intelligence, local app and metadata inspection, Android DNS/VPN work, and narrow, reversible Windows policy controls—without pretending any tool can make a device completely anonymous.</p></div></div><span className="project-type">PRIVACY / ANDROID + WINDOWS</span><ArrowUpRight className="row-arrow" size={19}/>
-</a>
-<a className="project-row" href="https://lunarx.to" target="_blank" rel="noreferrer">
-  <span className="project-index">03 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/lunarx.svg" alt="" width="34" height="34"/><div><h3>Lunar X</h3><p>A community platform for anime, manga, and novel discovery, profile customisation, progression, gacha/game systems, and the infrastructure that keeps its social features moving.</p></div></div><span className="project-type">PLATFORM / COMMUNITY</span><ArrowUpRight className="row-arrow" size={19}/>
-</a>
-<a className="project-row" href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer">
-  <span className="project-index">04 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/vireon-mark.svg" alt="" width="34" height="34"/><div><h3>Personal systems</h3><p>Small utilities, profile tooling, automation, and experiments made to reduce friction and make digital life more considered.</p></div></div><span className="project-type">TOOLS / EXPERIMENTS</span><ArrowUpRight className="row-arrow" size={19}/>
-</a>
+    <section className="work section-shell section-space" id="work"><div className="section-topline"><IndexLabel n={themeCopy.workIndex} label={themeCopy.workLabel}/><Eyebrow>{themeCopy.workEyebrow}</Eyebrow></div><div className="work-heading"><motion.h2 initial="hidden" whileInView="show" viewport={{once:true}} variants={motionRise}>{themeCopy.workTop}<br/><em>{themeCopy.workBottom}</em></motion.h2><p>{themeCopy.workDescription}</p></div><div className="project-list project-list-expandable">
+<details className="project-feature project-feature-expand project-expand">
+  <summary className="project-feature-summary">
+    <div className="project-art lunar-art"><div className="lunar-moon"/><div className="lunar-ring"/><span>01 — COMMUNITY SYSTEMS</span><motion.div className="lunar-star" animate={reduce?{}:{rotate:360}} transition={{duration:45,repeat:Infinity,ease:"linear"}}>✳</motion.div></div>
+    <div className="project-detail"><div className="project-index">01 <span>/ SOFTWARE</span></div><div><div className="project-title-row"><img className="project-logo project-logo-large" src="/brands/lemegeton.svg" alt="" width="44" height="44"/><div><h3>Lemegeton</h3><p><em>One bot. Many communities. More ways to discover.</em><br/>A multi-guild Discord bot bringing anime, manga, light novels, general novels, and Steam discovery together.</p></div></div><div className="tag-row"><span>MULTI-GUILD</span><span>ANILIST + STEAM</span><span>MEDIA DISCOVERY</span><span>SERVER AUTOMATION</span></div></div><span className="project-arrow"><ArrowUpRight/></span></div>
+    <span className="project-expand-hint">EXPAND PROJECT <span aria-hidden="true">＋</span></span>
+  </summary>
+  <div className="project-expanded-content"><p>Combines AniList-linked profiles, recommendations, media browsing, leaderboards, custom roles, per-server dashboards, moderation utilities, notifications, and automated GitHub commit updates.</p><a href="https://github.com/Kyerstorm/Lemegeton" target="_blank" rel="noreferrer">OPEN REPOSITORY <ArrowUpRight size={14}/></a><span>MAJOR CONTRIBUTOR · CO-OWNER</span></div>
+</details>
+<details className="project-row project-row-expand project-expand">
+  <summary className="project-row-summary"><span className="project-index">02 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/privacage.svg" alt="" width="34" height="34"/><div><h3>PrivaCage</h3><p><em>Understand what your device exposes. Block what you can. Know what you cannot.</em><br/>A local-first privacy auditor for Android and Windows, backed by a Svelte + Rust web console.</p></div></div><span className="project-type">PRIVACY / ANDROID + WINDOWS</span><ArrowUpRight className="row-arrow" size={19}/></summary>
+  <div className="project-expanded-content"><p>Tracker intelligence, local app and metadata inspection, Android DNS/VPN work, and narrow, reversible Windows policy controls—with explicit limits rather than unrealistic anonymity promises.</p><a href="https://github.com/VireonNoctis/PrivaCage" target="_blank" rel="noreferrer">OPEN REPOSITORY <ArrowUpRight size={14}/></a></div>
+</details>
+<details className="project-row project-expand">
+  <summary className="project-row-summary"><span className="project-index">03 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/lunarx.svg" alt="" width="34" height="34"/><div><h3>Lunar X</h3><p>A community platform for anime, manga, and novel discovery, profile customisation, progression, gacha/game systems, and the infrastructure that keeps its social features moving.</p></div></div><span className="project-type">PLATFORM / COMMUNITY</span><ArrowUpRight className="row-arrow" size={19}/></summary>
+  <div className="project-expanded-content"><p>Reported project footprint: 676,088 lines across backend, frontend, gacha systems, scraping/tools, WebGL, and Three.js work. Supplied project totals are shown separately from automated repository scans.</p><a href="https://lunarx.to/Profile/vvvx" target="_blank" rel="noreferrer">OPEN PROFILE <ArrowUpRight size={14}/></a></div>
+</details>
+<details className="project-row project-expand">
+  <summary className="project-row-summary"><span className="project-index">04 / 04</span><div className="project-title-row"><img className="project-logo" src="/brands/vireon-mark.svg" alt="" width="34" height="34"/><div><h3>Personal systems</h3><p>Small utilities, profile tooling, automation, and experiments made to reduce friction and make digital life more considered.</p></div></div><span className="project-type">TOOLS / EXPERIMENTS</span><ArrowUpRight className="row-arrow" size={19}/></summary>
+  <div className="project-expanded-content"><p>Includes developer tooling, workflow experiments, visual systems, and supporting utilities across the wider Vireon project ecosystem.</p><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">BROWSE REPOSITORIES <ArrowUpRight size={14}/></a></div>
+</details>
 </div><div className="github-live"><div className="github-live-icon"><Github size={19}/></div><div><span className="micro-label">{themeCopy.liveLabel}</span><p>{live.repos!==undefined?<><AnimatedNumber value={live.repos}/> {themeCopy.repoUnit}</>:themeCopy.repoFallback}{live.followers!==undefined?<> · <AnimatedNumber value={live.followers}/> {themeCopy.followersUnit}</>:""}</p></div><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">{themeCopy.repoCta} <ArrowUpRight size={15}/></a></div><section className="code-footprint-teaser" aria-label="Language code statistics">
   <div className="code-footprint-teaser-head"><span className="micro-label">CODE TELEMETRY / OPEN ON A LANGUAGE</span><span className="code-footprint-updated">{codeStats ? `${languages.length} LANGUAGE GROUPS · ${codeStats.totals.repositories} REPOSITORIES IN SNAPSHOT` : codeStatsStatus === "loading" ? "FETCHING LANGUAGE DATA" : "LANGUAGE DATA TEMPORARILY UNAVAILABLE"}</span></div>
   <p>Language details now live in the Toolchain. Select a language or framework to inspect tracked lines, files, characters, repository breakdowns, and separately reported Lunar X estimates.</p>
@@ -528,6 +546,23 @@ export default function Home() {
                       <a className="tech-modal-repository" href={project.url} key={project.fullName} target="_blank" rel="noreferrer">
                         <span className="tech-modal-repository-copy"><strong>{project.name}</strong><small>{project.role ?? (project.relationship === "contributor" ? "Major contributor" : `Owned · ${project.branch}`)}</small></span>
                         <span className="tech-modal-repository-stats"><strong><AnimatedNumber value={language.lines}/></strong><small>lines · {language.files} files</small></span>
+                        <ArrowUpRight size={15} aria-hidden="true"/>
+                      </a>
+                    ))}
+                  </div>
+                </section>
+              )}
+              {selectedFrameworkRepositories.length > 0 && (
+                <section className="tech-modal-section" aria-label="Framework usage">
+                  <div className="tech-modal-section-heading">
+                    <div><span className="micro-label">FRAMEWORK DETECTION</span><h3>Projects using {selectedTech?.name}</h3></div>
+                    <span className="tech-modal-source-label">{selectedFrameworkRepositories.length} repositories</span>
+                  </div>
+                  <div className="tech-modal-repository-list">
+                    {selectedFrameworkRepositories.map((project) => (
+                      <a className="tech-modal-repository" href={project.url} key={project.fullName} target="_blank" rel="noreferrer">
+                        <span className="tech-modal-repository-copy"><strong>{project.name}</strong><small>{project.relationship === "contributor" ? project.role ?? "Contributor project" : "Owned project"}</small></span>
+                        <span className="tech-modal-repository-stats"><strong>{project.frameworks?.filter((item) => item.toLowerCase() === selectedTech?.name.toLowerCase()).length ?? 0}</strong><small>framework match</small></span>
                         <ArrowUpRight size={15} aria-hidden="true"/>
                       </a>
                     ))}
