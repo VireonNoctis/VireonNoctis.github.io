@@ -20,7 +20,7 @@ type LanguageItem = { language: string; files: number; lines: number; nonblankLi
 type EstimateArea = { name: string; stack: string; lines: number; characters?: number; estimatedCharactersPerLine?: number };
 type EstimateProject = { id: string; name: string; url: string; classification: string; areas: EstimateArea[] };
 type StatsSnapshot = {
-  totals: { repositories: number; files: number; lines: number; characters: number; words: number; stars: number; forks: number };
+  totals: { repositories: number; ownedRepositories?: number; contributorRepositories?: number; files: number; lines: number; nonblankLines?: number; characters: number; words: number; stars: number; forks: number };
   languages?: LanguageItem[];
   manualProjectEstimates?: EstimateProject[];
 } | null;
@@ -195,10 +195,22 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
           <div className="cinema-paper-band cinema-paper-work">
             <div className="cinema-section-intro"><PaperIndex number="01" eyebrow="SELECTED WORK" /><h2>PROJECTS<br /><em>WITH A PULSE.</em></h2><p>Tools and communities shaped through iteration, contribution, and a lot of late nights.</p></div>
             <div className="cinema-project-list">
-              <a href="https://github.com/Kyerstorm/Lemegeton" target="_blank" rel="noreferrer"><span>01 / COMMUNITY SYSTEMS</span><strong>Lemegeton</strong><small>Multi-guild Discord bot · AniList · Steam · discovery</small><ArrowUpRight size={16} /></a>
-              <a href="https://github.com/VireonNoctis/PrivaCage" target="_blank" rel="noreferrer"><span>02 / PRIVACY ENGINEERING</span><strong>PrivaCage</strong><small>Svelte + Rust · Android · Windows</small><ArrowUpRight size={16} /></a>
-              <a href="https://lunarx.to" target="_blank" rel="noreferrer"><span>03 / COMMUNITY PLATFORM</span><strong>Lunar X</strong><small>Anime · manga · novels · game systems</small><ArrowUpRight size={16} /></a>
-              <a href="https://github.com/VireonNoctis" target="_blank" rel="noreferrer"><span>04 / PERSONAL SYSTEMS</span><strong>Utilities &amp; experiments</strong><small>Automation, tooling, and unfinished ideas</small><ArrowUpRight size={16} /></a>
+              <details className="cinema-project-expand" open>
+                <summary><span>01 / COMMUNITY SYSTEMS</span><strong>Lemegeton</strong><small>Multi-guild Discord bot · AniList · Steam · discovery</small><i>＋</i></summary>
+                <div className="cinema-project-expanded"><p>A community media-discovery system with server-aware recommendations, browsing, panels, leaderboards, moderation utilities, and multi-guild configuration.</p><span>MAJOR CONTRIBUTOR · CO-OWNER</span><a href="https://github.com/Kyerstorm/Lemegeton" target="_blank" rel="noreferrer">OPEN REPOSITORY <ArrowUpRight size={14}/></a></div>
+              </details>
+              <details className="cinema-project-expand">
+                <summary><span>02 / PRIVACY ENGINEERING</span><strong>PrivaCage</strong><small>Svelte + Rust · Android · Windows</small><i>＋</i></summary>
+                <div className="cinema-project-expanded"><p>Local-first privacy auditing, tracker intelligence, app and metadata inspection, DNS/VPN research, and carefully scoped reversible controls.</p><a href="https://github.com/VireonNoctis/PrivaCage" target="_blank" rel="noreferrer">OPEN REPOSITORY <ArrowUpRight size={14}/></a></div>
+              </details>
+              <details className="cinema-project-expand">
+                <summary><span>03 / COMMUNITY PLATFORM</span><strong>Lunar X</strong><small>Anime · manga · novels · game systems</small><i>＋</i></summary>
+                <div className="cinema-project-expanded"><p>Reported project footprint: 676,088 lines across Rust backend, Next.js frontend, React game systems, Python tools, WebGL, and Three.js.</p><a href="https://lunarx.to/Profile/vvvx" target="_blank" rel="noreferrer">OPEN PROFILE <ArrowUpRight size={14}/></a></div>
+              </details>
+              <details className="cinema-project-expand">
+                <summary><span>04 / PERSONAL SYSTEMS</span><strong>Utilities &amp; experiments</strong><small>Automation, tooling, and unfinished ideas</small><i>＋</i></summary>
+                <div className="cinema-project-expanded"><p>Developer tooling, profile automation, visual systems, and small experiments across the wider project ecosystem.</p><a href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">BROWSE REPOSITORIES <ArrowUpRight size={14}/></a></div>
+              </details>
             </div>
           </div>
         </section>
@@ -210,8 +222,12 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
             <div className="cinema-stat-grid">
               <Stat label="SCANNED LINES" value={totalLines} />
               <Stat label="CHARACTERS" value={totalCharacters} />
-              <Stat label="REPOSITORIES" value={codeStats?.totals.repositories ?? live.repos ?? 0} />
+              <Stat label="TRACKED FILES" value={codeStats?.totals.files ?? 0} />
               <Stat label="WORDS" value={codeStats?.totals.words ?? 0} />
+              <Stat label="REPOSITORIES" value={codeStats?.totals.repositories ?? live.repos ?? 0} />
+              <Stat label="OWNED PROJECTS" value={codeStats?.totals.ownedRepositories ?? 0} />
+              <Stat label="CONTRIBUTOR PROJECTS" value={codeStats?.totals.contributorRepositories ?? 0} />
+              <Stat label="STARS / FORKS" value={(codeStats?.totals.stars ?? 0) + (codeStats?.totals.forks ?? 0)} />
               <div className="cinema-estimate-strip"><span>LUNAR X / REPORTED ESTIMATES</span><div><strong>WebGL <b>20,657 lines</b></strong><small>≈ <AnimatedNumber value={webglCharacters} /> characters</small></div><div><strong>Three.js <b>18,685 lines</b></strong><small>≈ <AnimatedNumber value={threeCharacters} /> characters</small></div></div>
             </div>
           </div>
@@ -222,10 +238,11 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
           <div className="cinema-paper-band cinema-paper-stack">
             <div className="cinema-section-intro"><PaperIndex number="03" eyebrow="THE TOOLCHAIN" /><h2>EVERY LAYER<br /><em>HAS A JOB.</em></h2><p>The stack behind this website, from the interface and scene choreography to public data and static deployment.</p></div>
             <div className="cinema-stack-lines">
-              <div><span>01 / INTERFACE</span><strong>Next.js + React</strong><p>Components, layouts, and page rendering.</p></div>
-              <div><span>02 / BEHAVIOUR</span><strong>TypeScript</strong><p>Typed UI state, data parsing, and interactions.</p></div>
-              <div><span>03 / MOTION</span><strong>Framer Motion + CSS</strong><p>Transitions, scroll reveals, and visual systems.</p></div>
-              <div><span>04 / RELEASE</span><strong>GitHub Actions + Pages</strong><p>Validation, static export, and deployment.</p></div>
+              <div><span>01 / FRAMEWORK</span><strong>Next.js</strong><p>The application framework for routing, page composition, and static export.</p></div>
+              <div><span>02 / UI LIBRARY</span><strong>React</strong><p>Reusable components and interactive interface state.</p></div>
+              <div><span>03 / SOURCE LANGUAGE</span><strong>TypeScript</strong><p>Typed UI state, data parsing, and interactions. It remains a source language, not a framework label.</p></div>
+              <div><span>04 / MOTION &amp; DESIGN</span><strong>Framer Motion + CSS</strong><p>Transitions, scroll reveals, and theme-specific visual systems.</p></div>
+              <div><span>05 / RELEASE</span><strong>GitHub Actions + Pages</strong><p>Validation, static export, and deployment.</p></div>
             </div>
           </div>
         </section>
