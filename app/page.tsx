@@ -269,14 +269,45 @@ export default function Home() {
           workIndex:"02 / 06",workLabel:"SELECTED WORK",workEyebrow:"BUILT, MAINTAINED, ITERATED",workTop:"Projects, not",workBottom:"case studies.",workDescription:"A few things I've spent real time on. Some are polished; some are still becoming.",
           liveLabel:"LIVE FROM GITHUB",repoUnit:"public repositories",followersUnit:"followers",repoFallback:"A growing collection of open work",repoCta:"EXPLORE REPOSITORIES",
           footprintLabel:"CODE FOOTPRINT / AUTO-SYNCED",contributorsLabel:"CONTRIBUTOR PROJECTS INCLUDED",footprintScope:"Current text footprint across public projects I own or contribute to. Whole-repository totals are project size, not a claim about personal authorship.",metricLabels:["TEXT CHARACTERS","TEXT LINES","WORDS","TRACKED FILES","OWNED / CONTRIBUTED REPOS","STARS / FORKS"],metricNotes:["Line breaks excluded","Non-blank lines","Code, config and docs","Text files only","Scanned projects and scan failures","Across scanned projects"],
-          stackIndex:"03 / 06",stackLabel:"THE WEBSITE STACK",stackEyebrow:"HOW THE WEBSITE WORKS",stackTop:"What powers",stackBottom:"this website.",stackDescription:"The technologies behind this site, explained in plain English: the interface, the visual themes, the animation layer, live public data, and deployment.",stackSubheading:"The website, explained",stackBody:"Next.js and React render the experience, TypeScript powers its interactions, CSS gives each theme a distinct visual language, and GitHub Actions builds the static site for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"The goal is a fast, reliable static site with expressive motion—not an unnecessary server or a pile of tools with no clear purpose.",
+          stackIndex:"03 / 06",stackLabel:"THE WEBSITE STACK",stackEyebrow:"HOW THE WEBSITE WORKS",stackTop:"What powers",stackBottom:"this website.",stackDescription:"The technologies behind this site, explained in plain English: the interface, the visual themes, the animation layer, live public data, and deployment.",stackSubheading:"The website, explained",stackBody:"Next.js shapes the experience, React renders its components, TypeScript keeps the application source typed, CSS gives each theme a distinct visual language, and GitHub Actions builds the static site for GitHub Pages.",stackFootnoteTitle:"WHY THIS STACK:",stackFootnoteBody:"The goal is a fast, reliable static site with expressive motion—not an unnecessary server or a pile of tools with no clear purpose.",
           learningIndex:"04 / 06",learningLabel:"THE NEXT FRONTIER",learningEyebrow:"ALWAYS A STUDENT OF THE CRAFT",learningTop:"Still becoming.",learningBottom:"Never finished.",learningDescription:"Open any technology card for details. Svelte is already in active use; the others are planned areas to explore.",
           interludeTop:"Make it because",interludeBottom:"you care about it.",interludeCredit:"A PRINCIPLE, NOT A SLOGAN",
           archiveIndex:"05 / 06",archiveLabel:"THE OPEN TABS",archiveEyebrow:"WHAT STAYS IN ROTATION",archiveTop:"What's open",archiveBottom:"in another tab.",archiveDescription:"The stuff I read, watch, and listen to when I'm not building.",
           contactIndex:"06 / 06",contactLabel:"OPEN CHANNEL",contactEyebrow:"EVERY GOOD THING STARTS SOMEWHERE",contactTop:"Have a good",contactBottom:"reason to talk?",contactCopy:"Ideas, collaborations, questions, or a conversation about something worth making. The channel is open.",contactCta:"START HERE"
         };
-  const languages = codeStats?.languages ?? [];
+  const sourceLanguages = codeStats?.languages ?? [];
   const estimates = codeStats?.manualProjectEstimates ?? [];
+  const nextJsRepositories = codeStats?.repositories.filter((project) =>
+    (project.frameworks ?? []).some((framework) => framework.toLowerCase() === "next.js")) ?? [];
+  const nextJsScannedLanguage = nextJsRepositories.reduce<CodeStatsLanguage>((total, project) => {
+    const typescript = project.languages.find((language) => language.language.toLowerCase() === "typescript");
+    if (typescript) {
+      total.files += typescript.files;
+      total.lines += typescript.lines;
+      total.nonblankLines += typescript.nonblankLines;
+      total.characters += typescript.characters;
+      total.words += typescript.words;
+    }
+    return total;
+  }, { language: "Next.js", files: 0, lines: 0, nonblankLines: 0, characters: 0, words: 0 });
+  const sourceTypeScript = sourceLanguages.find((language) => language.language.toLowerCase() === "typescript");
+  const remainingTypeScript = sourceTypeScript ? {
+    ...sourceTypeScript,
+    files: Math.max(0, sourceTypeScript.files - nextJsScannedLanguage.files),
+    lines: Math.max(0, sourceTypeScript.lines - nextJsScannedLanguage.lines),
+    nonblankLines: Math.max(0, sourceTypeScript.nonblankLines - nextJsScannedLanguage.nonblankLines),
+    characters: Math.max(0, sourceTypeScript.characters - nextJsScannedLanguage.characters),
+    words: Math.max(0, sourceTypeScript.words - nextJsScannedLanguage.words),
+  } : undefined;
+  // TypeScript files inside detected Next.js repositories belong to the Next.js profile,
+  // and are removed from the remaining TypeScript total to prevent duplicate counting.
+  const languages = sourceLanguages.flatMap((language) => {
+    if (language.language.toLowerCase() !== "typescript") return [language];
+    return [
+      ...(nextJsScannedLanguage.files > 0 ? [nextJsScannedLanguage] : []),
+      ...(remainingTypeScript && remainingTypeScript.files > 0 ? [remainingTypeScript] : []),
+    ];
+  });
   const selectedLanguage = selectedTech
     ? languages.find((language) => language.language.toLowerCase() === selectedTech.name.toLowerCase())
     : undefined;
@@ -286,7 +317,12 @@ export default function Home() {
     : [];
   const selectedRepositoryLanguages = selectedLanguage && codeStats
     ? codeStats.repositories.flatMap((project) => {
-        const language = project.languages.find((item) => item.language.toLowerCase() === selectedLanguage.language.toLowerCase());
+        const projectUsesNextJs = (project.frameworks ?? []).some((framework) => framework.toLowerCase() === "next.js");
+        const selectedIsNextJs = selectedLanguage.language.toLowerCase() === "next.js";
+        const selectedIsTypeScript = selectedLanguage.language.toLowerCase() === "typescript";
+        if ((selectedIsNextJs && !projectUsesNextJs) || (selectedIsTypeScript && projectUsesNextJs)) return [];
+        const sourceLanguage = selectedIsNextJs ? "TypeScript" : selectedLanguage.language;
+        const language = project.languages.find((item) => item.language.toLowerCase() === sourceLanguage.toLowerCase());
         return language ? [{ project, language }] : [];
       }).sort((a, b) => b.language.lines - a.language.lines)
     : [];
@@ -305,7 +341,8 @@ export default function Home() {
     ...languages.map((language) => ({
       name: language.language,
       logo: techLogosByName[language.language] ?? "",
-      kind: formatLanguageNames.has(language.language) ? "FORMAT" as const : "LANGUAGE" as const,
+      kind: language.language === "Next.js" ? "FRAMEWORK" as const
+        : formatLanguageNames.has(language.language) ? "FORMAT" as const : "LANGUAGE" as const,
     })),
     ...estimates.flatMap((project) => project.areas.map((area) => ({
       name: area.stack,
@@ -418,7 +455,7 @@ export default function Home() {
         </div>
       </div>
       <div className="website-stack-modules" aria-label="Technologies used by this website">
-        {[{name:"Next.js + React",logo:"nextdotjs",kind:"INTERFACE",copy:"The page framework and component system that render the site and its reusable sections."},{name:"TypeScript",logo:"typescript",kind:"BEHAVIOUR",copy:"Typed UI state, data parsing, modal interactions, and safer updates across the app."},{name:"CSS theme system",logo:"css3",kind:"VISUAL DESIGN",copy:"Responsive layouts and separate Classic, NothingOS, and Light visual systems—not one layout with a recoloured background."},{name:"Framer Motion",logo:"framer",kind:"ANIMATION",copy:"Scroll reveals, animated counters, theme transitions, and the language-logo-to-modal movement."},{name:"Rust + GitHub Actions",logo:"rust",kind:"LIVE DATA",copy:"A scheduled Rust helper refreshes the optional Spotify snapshot; Actions runs validation and the site build."},{name:"GitHub Pages",logo:"github",kind:"HOSTING",copy:"The website is exported as static files, so it can be served without a permanently running application server."}].map((item,i)=><article className="website-stack-module" key={item.name}>
+        {[{name:"Next.js",logo:"nextdotjs",kind:"APPLICATION",copy:"Next.js handles routing, page composition and static export; React renders the interface, with TypeScript providing typed application interactions."},{name:"CSS theme system",logo:"css3",kind:"VISUAL DESIGN",copy:"Responsive layouts and separate Classic, NothingOS, and Light visual systems—not one layout with a recoloured background."},{name:"Framer Motion",logo:"framer",kind:"ANIMATION",copy:"Scroll reveals, animated counters, theme transitions, and the language-logo-to-modal movement."},{name:"Rust + GitHub Actions",logo:"rust",kind:"LIVE DATA",copy:"A scheduled Rust helper refreshes the optional Spotify snapshot; Actions runs validation and the site build."},{name:"GitHub Pages",logo:"github",kind:"HOSTING",copy:"The website is exported as static files, so it can be served without a permanently running application server."}].map((item,i)=><article className="website-stack-module" key={item.name}>
           <div className="website-stack-module-top"><span>{String(i+1).padStart(2,"0")} / {item.kind}</span><img src={`/brands/tech-${item.logo}.svg`} alt="" loading="lazy"/></div>
           <h3>{item.name}</h3><p>{item.copy}</p>
         </article>)}
@@ -426,7 +463,7 @@ export default function Home() {
     </div>
     <div className="project-language-explorer">
       <div className="project-language-heading">
-        <div><span className="micro-label">02 / CODEBASE EXPLORER</span><h3>Language statistics, on demand.</h3><p>These are tracked project languages and the supplied Lunar X estimates. Select any tile to open the full breakdown—the headline line total includes Lunar X wherever that estimate applies.</p></div>
+        <div><span className="micro-label">02 / CODEBASE EXPLORER</span><h3>Technology statistics, on demand.</h3><p>Tracked source technologies and supplied Lunar X estimates. Next.js project source is grouped under its framework profile, with no duplicate TypeScript count.</p></div>
         <span className="project-language-count">{statTechOptions.length} PROFILES</span>
       </div>
       <div className="project-language-grid">
@@ -436,15 +473,15 @@ export default function Home() {
           const lunarLines=lunarAreas.reduce((sum,area)=>sum+area.lines,0);
           const lunarCharacters=lunarAreas.reduce((sum,area)=>sum+(estimateProjectCharacters(area)??0),0);
           const totalLines=(scanned?.lines??0)+lunarLines;
-          return <motion.button type="button" className="project-language-tile" key={tech.name} aria-haspopup="dialog" aria-label={`Open ${tech.name} language statistics, ${totalLines.toLocaleString()} total lines`} onClick={()=>setSelectedTech({name:tech.name,logo:tech.logo,kind:tech.kind})} initial={reduce?false:{opacity:0,y:12}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.12}} transition={{duration:.35,delay:Math.min(i*.018,.25)}}>
+          return <motion.button type="button" className="project-language-tile" key={tech.name} aria-haspopup="dialog" aria-label={`Open ${tech.name} technology statistics, ${totalLines.toLocaleString()} total lines`} onClick={()=>setSelectedTech({name:tech.name,logo:tech.logo,kind:tech.kind})} initial={reduce?false:{opacity:0,y:12}} whileInView={reduce?undefined:{opacity:1,y:0}} viewport={{once:true,amount:.12}} transition={{duration:.35,delay:Math.min(i*.018,.25)}}>
             <span className="project-language-logo">{tech.logo ? <motion.img layoutId={`tech-logo-${tech.name}`} src={`/brands/tech-${tech.logo}.svg`} alt="" loading="lazy"/> : <motion.span layoutId={`tech-logo-${tech.name}`} className="project-language-generic"><Code2 size={16}/></motion.span>}</span>
-            <span className="project-language-copy"><strong>{tech.name}</strong><small>{lunarLines>0?("Lunar X · ≈ "+formatCompactEstimate(lunarCharacters)+" estimated characters"):"tracked repository data"}</small></span>
+            <span className="project-language-copy"><strong>{tech.name}</strong><small>{lunarLines>0?("Lunar X · ≈ "+formatCompactEstimate(lunarCharacters)+" estimated characters"):tech.name==="Next.js"?"detected Next.js project source":"tracked repository data"}</small></span>
             <span className="project-language-lines"><strong>{totalLines.toLocaleString()}</strong><small>lines</small></span>
             <ArrowUpRight size={14} className="project-language-arrow" aria-hidden="true"/>
           </motion.button>;
         })}
       </div>
-      <p className="project-language-note">Lunar X is included in the totals for Rust, Next.js, React, and Python. Approximate character totals use the per-stack rates shown in the breakdown.</p>
+      <p className="project-language-note">Next.js includes TypeScript source from repositories detected as Next.js; those files are removed from the separate TypeScript total. Lunar X estimates remain included for Rust, Next.js, React, and Python.</p>
     </div><div className="stack-footnote"><span className="stack-footnote-symbol">✳</span><p><strong>{themeCopy.stackFootnoteTitle}</strong> {themeCopy.stackFootnoteBody}</p><span className="stack-footnote-end">VN / STACK INDEX</span></div>
     {portalReady && createPortal(
       <AnimatePresence initial={false}>
@@ -477,14 +514,18 @@ export default function Home() {
               <div className="tech-modal-identity">
                 {selectedTech.logo ? <motion.img layoutId={`tech-logo-${selectedTech.name}`} src={`/brands/tech-${selectedTech.logo}.svg`} alt="" /> : <motion.span layoutId={`tech-logo-${selectedTech.name}`} className="tech-modal-generic-logo"><Code2 size={24}/></motion.span>}
                 <div>
-                  <span className="micro-label">{selectedTech.learningStatus ? (selectedTech.learningStatus === "IN USE" ? "ACTIVE TOOLKIT" : "LEARNING ROADMAP") : selectedEstimateAreas.length > 0 ? "COMBINED TOTAL / LUNAR X INCLUDED" : selectedLanguage ? "AUTOMATED REPOSITORY SCAN" : "NO SOURCE DATA FOUND"}</span>
+                  <span className="micro-label">{selectedTech.learningStatus ? (selectedTech.learningStatus === "IN USE" ? "ACTIVE TOOLKIT" : "LEARNING ROADMAP") : selectedEstimateAreas.length > 0 ? "COMBINED TOTAL / LUNAR X INCLUDED" : selectedLanguage ? (selectedTech.name === "Next.js" ? "FRAMEWORK-AWARE REPOSITORY SCAN" : "AUTOMATED REPOSITORY SCAN") : "NO SOURCE DATA FOUND"}</span>
                   <h2 id="tech-modal-title">{selectedTech.name}</h2>
                   <p>{selectedTech.learningStatus
                     ? (selectedTech.learningNote ?? (selectedTech.learningStatus === "IN USE" ? "Part of the current toolkit." : "On the learning shortlist."))
                     : selectedEstimateAreas.length > 0
                       ? "The totals include Lunar X's estimates for this technology alongside tracked project data."
                       : selectedLanguage
-                        ? "Whole-repository totals from the current project scan."
+                        ? selectedTech.name === "Next.js"
+                          ? "TypeScript source files from detected Next.js repositories, plus any supplied project estimates. These files are excluded from the separate TypeScript total."
+                          : selectedTech.name === "TypeScript"
+                            ? "TypeScript source from repositories that are not detected as Next.js projects."
+                            : "Whole-repository totals from the current project scan."
                         : "No tracked statistics are available for this technology yet."}</p>
                 </div>
               </div>
@@ -569,7 +610,7 @@ export default function Home() {
                   </div>
                 </section>
               )}
-              <p className="tech-modal-footnote">Automated language counts include scanned public repositories and remain separate from user-provided estimates. Repository totals are not line-by-line authorship claims.</p>
+              <p className="tech-modal-footnote">Next.js source is grouped from TypeScript files in repositories detected as Next.js; those files are excluded from the TypeScript profile to avoid double-counting. User-provided project estimates remain separate from automated scans, and repository totals are not line-by-line authorship claims.</p>
             </motion.section>
           </motion.div>
         )}
