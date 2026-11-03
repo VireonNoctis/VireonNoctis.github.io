@@ -239,11 +239,10 @@ export default function CinematicPage({ live, repos, codeStats, spotify }: Cinem
           <div className="cinema-paper-band cinema-paper-stack">
             <div className="cinema-section-intro"><PaperIndex number="03" eyebrow="THE TOOLCHAIN" /><h2>EVERY LAYER<br /><em>HAS A JOB.</em></h2><p>The stack behind this website, from the interface and scene choreography to public data and static deployment.</p></div>
             <div className="cinema-stack-lines">
-              <div><span>01 / FRAMEWORK</span><strong>Next.js</strong><p>The application framework for routing, page composition, and static export.</p></div>
+              <div><span>01 / FRAMEWORK</span><strong>Next.js</strong><p>Routing, page composition, and static export, with the application source written in TypeScript.</p></div>
               <div><span>02 / UI LIBRARY</span><strong>React</strong><p>Reusable components and interactive interface state.</p></div>
-              <div><span>03 / SOURCE LANGUAGE</span><strong>TypeScript</strong><p>Typed UI state, data parsing, and interactions. It remains a source language, not a framework label.</p></div>
-              <div><span>04 / MOTION &amp; DESIGN</span><strong>Framer Motion + CSS</strong><p>Transitions, scroll reveals, and theme-specific visual systems.</p></div>
-              <div><span>05 / RELEASE</span><strong>GitHub Actions + Pages</strong><p>Validation, static export, and deployment.</p></div>
+              <div><span>03 / MOTION &amp; DESIGN</span><strong>Framer Motion + CSS</strong><p>Transitions, scroll reveals, and theme-specific visual systems.</p></div>
+              <div><span>04 / RELEASE</span><strong>GitHub Actions + Pages</strong><p>Validation, static export, and deployment.</p></div>
             </div>
           </div>
         </section>
