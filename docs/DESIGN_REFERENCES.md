@@ -1,6 +1,6 @@
 # Portfolio design references
 
-These references are research sources, not a mandate to install every library. Choose patterns that strengthen the portfolio's editorial identity, preserve its Next.js / React architecture, and remain accessible and fast.
+These references are research sources, not a mandate to install every library. The portfolio now has one visual system: Nothing OS. Adapt patterns to its strict monochrome language, preserve the Next.js / React architecture, and keep every effect accessible and fast.
 
 ## ReactVibe
 
@@ -38,6 +38,10 @@ These references are research sources, not a mandate to install every library. C
 - [Liquid Glass JS](https://github.com/dashersw/liquid-glass-js): WebGL refraction and blur experiments for a few floating controls. Test WebGL 2, cross-origin sampling, accessibility, and fallbacks before production use.
 - [ShaderGradient](https://github.com/ruucm/shadergradient): configurable animated shader backgrounds for a limited hero or feature section, with static and reduced-motion alternatives.
 - [Paper Design Liquid Logo](https://github.com/paper-design/liquid-logo): inspiration for a one-off liquid-metal brand reveal. Its repository uses PolyForm Shield with a noncompete condition; do not reuse its source unless the terms have been reviewed for the intended use.
+
+## Active visual direction
+
+Nothing OS is the only supported design. The former theme picker, saved theme preferences, and alternate theme implementations have been removed. The hero signal field is rendered with a small native WebGL2 fragment shader rather than a CSS imitation or a Three.js dependency. The rest of the interface remains readable and functional without WebGL; reduced-motion users receive a static render, and browsers without WebGL2 receive a monochrome CSS fallback.
 
 ## Selection rules
 

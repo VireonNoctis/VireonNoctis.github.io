@@ -2,11 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "./themes.css";
 import "./themes/nothing.css";
-import "./themes/light.css";
-import "./themes/lunar.css";
-import "./theme-picker.css";
-import "./themes/cinematic.css";
-import "./themes/liquid-glass.css";
+import "./nothing-webgl.css";
 import "./profile-identity.css";
 import "./editorial-cleanup.css";
 import "./telemetry-responsive.css";
@@ -50,7 +46,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="nothing">
       <body><ThemeProvider>{children}</ThemeProvider></body>
     </html>
   );

@@ -23,7 +23,7 @@ Vireon presents as a **Businessman, Full-stack Developer, and Real Estate Develo
 ## What the site does
 
 - **Projects and profiles:** curated project links alongside live GitHub, AniList, Last.fm, and optional Spotify data.
-- **Selectable themes:** Vireon Classic, NothingOS, Light Mode, Cinematic Ink, and Liquid Glass. NothingOS uses a strict monochrome system with Unicode/Braille details and animated numeric readouts; Cinematic Ink uses a textured scroll-led art direction; Liquid Glass reserves optical surfaces for selected interface elements.
+- **Nothing OS design:** the sole visual system across the site: strict monochrome, IBM Plex Mono telemetry, Unicode/Braille details, rolling numeric readouts, and a native WebGL2 signal field with responsive pointer interaction.
 - **Language explorer:** select a language tile to open a modal with tracked lines, files, characters, words, and repository breakdowns. The language mark animates into the modal.
 - **Lunar X:** project line and approximate character totals are included in the matching language/framework profiles.
 - **Static deployment:** Next.js exports the site for GitHub Pages; the optional Rust API is deployed separately.
@@ -52,7 +52,7 @@ The portfolio's motion and component research includes [ReactVibe](https://react
 | --- | --- |
 | Next.js + React | Pages, components, and site layout. |
 | TypeScript | Interactive state, public-data parsing, and safer UI changes. |
-| CSS | Responsive design and theme-specific visual systems. |
+| CSS + WebGL2 | Responsive monochrome interface and a native shader-rendered signal field. |
 | Framer Motion | Scroll reveals, counters, transitions, and shared-logo modal animation. |
 | Lucide React | Interface iconography. |
 | GitHub Actions + Pages | Type-checking, static export, and deployment. |
@@ -114,10 +114,12 @@ To enable the workflow, add `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, and `S
 
 ```text
 app/page.tsx                    Main site and language modal
-app/theme-system.tsx             Theme catalog, picker, and switcher
+app/theme-system.tsx             Fixed Nothing OS system and numeric telemetry
+app/nothing-webgl.tsx             Native WebGL2 shader and pointer interaction
+app/nothing-webgl.css             WebGL surface, overlays, and static fallback
 app/globals.css                  Shared layout and global styles
 app/themes.css                   Shared components and language-modal styles
-app/themes/                      Theme-specific CSS
+app/themes/nothing.css           Nothing OS design tokens and component styling
 backend/src/main.rs              Rust/Axum API
 backend/src/bin/                 Spotify helper binaries
 public/brands/                   Technology and brand marks

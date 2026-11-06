@@ -4,8 +4,7 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { createPortal } from "react-dom";
 import { ArrowDownRight, ArrowUpRight, AudioLines, BookOpen, Code2, Github, Menu, Orbit, X } from "lucide-react";
-import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork, ThemeSwitcher, useCurrentTheme } from "./theme-system";
-import CinematicPage from "./cinematic-page";
+import { AnimatedNumber, NothingSystemStrip, ThemeHeroArtwork } from "./theme-system";
 
 type Repo = { name: string; description: string | null; html_url: string; stargazers_count: number; language: string | null; fork: boolean; archived?: boolean; updated_at: string };
 type RankedItem = { name: string; count?: number; playcount?: number; url?: string; artist?: string };
@@ -224,7 +223,7 @@ export default function Home() {
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [selectedTech]);
-  const activeTheme = useCurrentTheme();
+  const activeTheme = "nothing" as const;
   const themeCopy = activeTheme === "nothing"
     ? {
         kicker: "BOOT SEQUENCE / VIREON NODE 001", lineOne: "MAKE THE", lineTwo: "SIGNAL", emphasis: "MATTER.", description: "A live console for shipped systems, public data, and unfinished experiments.",
@@ -357,25 +356,14 @@ export default function Home() {
     }))),
   ].map((tech) => [tech.name.toLowerCase(), tech] as const)).values());
   const motionRise = reduce ? {} : rise;
-  if (activeTheme === "cinematic") return <CinematicPage live={live} repos={repos} codeStats={codeStats} spotify={spotify} />;
   return <main id="main-content" tabIndex={-1} onKeyDown={event=>{if(event.key==="Escape")setMenu(false)}}><a className="skip-link" href="#content-start">Skip to content</a>
     <motion.div className="reading-progress" style={{scaleX:progress}} />
     <div className="atmosphere" aria-hidden="true"><div className="atmosphere-grid"/><motion.div className="aurora aurora-one" animate={reduce?{}:{x:[0,38,-18,0],y:[0,-22,16,0],rotate:[0,7,-4,0],scale:[1,1.08,.97,1]}} transition={{duration:25,repeat:Infinity,ease:"easeInOut"}}/><motion.div className="aurora aurora-two" animate={reduce?{}:{x:[0,-32,16,0],y:[0,20,-16,0],rotate:[0,-9,4,0]}} transition={{duration:31,repeat:Infinity,ease:"easeInOut"}}/><div className="grain"/></div>
-    <header className="site-header"><a className="wordmark" href="#top" aria-label="Vireon — The Slop King, home" onClick={()=>setMenu(false)}><img className="wordmark-logo" src="/brands/vireon-mark.svg" alt="" width="42" height="42"/><span className="wordmark-copy"><strong>VIREON</strong><small>THE SLOP KING <span aria-hidden="true">👑</span></small></span></a><nav id="primary-navigation" className={menu?"navigation navigation-open":"navigation"} aria-label="Main navigation">{themeCopy.nav.map(([label,href],i)=><a key={href} href={href} onClick={()=>setMenu(false)}><span className="nav-index">0{i+1}</span>{label}</a>)}<a className="nav-contact" href="#contact" onClick={()=>setMenu(false)}>Get in touch <ArrowUpRight size={14}/></a></nav><ThemeSwitcher /><button className="menu-toggle" onClick={()=>setMenu(v=>!v)} aria-label={menu?"Close navigation":"Open navigation"} aria-controls="primary-navigation" aria-expanded={menu}>{menu?<X/>:<Menu/>}</button></header>
+    <header className="site-header"><a className="wordmark" href="#top" aria-label="Vireon — The Slop King, home" onClick={()=>setMenu(false)}><img className="wordmark-logo" src="/brands/vireon-mark.svg" alt="" width="42" height="42"/><span className="wordmark-copy"><strong>VIREON</strong><small>THE SLOP KING <span aria-hidden="true">👑</span></small></span></a><nav id="primary-navigation" className={menu?"navigation navigation-open":"navigation"} aria-label="Main navigation">{themeCopy.nav.map(([label,href],i)=><a key={href} href={href} onClick={()=>setMenu(false)}><span className="nav-index">0{i+1}</span>{label}</a>)}<a className="nav-contact" href="#contact" onClick={()=>setMenu(false)}>Get in touch <ArrowUpRight size={14}/></a></nav><button className="menu-toggle" onClick={()=>setMenu(v=>!v)} aria-label={menu?"Close navigation":"Open navigation"} aria-controls="primary-navigation" aria-expanded={menu}>{menu?<X/>:<Menu/>}</button></header>
     <NothingSystemStrip />
     <section className="hero section-shell" id="top"><span id="content-start" className="content-start" aria-hidden="true"/><div className="hero-meta"><Eyebrow>{themeCopy.heroMeta}</Eyebrow><span className="coordinates">{themeCopy.coordinatesTop}<br/>{themeCopy.coordinatesBottom}</span></div><div className="hero-main"><motion.div className="hero-copy" variants={sequence} initial="hidden" animate="show"><motion.p className="hero-kicker" variants={motionRise}>{themeCopy.kicker}</motion.p><motion.h1 variants={motionRise}>{themeCopy.lineOne}<br/>{themeCopy.lineTwo} <em>{themeCopy.emphasis}</em></motion.h1><motion.div className="hero-bottomline" variants={motionRise}><p>{themeCopy.description}</p><a className="round-link" href="#manifesto" aria-label="Discover the archive"><ArrowDownRight size={21}/></a></motion.div></motion.div><div className="hero-art editorial-index editorial-index-slop" role="group" aria-label="Vireon — The Slop King">
   <ThemeHeroArtwork />
-  <div className="slop-card-aura" aria-hidden="true">
-    <span className="slop-halo slop-halo-one"/>
-    <span className="slop-halo slop-halo-two"/>
-    <span className="slop-orbit slop-orbit-one"/>
-    <span className="slop-orbit slop-orbit-two"/>
-    <span className="slop-orbit-dot slop-orbit-dot-one"/>
-    <span className="slop-orbit-dot slop-orbit-dot-two"/>
-    <span className="slop-star slop-star-one">✦</span>
-    <span className="slop-star slop-star-two">✧</span>
-    <span className="slop-star slop-star-three">✦</span>
-  </div>
+  
   <div className="editorial-index-top slop-panel-top"><span>{themeCopy.brandIndex}</span><span className="slop-live-label"><i/> {themeCopy.brandLive}</span></div>
   <div className="slop-brand-lockup">
     <div className="slop-brand-overline"><span>{themeCopy.brandOverline}</span><span>{themeCopy.brandEdition}</span></div>

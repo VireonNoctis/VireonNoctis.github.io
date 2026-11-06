@@ -1,0 +1,84 @@
+/* Native WebGL2 signal field for the single Nothing OS visual system. */
+html[data-theme="nothing"] .theme-hero-artwork-nothing {
+  inset: 0;
+  opacity: 1;
+  pointer-events: none;
+  isolation: isolate;
+  background:
+    radial-gradient(ellipse at 50% 46%, rgba(255,255,255,.045), transparent 58%),
+    #000;
+}
+html[data-theme="nothing"] .nothing-webgl-canvas {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: .94;
+  pointer-events: none;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing[data-webgl="fallback"] {
+  background:
+    radial-gradient(circle at 50% 50%, transparent 0 19%, rgba(255,255,255,.38) 19.1% 19.3%, transparent 19.4% 29%, rgba(255,255,255,.2) 29.1% 29.3%, transparent 29.4%),
+    radial-gradient(rgba(255,255,255,.34) .75px, transparent .9px) 0 0 / 12px 12px,
+    #000;
+}
+html[data-theme="nothing"] .nothing-webgl-vignette {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background:
+    linear-gradient(90deg, #000 0%, transparent 13%, transparent 87%, #000 100%),
+    linear-gradient(0deg, #000 0%, transparent 18%, transparent 82%, #000 100%),
+    radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,.48) 100%);
+  pointer-events: none;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-ring {
+  z-index: 3;
+  border-color: rgba(255,255,255,.38);
+  pointer-events: none;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-ring-outer {
+  width: 72%;
+  border-style: dashed;
+  animation-duration: 46s;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-ring-inner {
+  width: 49%;
+  border-color: rgba(255,255,255,.2);
+  animation-duration: 31s;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-core {
+  position: relative;
+  z-index: 4;
+  width: 24%;
+  min-width: 78px;
+  max-width: 150px;
+  background: rgba(0,0,0,.82);
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-core span {
+  font: 700 clamp(28px, 4.2vw, 62px)/1 Arial, sans-serif;
+  letter-spacing: -.11em;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-code {
+  position: absolute;
+  z-index: 5;
+  left: 3%;
+  right: 3%;
+  display: flex;
+  justify-content: space-between;
+  color: rgba(255,255,255,.72);
+  font: 8px/1.5 "IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-code-top { top: 3%; }
+html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-code-bottom { bottom: 3%; }
+@media (max-width: 640px) {
+  html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-code { font-size: 7px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="nothing"] .theme-hero-artwork-nothing .nothing-hero-ring { animation: none !important; }
+}
