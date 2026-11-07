@@ -603,3 +603,128 @@ html[data-theme="nothing"] .website-stack-module { backface-visibility: hidden; 
   html[data-theme="nothing"] :is(a, button, summary, .braille-text) { transition: none !important; animation: none !important; }
   html[data-theme="nothing"] .nothing-reveal-in { transition: none !important; }
 }
+
+
+/* DOT-MATRIX DISPLAY + TACTILE REACT CONTROLS */
+html[data-theme="nothing"] .tactile-react-control {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+html[data-theme="nothing"] .tactile-react-sheen {
+  position: absolute;
+  z-index: 0;
+  inset: -1px;
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(108deg, transparent 20%, rgba(255,255,255,.16) 48%, transparent 76%);
+  transform: translateX(-125%) skewX(-12deg);
+  transition: transform .72s cubic-bezier(.2,.8,.2,1), opacity .3s ease;
+}
+html[data-theme="nothing"] .tactile-react-control:hover .tactile-react-sheen {
+  opacity: 1;
+  transform: translateX(125%) skewX(-12deg);
+}
+html[data-theme="nothing"] .tactile-react-control > :not(.tactile-react-sheen):not(.braille-sr-only) {
+  position: relative;
+  z-index: 1;
+}
+html[data-theme="nothing"] .tactile-react-control .braille-text {
+  transition: letter-spacing .34s cubic-bezier(.2,.8,.2,1), text-shadow .34s ease;
+}
+html[data-theme="nothing"] .tactile-react-control:hover .braille-text {
+  letter-spacing: .21em;
+  text-shadow: 0 0 13px rgba(255,255,255,.32);
+}
+html[data-theme="nothing"] .tactile-react-control svg {
+  transition: transform .38s cubic-bezier(.2,.8,.2,1);
+}
+html[data-theme="nothing"] .tactile-react-control:hover svg {
+  transform: translate3d(2px,-2px,0);
+}
+
+/* Ndot-inspired live-text display; no proprietary font assets required. */
+html[data-theme="nothing"] .slop-brand-vireon {
+  color: #fff;
+  font-weight: 700;
+  letter-spacing: -.105em;
+  text-shadow: 0 0 26px rgba(255,255,255,.08);
+}
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  html[data-theme="nothing"] .slop-brand-vireon {
+    color: transparent;
+    background-image: radial-gradient(circle, #fff .72px, transparent .98px);
+    background-size: 4px 4px;
+    background-position: center;
+    -webkit-background-clip: text;
+    background-clip: text;
+    filter: drop-shadow(0 8px 18px rgba(255,255,255,.08));
+  }
+}
+html[data-theme="nothing"] .hero h1 {
+  font-weight: 300;
+  letter-spacing: -.085em;
+  line-height: .84;
+  text-wrap: balance;
+}
+html[data-theme="nothing"] .section-heading h2,
+html[data-theme="nothing"] .work-heading h2,
+html[data-theme="nothing"] .archive-heading h2,
+html[data-theme="nothing"] .contact-main h2 {
+  font-weight: 300;
+  letter-spacing: -.075em;
+  line-height: .9;
+  text-wrap: balance;
+}
+html[data-theme="nothing"] .eyebrow i,
+html[data-theme="nothing"] .live-dot,
+html[data-theme="nothing"] .signal-live i,
+html[data-theme="nothing"] .slop-live-label i {
+  animation: nothing-led-breathe 2.6s ease-in-out infinite;
+}
+@keyframes nothing-led-breathe {
+  0%, 100% { opacity: .46; box-shadow: 0 0 0 rgba(255,255,255,0); }
+  50% { opacity: 1; box-shadow: 0 0 12px rgba(255,255,255,.36); }
+}
+html[data-theme="nothing"] .nothing-system-strip {
+  box-shadow: 0 10px 40px rgba(255,255,255,.025);
+}
+html[data-theme="nothing"] .nothing-system-cell {
+  transition: background-color .3s ease;
+}
+html[data-theme="nothing"] .nothing-system-cell:hover {
+  background: rgba(255,255,255,.045);
+}
+html[data-theme="nothing"] .project-row[open] .project-row-summary {
+  border-color: #fff;
+  background: rgba(255,255,255,.035);
+}
+html[data-theme="nothing"] .project-expand-hint {
+  transition: letter-spacing .3s ease, opacity .3s ease;
+}
+html[data-theme="nothing"] .project-row:hover .project-expand-hint {
+  letter-spacing: .14em;
+}
+html[data-theme="nothing"] .social-list > a:hover .social-logo,
+html[data-theme="nothing"] .repo-live-list > a:hover .repo-row-index {
+  filter: brightness(1.65);
+}
+@media (max-width: 640px) {
+  html[data-theme="nothing"] .slop-brand-vireon { background-size: 3.5px 3.5px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="nothing"] .tactile-react-control,
+  html[data-theme="nothing"] .tactile-react-sheen,
+  html[data-theme="nothing"] .tactile-react-control svg,
+  html[data-theme="nothing"] .tactile-react-control .braille-text,
+  html[data-theme="nothing"] .eyebrow i,
+  html[data-theme="nothing"] .live-dot,
+  html[data-theme="nothing"] .signal-live i,
+  html[data-theme="nothing"] .slop-live-label i {
+    animation: none !important;
+    transition: none !important;
+  }
+}
