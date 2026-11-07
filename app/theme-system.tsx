@@ -11,7 +11,12 @@ const BRAILLE_LETTERS: Record<string, string> = {
 };
 
 function encodeBraille(label: string): string {
-  return Array.from(label, (character) => BRAILLE_LETTERS[character.toLowerCase()] ?? character).join("");
+  return Array.from(label, (character) => {
+    const lower = character.toLowerCase();
+    const letter = BRAILLE_LETTERS[lower];
+    if (!letter) return character;
+    return character !== lower ? "⠠" + letter : letter;
+  }).join("");
 }
 
 /** Braille-first action label with an accessible plain-text name. */
