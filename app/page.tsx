@@ -223,7 +223,6 @@ export default function Home() {
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [selectedTech]);
-  const activeTheme = "nothing" as const;
   const themeCopy = {
     kicker: "VIREON / NODE 001", lineOne: "MAKE THE", lineTwo: "SIGNAL", emphasis: "MATTER.",
     description: "Projects. Systems. Signal.",
@@ -355,7 +354,7 @@ export default function Home() {
   <div className="editorial-index-rule slop-panel-rule"/>
   <div className="editorial-index-bottom slop-panel-bottom"><span>{themeCopy.brandBottom}</span><span>{themeCopy.brandEnd}</span></div>
   <div className="editorial-index-side slop-panel-side">{themeCopy.brandSide}</div>
-</div></div><div className="hero-foot"><span>{activeTheme==="nothing"?"NODE ACTIVE":activeTheme==="light"?"A COLLECTION IN PROGRESS":"INDEPENDENT BY NATURE"}</span><span className="hero-foot-center"><i className="live-dot"/> {activeTheme==="nothing"?"PUBLIC SIGNAL / ONLINE":activeTheme==="light"?"OPEN GALLERY / ONLINE":"DIGITAL PRESENCE / ONLINE"}</span><span>{activeTheme==="nothing"?"SCROLL TO QUERY":activeTheme==="light"?"CONTINUE BROWSING":"SCROLL TO EXPLORE"} <i className="scroll-line"/></span></div></section>
+</div></div><div className="hero-foot"><span>NODE ACTIVE</span><span className="hero-foot-center"><i className="live-dot"/> PUBLIC SIGNAL / ONLINE</span><span>SCROLL TO QUERY <i className="scroll-line"/></span></div></section>
     <section className="profile-identity-band section-shell" aria-label="Professional roles">
       <div className="profile-identity-heading"><span>01 / PROFESSIONAL PROFILE</span><strong>Business, technology<br />and property.</strong></div>
       <div className="profile-identity-roles">
