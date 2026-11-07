@@ -610,9 +610,6 @@ html[data-theme="nothing"] .tactile-react-control {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform;
 }
 html[data-theme="nothing"] .tactile-react-sheen {
   position: absolute;
