@@ -4,12 +4,51 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useInView, useReducedMotion } from "framer-motion";
 import { NothingWebGL } from "./nothing-webgl";
 
+const BRAILLE_LETTERS: Record<string, string> = {
+  a:"⠁", b:"⠃", c:"⠉", d:"⠙", e:"⠑", f:"⠋", g:"⠛", h:"⠓", i:"⠊", j:"⠚",
+  k:"⠅", l:"⠇", m:"⠍", n:"⠝", o:"⠕", p:"⠏", q:"⠟", r:"⠗", s:"⠎", t:"⠞",
+  u:"⠥", v:"⠧", w:"⠺", x:"⠭", y:"⠽", z:"⠵",
+};
+
+function encodeBraille(label: string): string {
+  return Array.from(label, (character) => BRAILLE_LETTERS[character.toLowerCase()] ?? character).join("");
+}
+
+/** Braille-first action label with an accessible plain-text name. */
+export function BrailleText({ label }: { label: string }) {
+  return (
+    <>
+      <span className="braille-text" aria-hidden="true">{encodeBraille(label)}</span>
+      <span className="braille-sr-only">{label}</span>
+    </>
+  );
+}
+
 /** The portfolio has one visual system. There is no theme picker or persisted theme state. */
 export function ThemeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     document.documentElement.dataset.theme = "nothing";
     document.body.dataset.theme = "nothing";
     document.documentElement.style.colorScheme = "dark";
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || typeof IntersectionObserver === "undefined") return;
+
+    const targets = document.querySelectorAll<HTMLElement>(
+      ".section-space, .profile-identity-band, .nothing-system-strip, .project-list, .website-stack-overview, .repo-live-area, .code-footprint-teaser, .archive-grid, .signal-grid, .social-list, .site-footer",
+    );
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("nothing-reveal-in");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -6% 0px" });
+
+    targets.forEach((target) => {
+      target.classList.add("nothing-reveal-pending");
+      observer.observe(target);
+    });
+    return () => observer.disconnect();
   }, []);
 
   return <>{children}</>;
