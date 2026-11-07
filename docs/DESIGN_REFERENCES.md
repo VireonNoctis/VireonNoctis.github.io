@@ -41,7 +41,13 @@ These references are research sources, not a mandate to install every library. T
 
 ## Active visual direction
 
-Nothing OS is the only supported design. The former theme picker, saved theme preferences, and alternate theme implementations have been removed. The hero signal field is rendered with a small native WebGL2 fragment shader rather than a CSS imitation or a Three.js dependency. The rest of the interface remains readable and functional without WebGL; reduced-motion users receive a static render, and browsers without WebGL2 receive a monochrome CSS fallback.
+Nothing OS is the only supported design. Use pure monochrome, dot-matrix display texture, ultra-light editorial headlines, and restrained uppercase mono labels. Keep the hero signal field on the existing native WebGL2 shader.
+
+**Framework boundary:** Next.js is a React framework, so React owns UI rendering and state. Do not add Vue as a second view runtime or use Vue reactivity alongside React state for the same interface. Motion for React handles spring-based pointer attraction, hover, tap, and shared transitions. Use the existing React component layer for tactile controls and preserve native link, button, and disclosure semantics.
+
+Use animated icon references such as pqoqubbw/icons selectively for state changes and meaningful feedback; do not animate every glyph continuously. Keep the hand-written WebGL2 field for light ambient graphics. Add React Three Fiber and Drei only when a real interactive 3D scene is needed, rather than introducing a second rendering stack for ordinary UI.
+
+The rest of the interface remains readable and functional without WebGL; reduced-motion users receive static states, and browsers without WebGL2 receive a monochrome CSS fallback.
 
 ## Selection rules
 
