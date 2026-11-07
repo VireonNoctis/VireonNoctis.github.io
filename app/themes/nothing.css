@@ -524,3 +524,82 @@ html[data-theme="nothing"] .manual-project-heading > strong { color: #fff; }
   html[data-theme="nothing"] .nothing-system-value,
   html[data-theme="nothing"] .nothing-system-cycle { font-size: 16px; }
 }
+
+
+/* NOTHING OS — Braille actions and premium interaction states. */
+html[data-theme="nothing"] .braille-text {
+  display: inline-block;
+  font-family: "DejaVu Sans", "Segoe UI Symbol", "Apple Symbols", sans-serif;
+  font-size: 1.06em;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: .12em;
+  white-space: nowrap;
+  transition: letter-spacing .38s cubic-bezier(.2,.8,.2,1), text-shadow .38s ease;
+}
+html[data-theme="nothing"] .braille-sr-only {
+  position: absolute !important; width: 1px !important; height: 1px !important;
+  padding: 0 !important; margin: -1px !important; overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important; white-space: nowrap !important; border: 0 !important;
+}
+html[data-theme="nothing"] :is(a, button, summary) {
+  -webkit-tap-highlight-color: transparent; touch-action: manipulation;
+}
+html[data-theme="nothing"] :is(
+  .nav-contact, .round-link, .text-link, .project-feature, .project-row,
+  .project-language-tile, .website-stack-module, .learning-card, .archive-card,
+  .signal-panel, .ranked-row, .social-list > a, .repo-live-list > a,
+  .signal-footer-link, .archive-link, .code-footprint-link, .contact-circle,
+  .back-top, .menu-toggle, .tech-modal-close, .stack-chip, .stack-site-item
+) {
+  transition: transform .42s cubic-bezier(.2,.8,.2,1), border-color .34s ease,
+    background-color .34s ease, color .28s ease, box-shadow .42s ease, filter .34s ease;
+}
+html[data-theme="nothing"] :is(
+  .project-feature, .project-row, .project-language-tile, .website-stack-module,
+  .archive-card, .signal-panel, .repo-live-list > a, .social-list > a
+):hover {
+  transform: translate3d(0,-4px,0); border-color: rgba(255,255,255,.92);
+  box-shadow: 0 16px 38px rgba(255,255,255,.045), inset 0 0 0 1px rgba(255,255,255,.08);
+  filter: brightness(1.08);
+}
+html[data-theme="nothing"] :is(.learning-card, .ranked-row, .stack-chip, .stack-site-item):hover {
+  border-color: #fff; filter: brightness(1.12);
+}
+html[data-theme="nothing"] :is(a, button, summary):active { transform: scale(.985); }
+html[data-theme="nothing"] :is(a, button, summary):focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+html[data-theme="nothing"] :is(a, button):hover .braille-text {
+  letter-spacing: .2em; text-shadow: 0 0 14px rgba(255,255,255,.34);
+}
+html[data-theme="nothing"] .nothing-reveal-pending {
+  opacity: 0; translate: 0 24px; filter: blur(7px); will-change: opacity, translate, filter;
+}
+html[data-theme="nothing"] .nothing-reveal-in {
+  opacity: 1; translate: 0 0; filter: blur(0);
+  transition: opacity .8s cubic-bezier(.2,.8,.2,1), translate .8s cubic-bezier(.2,.8,.2,1), filter .8s cubic-bezier(.2,.8,.2,1);
+}
+html[data-theme="nothing"] .manifesto-aside,
+html[data-theme="nothing"] .stack-heading > p,
+html[data-theme="nothing"] .learning-heading > p,
+html[data-theme="nothing"] .archive-heading > p,
+html[data-theme="nothing"] .contact-copy,
+html[data-theme="nothing"] .archive-note,
+html[data-theme="nothing"] .signal-intro,
+html[data-theme="nothing"] .code-footprint-teaser > p,
+html[data-theme="nothing"] .project-language-note,
+html[data-theme="nothing"] .repo-live-count,
+html[data-theme="nothing"] .archive-card-bottom > p,
+html[data-theme="nothing"] .site-footer > p { display: none !important; }
+html[data-theme="nothing"] .project-row-summary p { max-width: 66ch; line-height: 1.45; }
+html[data-theme="nothing"] .project-expanded-content p { max-width: 62ch; color: #bdbdbd; }
+html[data-theme="nothing"] .website-stack-module p { max-width: 42ch; color: #aaa; }
+html[data-theme="nothing"] .section-space { padding-block: clamp(56px,6.4vw,86px); }
+html[data-theme="nothing"] .project-row,
+html[data-theme="nothing"] .archive-card,
+html[data-theme="nothing"] .signal-panel,
+html[data-theme="nothing"] .website-stack-module { backface-visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme="nothing"] .nothing-reveal-pending { opacity: 1; translate: none; filter: none; }
+  html[data-theme="nothing"] :is(a, button, summary, .braille-text) { transition: none !important; animation: none !important; }
+  html[data-theme="nothing"] .nothing-reveal-in { transition: none !important; }
+}
