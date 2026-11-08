@@ -3,6 +3,8 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import AnimatedNumber from "./components/AnimatedNumber.vue";
 import BrailleText from "./components/BrailleText.vue";
 import NothingWebGL from "./components/NothingWebGL.vue";
+import CinematicTransition from "./components/CinematicTransition.vue";
+import { useCinematicMotion } from "./composables/useCinematicMotion";
 import { usePortfolioData } from "./composables/usePortfolioData";
 import type { CodeStatsLanguage, CodeStatsProjectEstimate, GenreItem } from "./types";
 
@@ -15,6 +17,8 @@ interface TechCard {
   learningNote?: string;
 }
 const { repos, codeStats, codeStatsStatus, live, spotify } = usePortfolioData();
+const cinematicTransition = ref<InstanceType<typeof CinematicTransition> | null>(null);
+const { scrollTo } = useCinematicMotion();
 
 const menuOpen = ref(false);
 const selectedTech = ref<TechCard | null>(null);
@@ -262,6 +266,34 @@ function onScroll() {
     scrollFrame = 0;
   });
 }
+function handleInternalNavigation(event: MouseEvent) {
+  if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  const source = event.target;
+  if (!(source instanceof Element)) return;
+  const anchor = source.closest<HTMLAnchorElement>('a[href^="#"]');
+  const href = anchor?.getAttribute("href");
+  if (!href || href === "#") return;
+  const destination = document.getElementById(href.slice(1));
+  if (!destination) return;
+
+  event.preventDefault();
+  menuOpen.value = false;
+  const move = () => {
+    if (window.location.hash !== href) window.history.pushState(null, "", href);
+    const moved = scrollTo(destination, -96);
+    if (!moved) {
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      destination.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+    }
+  };
+
+  if (cinematicTransition.value) {
+    void cinematicTransition.value.transitionTo(move);
+  } else {
+    move();
+  }
+}
+
 function onEscape(event: KeyboardEvent) {
   if (event.key === "Escape") {
     menuOpen.value = false;
@@ -288,7 +320,8 @@ const systemFrame = computed(() => systemFrames[signalCycle.value % systemFrames
 </script>
 
 <template>
-  <main id="main-content" tabindex="-1" @keydown.esc="menuOpen = false">
+  <main id="main-content" tabindex="-1" @keydown.esc="menuOpen = false" @click.capture="handleInternalNavigation">
+    <CinematicTransition ref="cinematicTransition" />
     <a class="skip-link" href="#content-start">Skip to content</a>
     <div class="reading-progress" :style="{ transform: 'scaleX(' + scrollProgress + ')' }"></div>
     <div class="atmosphere" aria-hidden="true">

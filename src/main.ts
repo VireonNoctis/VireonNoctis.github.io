@@ -9,6 +9,8 @@ import "../app/profile-identity.css";
 import "../app/editorial-cleanup.css";
 import "../app/telemetry-responsive.css";
 import "./styles.css";
+import "../app/cinematic.css";
+import "lenis/dist/lenis.css";
 
 document.documentElement.dataset.theme = "nothing";
 document.documentElement.style.colorScheme = "dark";

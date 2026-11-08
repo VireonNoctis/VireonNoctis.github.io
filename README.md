@@ -23,7 +23,7 @@ Vireon presents as a **Businessman, Full-stack Developer, and Real Estate Develo
 ## What the site does
 
 - **Projects and profiles:** curated project links alongside live GitHub, AniList, Last.fm, and optional Spotify data.
-- **Nothing OS design:** the only visual system: strict monochrome, IBM Plex Mono telemetry, Unicode/Braille details, animated number readouts, tactile controls, and a native WebGL2 signal field.
+- **Nothing OS design:** a cinematic monochrome system with a 3D split-panel entry/section transition, restrained IBM Plex Mono telemetry, Unicode/Braille controls, GSAP + Lenis motion, and a native WebGL2 signal field.
 - **Language explorer:** select a technology tile to open its tracked lines, files, characters, words, and repository breakdown. Framework attribution remains separate from the underlying source-language counter.
 - **Lunar X:** supplied codebase line counts and approximate character totals are included in the matching technology profiles.
 - **Static deployment:** Vue 3 + Vite builds the site into `dist/` for GitHub Pages. The optional Rust API is deployed separately.
@@ -106,9 +106,12 @@ src/App.vue                       Vue portfolio and technology modal
 src/components/AnimatedNumber.vue Count-up telemetry
 src/components/BrailleText.vue    Accessible Braille-first action labels
 src/components/NothingWebGL.vue   Native WebGL2 signal field
+src/components/CinematicTransition.vue  3D split-panel cinematic transitions
+src/composables/useCinematicMotion.ts     GSAP, ScrollTrigger, and Lenis motion
 src/composables/usePortfolioData.ts GitHub, AniList, Last.fm, Spotify, and code stats
 src/directives/interaction.ts     Tactile pointer and scroll reveal directives
 src/styles.css                    Vue interaction states and accessibility overrides
+app/cinematic.css                 Cinematic Nothing OS visual layer
 app/*.css                         Existing Nothing OS visual system
 backend/src/main.rs               Rust/Axum companion API
 backend/src/bin/                  Spotify helper binaries
