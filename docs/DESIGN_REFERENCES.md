@@ -1,58 +1,43 @@
 # Portfolio design references
 
-These references are research sources, not a mandate to install every library. The portfolio now has one visual system: Nothing OS. Adapt patterns to its strict monochrome language, preserve the Next.js / React architecture, and keep every effect accessible and fast.
-
-## ReactVibe
-
-- Website: https://reactvibe.com/
-- Documentation: https://reactvibe.com/docs
-- Motion catalog: https://reactvibe.com/docs/motion/overview
-- Public source repository: https://github.com/siddhantmani/reactvibe
-- The docs describe a copy-paste collection of motion-first React components, backgrounds, hero sections, UI blocks, dashboard systems, and text motion. The site reported 74 components across 7 categories at the time this reference was added; the live catalogue may change.
-- It is built around React, Next.js, TypeScript, Tailwind CSS, and Framer Motion. This portfolio already uses Next.js, React, TypeScript, and Framer Motion, so study and selectively adapt the interaction patterns instead of adding a duplicate component framework.
-- Particularly useful patterns for this portfolio:
-  - Motion and text: directional text reveals, restrained staggered entrance, and animated type used to guide attention.
-  - Hero sections: strong editorial hierarchy, layered background treatment, and motion that leads into the work rather than competing with it.
-  - Backgrounds: particles, waves, gradients, and ambient visuals for occasional high-impact sections.
-  - Network / workflow motion: Branch Flow, Hub Flow, Converge, Network Pulse, Pipeline, Signal, Data Flow, Connection Flow, Node Flow, Origin, and Nexus can inspire original diagrams showing how projects, products, tools, and systems connect.
-  - Wave CTA and waveform patterns: use only when an audio, media, or call-to-action section benefits from a visual rhythm.
-  - UI blocks: use as layout references for project detail, contact, or information sections; do not add irrelevant SaaS dashboards, pricing tables, or testimonials to a personal portfolio.
-- Implementation guidance:
-  - Browse the current live preview and copyable source for the closest component before implementing a similar effect.
-  - Use ReactVibe source as a starting point only where its license and current dependency requirements permit; the public repository currently declares MIT, but re-check the exact version and preserve required notices.
-  - Adapt its Framer Motion patterns to this project's existing version and CSS theme system. Do not install a second motion library for effects already covered by Framer Motion.
-  - Preserve keyboard and touch interaction, meaningful focus states, reduced-motion alternatives, SSR safety, and clear static fallbacks.
-  - Prefer transform and opacity animation, avoid unnecessary continuously-running canvases, and test on mobile GPUs.
-
-## Existing reference library
-
-- [Dqnamo Kitchen](https://www.dqnamo.com/kitchen): tactile component experiments, animated signature, scramble text, receipt-printer presentation, cassette controls, magnetic drop zones, card interactions, and copyable prompts. Inspect live behavior and prompts; adapt the interaction concept rather than copying the entire component.
-- [SmoothUI](https://smoothui.dev/): reusable React motion components and UI blocks. Useful for buttons, inputs, expandable surfaces, dynamic notifications, text motion, magnetic interactions, and page sections.
-- [Unlumen UI](https://ui.unlumen.com/): reusable animated React components, image treatments, navigation, SVG motion, and AI Chat interaction patterns.
-- [Animmaster Lib](https://animmasterlib.dev/): broad animation reference for scroll transitions, pointer effects, WebGL, 3D, sliders, text motion, and backgrounds. Treat paid/private source as inspiration only.
-- [Animmaster GitHub](https://github.com/Animmaster): inspect the creator's public portfolio repositories for original composition, typography, 3D hero, parallax, and interaction architecture.
-- [pqoqubbw/icons](https://github.com/pqoqubbw/icons): animated SVG icon references; animate icons only when motion clarifies state or interaction.
-- [Drei](https://github.com/pmndrs/drei): React Three Fiber helpers for model loading, environments, cameras, controls, scroll scenes, and DOM labels attached to 3D objects.
-- [React Three Next](https://github.com/pmndrs/react-three-next): optional Next.js starter architecture for projects that require a persistent shared WebGL canvas; not a default dependency for this existing site.
-- [React Three Fiber](https://github.com/pmndrs/react-three-fiber): the core React renderer for Three.js; use for true interactive 3D scenes, not ordinary 2D UI.
-- [Liquid Glass JS](https://github.com/dashersw/liquid-glass-js): WebGL refraction and blur experiments for a few floating controls. Test WebGL 2, cross-origin sampling, accessibility, and fallbacks before production use.
-- [ShaderGradient](https://github.com/ruucm/shadergradient): configurable animated shader backgrounds for a limited hero or feature section, with static and reduced-motion alternatives.
-- [Paper Design Liquid Logo](https://github.com/paper-design/liquid-logo): inspiration for a one-off liquid-metal brand reveal. Its repository uses PolyForm Shield with a noncompete condition; do not reuse its source unless the terms have been reviewed for the intended use.
+The portfolio now has one visual system: **Nothing OS**. These references inform individual interactions and compositions; they are not a reason to install every library.
 
 ## Active visual direction
 
-Nothing OS is the only supported design. Use pure monochrome, dot-matrix display texture, ultra-light editorial headlines, and restrained uppercase mono labels. Keep the hero signal field on the existing native WebGL2 shader.
+Use strict black, white, and neutral grey; geometric dot-matrix details; ultra-light or tightly tracked display typography; compact uppercase mono labels; Braille-first action labels; and tactile, purposeful feedback.
 
-**Framework boundary:** Next.js is a React framework, so React owns UI rendering and state. Do not add Vue as a second view runtime or use Vue reactivity alongside React state for the same interface. Motion for React handles spring-based pointer attraction, hover, tap, and shared transitions. Use the existing React component layer for tactile controls and preserve native link, button, and disclosure semantics.
+The hero signal field is a hand-written native WebGL2 shader. It responds to pointer movement, suspends while the document is hidden, caps its pixel ratio, and falls back to CSS when WebGL2 is unavailable. The rest of the site remains fully usable without WebGL.
 
-Use animated icon references such as pqoqubbw/icons selectively for state changes and meaningful feedback; do not animate every glyph continuously. Keep the hand-written WebGL2 field for light ambient graphics. Add React Three Fiber and Drei only when a real interactive 3D scene is needed, rather than introducing a second rendering stack for ordinary UI.
+## Framework and motion architecture
 
-The rest of the interface remains readable and functional without WebGL; reduced-motion users receive static states, and browsers without WebGL2 receive a monochrome CSS fallback.
+**Vue 3 + Vite is the only frontend runtime.**
+
+- Vue Single-File Components keep each UI surface, local state, and behavior together.
+- The Composition API and Vue refs/computed values drive the live data, project disclosures, language explorer, and modal.
+- Small custom Vue directives provide pointer-spring tactile movement and IntersectionObserver reveals without a second UI framework.
+- CSS transitions and requestAnimationFrame cover the micro-interactions; no React, Framer Motion, Next.js, or Vue-in-React bridge is part of the site.
+- Vite builds a root-hosted static site into `dist/` for GitHub Pages. No server-side rendering is needed for this API-enhanced portfolio.
+- TypeScript is checked with `vue-tsc`, including strict Vue templates.
+
+Respect `prefers-reduced-motion`, keyboard interaction, readable focus states, touch devices, cleanup of event listeners/observers, and low-power GPUs. Keep meaningful HTML semantics: native links, buttons, details/summary, and modal dialog roles.
+
+## Interaction and visual references
+
+- [Dqnamo Kitchen](https://www.dqnamo.com/kitchen): tactile component experiments, animated signature, scramble text, receipt-printer presentation, cassette controls, magnetic drop zones, and card interactions. Inspect live behavior and adapt the interaction concept; do not copy the complete component.
+- [SmoothUI](https://smoothui.dev/): reusable motion and component patterns. Adapt ideas to native Vue and CSS; do not add a React runtime.
+- [Unlumen UI](https://ui.unlumen.com/): animated components, image treatments, navigation, and SVG interaction patterns. Rebuild suitable ideas in Vue.
+- [Animmaster Lib](https://animmasterlib.dev/): references for scroll transitions, pointer effects, WebGL, 3D, sliders, text motion, and backgrounds. Treat paid/private source as inspiration only.
+- [Animmaster GitHub](https://github.com/Animmaster): public portfolio references for composition, typography, parallax, and interaction architecture.
+- [pqoqubbw/icons](https://github.com/pqoqubbw/icons): animated SVG icon references; adapt selectively where motion explains a state change.
+- [Liquid Glass JS](https://github.com/dashersw/liquid-glass-js): WebGL refraction experiments. The portfolio deliberately keeps the current monochrome system rather than introducing a liquid-glass theme.
+- [ShaderGradient](https://github.com/ruucm/shadergradient): shader background inspiration. Prefer the existing lean native WebGL2 field over a new dependency.
+- [Paper Design Liquid Logo](https://github.com/paper-design/liquid-logo): one-off liquid-metal brand reveal inspiration. Its repository uses PolyForm Shield with a noncompete condition; do not reuse its source unless the terms are reviewed.
+- [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [Drei](https://github.com/pmndrs/drei), and [React Three Next](https://github.com/pmndrs/react-three-next) are React-specific tooling. They are not used in this Vue app; use native WebGL2 or a Vue-compatible Three.js layer only if a real interactive 3D scene is needed.
 
 ## Selection rules
 
-1. Study current project conventions and live reference behavior before implementation.
-2. Use the fewest dependencies that solve the actual problem; this site already includes Framer Motion.
-3. Keep core content readable and navigable without WebGL or animation.
-4. Respect the user's reduced-motion preference, keyboard access, responsive layouts, and low-power devices.
-5. Prefer an original implementation shaped by the reference over a verbatim copy of another creator's signature work.
+1. Study current behavior and source before adapting a reference.
+2. Use the fewest dependencies that solve the actual problem.
+3. Keep primary content navigable without animation or WebGL.
+4. Respect reduced motion, keyboard access, responsive layouts, and lower-power devices.
+5. Prefer original implementations over a verbatim copy of another creator's signature work.

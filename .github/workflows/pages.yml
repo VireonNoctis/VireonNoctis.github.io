@@ -22,25 +22,38 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out source
+        uses: actions/checkout@v4
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-      - uses: actions/setup-node@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
+
       - name: Install dependencies
-        run: npm install
-      - name: TypeScript validation
-        run: npm run lint
+        run: npm install --no-audit --no-fund
+
+      - name: Type-check Vue components
+        run: npm run typecheck
+
       - name: Build static website
         run: npm run build
-      - name: Verify exported entry point
-        run: test -f out/index.html
+
+      - name: Verify static output
+        run: |
+          test -s dist/index.html
+          test -s dist/robots.txt
+          test -s dist/sitemap.xml
+          test -d dist/brands
+
       - name: Upload website artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: dist
 
   deploy:
     if: github.event_name != 'pull_request'

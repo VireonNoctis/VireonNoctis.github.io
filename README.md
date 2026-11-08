@@ -10,8 +10,8 @@
 
 <p align="center">
   <a href="https://github.com/VireonNoctis/VireonNoctis.github.io/actions/workflows/pages.yml"><img alt="GitHub Pages build" src="https://github.com/VireonNoctis/VireonNoctis.github.io/actions/workflows/pages.yml/badge.svg?branch=main"/></a>
-  <img alt="Next.js 15" src="https://img.shields.io/badge/Next.js-15-000000?logo=nextdotjs&logoColor=white"/>
-  <img alt="React 19" src="https://img.shields.io/badge/React-19-149ECA?logo=react&logoColor=white"/>
+  <img alt="Vue 3" src="https://img.shields.io/badge/Vue-3-42B883?logo=vuedotjs&logoColor=white"/>
+  <img alt="Vite" src="https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white"/>
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white"/>
   <img alt="Rust API" src="https://img.shields.io/badge/Rust-Axum%20companion-DEA584?logo=rust&logoColor=black"/>
 </p>
@@ -23,14 +23,14 @@ Vireon presents as a **Businessman, Full-stack Developer, and Real Estate Develo
 ## What the site does
 
 - **Projects and profiles:** curated project links alongside live GitHub, AniList, Last.fm, and optional Spotify data.
-- **Nothing OS design:** the sole visual system across the site: strict monochrome, IBM Plex Mono telemetry, Unicode/Braille details, rolling numeric readouts, and a native WebGL2 signal field with responsive pointer interaction.
-- **Language explorer:** select a language tile to open a modal with tracked lines, files, characters, words, and repository breakdowns. The language mark animates into the modal.
-- **Lunar X:** project line and approximate character totals are included in the matching language/framework profiles.
-- **Static deployment:** Next.js exports the site for GitHub Pages; the optional Rust API is deployed separately.
+- **Nothing OS design:** the only visual system: strict monochrome, IBM Plex Mono telemetry, Unicode/Braille details, animated number readouts, tactile controls, and a native WebGL2 signal field.
+- **Language explorer:** select a technology tile to open its tracked lines, files, characters, words, and repository breakdown. Framework attribution remains separate from the underlying source-language counter.
+- **Lunar X:** supplied codebase line counts and approximate character totals are included in the matching technology profiles.
+- **Static deployment:** Vue 3 + Vite builds the site into `dist/` for GitHub Pages. The optional Rust API is deployed separately.
 
 ## Lunar X — supplied project stats
 
-Lunar X's figures feed directly into the website's clickable language statistics.
+Lunar X's figures feed directly into the website's clickable technology statistics.
 
 | Project area | Stack | Reported lines | Approx. characters |
 | --- | --- | ---: | ---: |
@@ -40,50 +40,38 @@ Lunar X's figures feed directly into the website's clickable language statistics
 | Scraping and other tools | Python (48 chars/line) | 20,865 | ≈ 1,001,520 |
 | **Reported total** | | **636,746** | **≈ 48,455,130** |
 
-*Approximate character totals use the per-stack characters-per-line assumptions shown above.*
-
-## Design references
-
-The portfolio's motion and component research includes [ReactVibe](https://reactvibe.com/), [Dqnamo Kitchen](https://www.dqnamo.com/kitchen), [SmoothUI](https://smoothui.dev/), [Unlumen UI](https://ui.unlumen.com/), and the [Animmaster portfolio repository collection](https://github.com/Animmaster). 3D and visual-effect research includes [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [Drei](https://github.com/pmndrs/drei), [ShaderGradient](https://github.com/ruucm/shadergradient), and [Liquid Glass JS](https://github.com/dashersw/liquid-glass-js). See [docs/DESIGN_REFERENCES.md](docs/DESIGN_REFERENCES.md) for where each belongs and the implementation constraints.
+*Approximate character totals use the per-stack characters-per-line assumptions shown above. These supplied figures are not part of the live repository scan.*
 
 ## Website stack
 
 | Layer | What it does |
 | --- | --- |
-| Next.js + React | Pages, components, and site layout. |
-| TypeScript | Interactive state, public-data parsing, and safer UI changes. |
-| CSS + WebGL2 | Responsive monochrome interface and a native shader-rendered signal field. |
-| Framer Motion | Scroll reveals, counters, transitions, and shared-logo modal animation. |
-| Lucide React | Interface iconography. |
-| GitHub Actions + Pages | Type-checking, static export, and deployment. |
+| Vue 3 | Reactive UI, Composition API, and Single-File Components. |
+| TypeScript + vue-tsc | Typed data parsing and strict template checking. |
+| Vite | Local development and static production builds. |
+| CSS + native WebGL2 | Responsive monochrome interface and shader-rendered signal field. |
+| Vue directives | Tactile pointer response and scroll-triggered reveals. |
+| GitHub Actions + Pages | Type checking, static build, and deployment. |
 | Rust + Axum | Optional companion API and scheduled Spotify snapshot helper. |
-
-## Planned learning
-
-| Technology | Category | Planned focus |
-| --- | --- | --- |
-| Tokio | Rust asynchronous runtime | High-concurrency networking, Discord event handling, and efficient game-session workloads. |
-
-*Tokio is a runtime, not a programming language; it is listed separately from languages and frameworks.*
 
 ## Run locally
 
-**Requirements:** Node.js 20+ and npm.
+**Requirements:** Node.js 24+ and npm.
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:5173](http://localhost:5173).
 
 | Command | Purpose |
 | --- | --- |
-| `npm run dev` | Start the development server. |
-| `npm run lint` | TypeScript validation. |
-| `npm run build` | Build the production static export into `out/`. |
-
-Run `npm run lint` and `npm run build` before submitting a change. Pull requests run both checks; only non-PR deployment runs publish the site.
+| `npm run dev` | Start the Vite development server. |
+| `npm run typecheck` | Strict Vue + TypeScript validation. |
+| `npm run lint` | Alias for type checking. |
+| `npm run build` | Type-check and create the static `dist/` output. |
+| `npm run preview` | Preview the production build locally. |
 
 ## Companion API
 
@@ -106,29 +94,26 @@ The archive response may be partial when an external provider is unavailable. Gi
 
 ## Spotify snapshot
 
-The site reads `public/spotify-now-playing.json`. A scheduled GitHub Actions workflow runs the Rust helper every five minutes and commits changed playback metadata. Spotify credentials must stay in local environment variables or repository Actions secrets and must never be placed in frontend code or the public JSON file.
+The site reads `/spotify-now-playing.json`. A scheduled GitHub Actions workflow runs the Rust helper every five minutes and commits changed playback metadata. Spotify credentials must stay in local environment variables or repository Actions secrets and must never be placed in frontend code or the public JSON file.
 
 To enable the workflow, add `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`, and `SPOTIFY_REFRESH_TOKEN` as repository Actions secrets, then run **Actions → Refresh Spotify listening status** once. The local authorization helper is `cargo run --manifest-path backend/Cargo.toml --bin spotify-auth`; use the redirect URI `http://127.0.0.1:8888/callback` in your Spotify app settings.
 
 ## Key files
 
 ```text
-app/page.tsx                    Main site and language modal
-app/theme-system.tsx             Fixed Nothing OS system and numeric telemetry
-app/nothing-webgl.tsx             Native WebGL2 shader and pointer interaction
-app/nothing-webgl.css             WebGL surface, overlays, and static fallback
-app/globals.css                  Shared layout and global styles
-app/themes.css                   Shared components and language-modal styles
-app/themes/nothing.css           Nothing OS design tokens and component styling
-backend/src/main.rs              Rust/Axum API
-backend/src/bin/                 Spotify helper binaries
-public/brands/                   Technology and brand marks
-public/spotify-now-playing.json  Public playback snapshot
-.github/workflows/pages.yml      Type-check, export, and Pages deployment
-.github/workflows/spotify-now-playing.yml
-                                Scheduled Spotify snapshot refresh
+index.html                        Static document shell and SEO metadata
+src/App.vue                       Vue portfolio and technology modal
+src/components/AnimatedNumber.vue Count-up telemetry
+src/components/BrailleText.vue    Accessible Braille-first action labels
+src/components/NothingWebGL.vue   Native WebGL2 signal field
+src/composables/usePortfolioData.ts GitHub, AniList, Last.fm, Spotify, and code stats
+src/directives/interaction.ts     Tactile pointer and scroll reveal directives
+src/styles.css                    Vue interaction states and accessibility overrides
+app/*.css                         Existing Nothing OS visual system
+backend/src/main.rs               Rust/Axum companion API
+backend/src/bin/                  Spotify helper binaries
+public/brands/                    Technology and brand marks
+public/spotify-now-playing.json   Public playback snapshot
 ```
 
-## License
-
-© 2026 VireonNoctis. All rights reserved. This repository is published for visibility and is not offered under an open-source license. See [LICENSE](LICENSE); third-party dependencies and trademarks remain subject to their owners' terms.
+The site is intentionally a single-page static portfolio. All primary navigation is anchor-based; external profile and repository links open directly.
