@@ -11,6 +11,8 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: portfolio-pages
@@ -27,6 +29,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
+
+      - name: Configure GitHub Pages for workflow deployment
+        uses: actions/configure-pages@v5
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
