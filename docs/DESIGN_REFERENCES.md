@@ -41,3 +41,16 @@ Respect `prefers-reduced-motion`, keyboard interaction, readable focus states, t
 3. Keep primary content navigable without animation or WebGL.
 4. Respect reduced motion, keyboard access, responsive layouts, and lower-power devices.
 5. Prefer original implementations over a verbatim copy of another creator's signature work.
+
+
+## Current portfolio motion references
+
+The latest Animmaster source review expanded the reference set beyond Discovermarket Sticky Cards and Realevate:
+
+- [GAMELAND](https://github.com/Animmaster/GAMELAND): dark full-screen preloader with progress readout and rail, then a video-led hero. Adapt the concise progress-led entrance; this portfolio uses its own six project marks rather than importing media or source.
+- [Samurai](https://github.com/Animmaster/Samurai): sequential full-screen image loader using clipped image layers, staggered reveals, and an overlay wipe. Adapt the clip-path sequence as a short, accessible entry reveal.
+- [FURROW-rebuild](https://github.com/Animmaster/FURROW-rebuild): full-bleed hero media, typography-led reveals, and pointer-aware canvas interaction. Use the restraint and hierarchy, not a copied video or canvas effect.
+- [Discovermarket Sticky Cards](https://github.com/Animmaster/Discovermarket-Sticky-Cards-): sticky editorial cards with scroll-linked depth and a fixed companion heading. Keep the content responsive and add page controls where the project collection grows.
+- [Realevate Landing Page](https://github.com/Animmaster/Realevate-Landing-Page-): staggered image masks, a continuous title strip, and a compact counter. Adapt the image-timing language without copying its photography or exact composition.
+
+The current entry sequence is a short six-panel brand reveal with a numbered progress rail. It must never delay access to page content when reduced motion is enabled.
