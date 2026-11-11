@@ -722,8 +722,7 @@ onBeforeUnmount(() => {
                   <span>ARTIST PLAYS · LAST.FM</span>
                   <strong v-if="lastFmArtistPlaycount !== undefined"><AnimatedNumber :value="lastFmArtistPlaycount" immediate :duration="1250" /></strong>
                   <strong v-else>—</strong>
-                  <small v-if="live.artist">{{ live.artist }}</small>
-                </div>
+                                  </div>
                 <div>
                   <span>YOUR TRACK PLAYS</span>
                   <strong v-if="listeningStatsMatch && live.trackUserPlaycount !== undefined"><AnimatedNumber :value="live.trackUserPlaycount ?? 0" immediate  :duration="1250" /></strong>
@@ -738,7 +737,7 @@ onBeforeUnmount(() => {
           </div>
           <div class="listening-metadata">
             <div v-if="spotify.albumReleaseDate"><span>RELEASED</span><strong>{{ spotify.albumReleaseDate }}</strong></div>
-            <div v-if="spotify.trackNumber"><span>TRACK</span><strong>{{ String(spotify.trackNumber).padStart(2, "0") }}<template v-if="spotify.albumTotalTracks"> / {{ spotify.albumTotalTracks }}</template></strong></div>
+            <div v-if="spotify.trackNumber" class="listening-track-number"><span>TRACK</span><strong>{{ String(spotify.trackNumber).padStart(2, "0") }}<template v-if="spotify.albumTotalTracks"> / {{ spotify.albumTotalTracks }}</template></strong></div>
             <div v-if="spotify.deviceName"><span>DEVICE</span><strong>{{ spotify.deviceName }}</strong></div>
           </div>
           <div class="spotify-playback-panel">

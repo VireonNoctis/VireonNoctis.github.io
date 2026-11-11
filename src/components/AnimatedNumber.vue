@@ -35,6 +35,9 @@ let pulseFrame = 0;
 let pulseTimer = 0;
 let generation = 0;
 let mounted = false;
+let isInView = false;
+let hasEnteredView = false;
+let intersectionObserver: IntersectionObserver | null = null;
 
 function stopFrame() {
   generation += 1;
@@ -100,12 +103,37 @@ function animate(fromZero = false) {
 
 onMounted(() => {
   mounted = true;
-  // Start after the first paint so the zero-to-value transition is visible.
-  frame = window.requestAnimationFrame(() => animate(true));
+  const node = element.value;
+
+  if (!node || typeof IntersectionObserver === "undefined") {
+    isInView = true;
+    hasEnteredView = true;
+    frame = window.requestAnimationFrame(() => animate(true));
+    return;
+  }
+
+  intersectionObserver = new IntersectionObserver((entries) => {
+    for (const entry of entries) {
+      if (entry.target !== node) continue;
+      const visible = entry.isIntersecting && entry.intersectionRatio >= 0.12;
+      if (visible && !isInView) {
+        isInView = true;
+        const firstEntry = !hasEnteredView;
+        hasEnteredView = true;
+        // Begin the count when the metric is actually on screen, not while
+        // its section is still far below the fold.
+        animate(firstEntry);
+      } else if (!visible) {
+        isInView = false;
+      }
+    }
+  }, { threshold: [0, 0.12], rootMargin: "0px 0px -6% 0px" });
+  intersectionObserver.observe(node);
 });
 
 watch(() => safeValue.value, () => {
-  if (mounted) animate(false);
+  // Hold off-screen values until first view; live updates animate when visible.
+  if (mounted && isInView) animate(false);
 });
 watch(() => props.decimals, () => {
   if (mounted) pulse();
@@ -113,6 +141,8 @@ watch(() => props.decimals, () => {
 
 onBeforeUnmount(() => {
   mounted = false;
+  intersectionObserver?.disconnect();
+  intersectionObserver = null;
   stopFrame();
   if (pulseFrame) window.cancelAnimationFrame(pulseFrame);
   if (pulseTimer) window.clearTimeout(pulseTimer);
