@@ -89,7 +89,7 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
 
 
 /* Cinematic portfolio opening — image reveals and editorial type, no 3D ornament */
-.intro-loader{position:fixed;inset:0;z-index:1000;overflow:hidden;background:#060606;color:#f2f1ed;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);pointer-events:none};opacity:0;visibility:hidden}.intro-loader.is-active{opacity:1;visibility:visible
+.intro-loader{position:fixed;inset:0;z-index:1000;overflow:hidden;background:#060606;color:#f2f1ed;clip-path:polygon(0 0,100% 0,100% 100%,0 100%);pointer-events:none;opacity:0;visibility:hidden}.intro-loader.is-active{opacity:1;visibility:visible}
 .intro-loader-panels{position:absolute;inset:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
 .intro-loader-panel{position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:linear-gradient(180deg,#151515 0%,#090909 64%,#050505 100%);clip-path:polygon(0 100%,100% 100%,100% 100%,0 100%)}
 .intro-loader-panel:nth-child(2n){background:linear-gradient(180deg,#101010 0%,#070707 70%,#050505 100%)}
