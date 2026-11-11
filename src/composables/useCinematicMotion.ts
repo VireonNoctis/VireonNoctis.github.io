@@ -35,14 +35,14 @@ export function useCinematicMotion() {
           autoAlpha: 1, y: 0, duration: .85, clearProps: "transform,opacity,visibility"
         }, .68);
 
-      gsap.fromTo(".hero-reveal-frame", { clipPath: "inset(100% 0 0 0)" }, {
+      intro.fromTo(".hero-reveal-frame", { clipPath: "inset(100% 0 0 0)" }, {
         clipPath: "inset(0% 0 0 0)", duration: 1.05, stagger: .14,
         ease: "power4.out", clearProps: "clipPath"
       }, .48);
-      gsap.fromTo(".hero-frame-mark img", { scale: 1.2 }, {
+      intro.fromTo(".hero-frame-mark img", { scale: 1.2 }, {
         scale: 1, duration: 1.2, stagger: .14, ease: "power4.out", clearProps: "transform"
       }, .48);
-      gsap.fromTo(".hero-foot", { autoAlpha: 0, y: 12 }, {
+      intro.fromTo(".hero-foot", { autoAlpha: 0, y: 12 }, {
         autoAlpha: 1, y: 0, duration: .7, clearProps: "transform,opacity,visibility"
       }, 1.05);
 
