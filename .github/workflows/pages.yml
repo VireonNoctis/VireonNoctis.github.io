@@ -42,7 +42,7 @@ jobs:
       - name: Verify branch deployment files
         run: |
           test -s index.html
-          test -s .nojekyll
+          test -f .nojekyll
           test -s robots.txt
           test -s sitemap.xml
           test -d brands
