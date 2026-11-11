@@ -19,29 +19,34 @@ const { scrollTo } = useCinematicMotion();
 
 interface WebnovelCard {
   id: string;
-  index: string;
   title: string;
-  mark: string;
+  image: string;
   source: string;
   href: string;
 }
 const webnovels: WebnovelCard[] = [
-  { id: "orv", index: "01", title: "Omniscient Reader's Viewpoint", mark: "ORV", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/omniscient-readers-viewpoint/" },
-  { id: "reverend", index: "02", title: "Reverend Insanity", mark: "RI", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/reverend-insanity/" },
-  { id: "lotm", index: "03", title: "Lord of the Mysteries", mark: "LOTM", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/lord-of-the-mysteries/" },
-  { id: "reincarnator", index: "04", title: "Reincarnator", mark: "RE", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/reincarnator/" },
-  { id: "shadow-slave", index: "05", title: "Shadow Slave", mark: "SS", source: "WEBNOVEL · OFFICIAL", href: "https://www.webnovel.com/book/22196546206090805" }
+  { id: "orv", title: "Omniscient Reader's Viewpoint", image: "https://cdn.novelupdates.com/images/2020/12/Omniscient-Readers-Viewpoint.png", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/omniscient-readers-viewpoint/" },
+  { id: "reverend", title: "Reverend Insanity", image: "https://cdn.novelupdates.com/images/2025/06/Reverend-Insanity.jpg", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/reverend-insanity/" },
+  { id: "lotm", title: "Lord of the Mysteries", image: "https://cdn.novelupdates.com/images/2018/11/Lord-of-the-Mysteries.jpeg", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/lord-of-the-mysteries/" },
+  { id: "reincarnator", title: "Reincarnator", image: "https://cdn.novelupdates.com/images/2016/10/xxlarge-2.jpg", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/reincarnator/" },
+  { id: "shadow-slave", title: "Shadow Slave", image: "https://book-pic.webnovel.com/bookcover/22196546206090805?imageMogr2/thumbnail/600x&imageId=1705256017438", source: "WEBNOVEL · OFFICIAL", href: "https://www.webnovel.com/book/22196546206090805" }
 ];
-const selectedFavoriteCategory = ref<AniListFavoriteCategory>("anime");
-const favoriteCategories: { key: AniListFavoriteCategory; label: string }[] = [
+type FavoriteCollectionCategory = AniListFavoriteCategory | "webnovels";
+const selectedFavoriteCategory = ref<FavoriteCollectionCategory>("anime");
+const favoriteCategories: { key: FavoriteCollectionCategory; label: string }[] = [
   { key: "anime", label: "ANIME" },
   { key: "manga", label: "MANGA" },
   { key: "characters", label: "CHARACTERS" },
   { key: "staff", label: "STAFF" },
-  { key: "studios", label: "STUDIOS" }
+  { key: "studios", label: "STUDIOS" },
+  { key: "webnovels", label: "WEBNOVELS" }
 ];
-const favoriteItems = computed(() => live.value.anilistFavorites?.[selectedFavoriteCategory.value] ?? []);
-const hasAniListFavorites = computed(() => Object.values(live.value.anilistFavorites ?? {}).some((items) => items.length > 0));
+const favoriteItems = computed(() => selectedFavoriteCategory.value === "webnovels"
+  ? webnovels.map((novel) => ({ id: novel.id, title: novel.title, image: novel.image, url: novel.href }))
+  : live.value.anilistFavorites?.[selectedFavoriteCategory.value] ?? []);
+const hasFavoriteCollection = computed(() =>
+  webnovels.length > 0 || Object.values(live.value.anilistFavorites ?? {}).some((items) => items.length > 0)
+);
 const genreListElement = ref<HTMLElement | null>(null);
 const genreBarsVisible = ref(false);
 let genreObserver: IntersectionObserver | null = null;
@@ -244,10 +249,40 @@ const logoByName: Record<string, string> = {
   "NPM config": "javascript"
 };
 const formatLanguages = new Set([
-  "Batch", "Markdown", "JSON", "Plain text", "YAML", "TOML", "Environment config",
-  "Shell", "SVG", "Git config", "Config", "XML", "Dockerfile", "Docker config",
-  "Go module", "Properties"
+  "batch", "markdown", "json", "plain text", "plaintext", "yaml", "toml", "environment config",
+  "shell", "svg", "git config", "config", "xml", "dockerfile", "docker config",
+  "go module", "properties"
 ]);
+const logoAliases: Record<string, string> = {
+  "plain text": "plaintext",
+  plaintext: "plaintext",
+  terraform: "terraform",
+  "terraform (hcl)": "terraform"
+};
+function technologyLogo(name: string): string {
+  const normalized = name.trim().toLowerCase();
+  return logoAliases[normalized] ?? logoByName[name.trim()] ?? logoByName[name.trim().replace(/^./, (letter) => letter.toUpperCase())] ?? "";
+}
+const languageColors: Record<string, string> = {
+  python: "#3776AB", batch: "#6A9955", kotlin: "#7F52FF", css: "#663399",
+  typescript: "#3178C6", rust: "#DEA584", r: "#276DC3", go: "#00ADD8",
+  javascript: "#F7DF1E", ruby: "#CC342D", yaml: "#CB171E", svelte: "#FF3E00",
+  html: "#E34F26", shell: "#4EAA25", "environment config": "#9CA3AF",
+  "git config": "#F05032", config: "#9CA3AF", dockerfile: "#2496ED",
+  "docker config": "#2496ED", "go module": "#00ADD8", "next.js": "#EDEDED",
+  react: "#61DAFB", webgl: "#990000", "three.js": "#FFFFFF", "vue.js": "#42B883",
+  vue: "#42B883", lua: "#000080", markdown: "#5190CB", json: "#F5A623",
+  sql: "#4169E1", "c++": "#00599C", "plain text": "#A1A1AA", plaintext: "#A1A1AA",
+  svg: "#FFB13B", xml: "#F16529", swift: "#F05138",
+  "terraform (hcl)": "#7B42BC", terraform: "#7B42BC", toml: "#9C4121",
+  gradle: "#02303A", editorconfig: "#B4B4B4", java: "#ED8B00", properties: "#A1A1AA"
+};
+function languageAccent(name: string): string {
+  return languageColors[name.trim().toLowerCase()] ?? "#A1A1AA";
+}
+function isFormatLanguage(name: string): boolean {
+  return formatLanguages.has(name.trim().toLowerCase());
+}
 const charactersPerLine: Record<string, number> = {
   Rust: 60, "Next.js": 90, React: 90, Python: 48, WebGL: 60, "Three.js": 60
 };
@@ -307,9 +342,9 @@ const techOptions = computed<TechCard[]>(() => {
   for (const language of languages.value) {
     items.set(language.language.toLowerCase(), {
       name: language.language,
-      logo: logoByName[language.language] ?? "",
+      logo: technologyLogo(language.language),
       kind: language.language === "Next.js" ? "FRAMEWORK" :
-        formatLanguages.has(language.language) ? "FORMAT" : "LANGUAGE"
+        isFormatLanguage(language.language) ? "FORMAT" : "LANGUAGE"
     });
   }
   for (const project of estimates.value) {
@@ -318,7 +353,7 @@ const techOptions = computed<TechCard[]>(() => {
       if (!items.has(key)) {
         items.set(key, {
           name: area.stack.trim(),
-          logo: logoByName[area.stack.trim()] ?? "",
+          logo: technologyLogo(area.stack.trim()),
           kind: area.stack === "Next.js" ? "FRAMEWORK" :
             area.stack === "React" || area.stack === "Three.js" ? "LIBRARY" :
             area.stack === "WebGL" ? "GRAPHICS API" :
@@ -736,7 +771,7 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="project-language-grid">
-            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-top': (108 + index * 6) + 'px', zIndex: 10 + index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech, $event)">
+            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-top': (108 + index * 6) + 'px', '--language-accent': languageAccent(tech.name), zIndex: 10 + index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech, $event)">
               <span class="project-language-logo">
                 <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
                 <span v-else class="project-language-generic">&lt;/&gt;</span>
@@ -852,19 +887,20 @@ onBeforeUnmount(() => {
           </div>
         </article>
       </div>
-      <section v-if="hasAniListFavorites" class="favorites-section" aria-label="AniList favourites">
+      <section v-if="hasFavoriteCollection" class="favorites-section" aria-label="Favourite collections">
         <div class="favorites-heading">
           <div><span>ANILIST / COLLECTION</span><h3>FAVOURITES</h3></div>
-          <a href="https://anilist.co/user/Vireon/favourites" target="_blank" rel="noreferrer">VIEW ALL ↗</a>
+          <a v-if="selectedFavoriteCategory !== 'webnovels'" href="https://anilist.co/user/Vireon/favourites" target="_blank" rel="noreferrer">VIEW ALL ↗</a>
+          <span v-else>05 TITLES</span>
         </div>
         <div class="favorites-controls" role="group" aria-label="Favourite category">
           <button v-for="category in favoriteCategories" :key="category.key" type="button" class="favorite-category-button" :class="{ 'is-active': selectedFavoriteCategory === category.key }" :aria-pressed="selectedFavoriteCategory === category.key" @click="selectedFavoriteCategory = category.key">{{ category.label }}</button>
         </div>
         <Transition name="favorite-switch" mode="out-in">
           <div :key="selectedFavoriteCategory" class="anilist-favorite-grid" :class="{ 'is-seven': favoriteItems.length === 7 }">
-            <a v-for="item in favoriteItems" :key="item.id" class="anilist-favorite-card" :href="item.url" target="_blank" rel="noreferrer" :title="item.title">
+            <a v-for="item in favoriteItems" :key="item.id" class="anilist-favorite-card" :class="{ 'is-webnovel': selectedFavoriteCategory === 'webnovels' }" :href="item.url" target="_blank" rel="noreferrer" :title="item.title">
               <span class="anilist-favorite-image">
-                <img v-if="item.image" :src="item.image" :alt="item.title" loading="lazy" />
+                <img v-if="item.image" :src="item.image" :alt="item.title" loading="lazy" decoding="async" referrerpolicy="no-referrer" />
                 <span v-else>{{ item.title.slice(0, 1) }}</span>
               </span>
               <span class="anilist-favorite-title">{{ item.title }}</span>
@@ -873,27 +909,6 @@ onBeforeUnmount(() => {
             <p v-if="!favoriteItems.length" class="favorites-empty">No favourites in this category.</p>
           </div>
         </Transition>
-      </section>
-      <section class="webnovel-section" aria-label="Webnovels">
-        <div class="webnovel-heading">
-          <div><span>READING / COLLECTION</span><h3>WEBNOVELS</h3></div>
-          <span>05 TITLES</span>
-        </div>
-        <div class="webnovel-grid">
-          <a v-for="novel in webnovels" :key="novel.id" class="webnovel-card" :class="'webnovel-' + novel.id" :href="novel.href" target="_blank" rel="noreferrer">
-            <span class="webnovel-cover" aria-hidden="true">
-              <span class="webnovel-cover-frame"></span>
-              <span class="webnovel-cover-index">{{ novel.index }}</span>
-              <span class="webnovel-cover-mark">{{ novel.mark }}</span>
-              <span class="webnovel-cover-title">{{ novel.title }}</span>
-              <span class="webnovel-cover-foot">{{ novel.source }}</span>
-            </span>
-            <span class="webnovel-card-meta">
-              <strong>{{ novel.title }}</strong>
-              <small>{{ novel.source }} <span aria-hidden="true">↗</span></small>
-            </span>
-          </a>
-        </div>
       </section>
       <div class="social-area" id="elsewhere">
         <div class="social-area-heading"><span>ELSEWHERE</span></div>
@@ -3556,4 +3571,58 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
   .webnovel-cover, .webnovel-card:hover .webnovel-cover { transition: none; transform: none; }
 }
 
+
+/* Native language identity colours and collection typography. */
+.project-language-tile {
+  border-left: 2px solid color-mix(in srgb, var(--language-accent, #a1a1aa) 58%, transparent);
+}
+.project-language-tile:hover {
+  background: color-mix(in srgb, var(--language-accent, #a1a1aa) 7%, transparent);
+}
+.project-language-logo {
+  border-color: color-mix(in srgb, var(--language-accent, #a1a1aa) 42%, rgba(242,241,237,.13));
+  background: color-mix(in srgb, var(--language-accent, #a1a1aa) 12%, #0d0d0d);
+  box-shadow: inset 0 0 18px color-mix(in srgb, var(--language-accent, #a1a1aa) 8%, transparent);
+}
+.project-language-logo img {
+  filter: none;
+}
+.project-language-copy strong {
+  color: color-mix(in srgb, var(--paper) 84%, var(--language-accent, #a1a1aa));
+}
+.tech-modal-heading {
+  color: color-mix(in srgb, var(--paper) 78%, var(--language-accent, #a1a1aa));
+}
+.tech-modal-logo {
+  border-color: color-mix(in srgb, var(--language-accent, #a1a1aa) 46%, rgba(242,241,237,.16));
+  background: color-mix(in srgb, var(--language-accent, #a1a1aa) 12%, #0b0b0b);
+}
+.tech-modal-logo img { filter: none; }
+.anilist-favorite-title {
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -.025em;
+}
+.anilist-favorite-card.is-webnovel .anilist-favorite-image {
+  aspect-ratio: 3 / 4.35;
+  background: #101010;
+}
+.anilist-favorite-card.is-webnovel .anilist-favorite-image img {
+  object-position: center;
+  filter: none;
+}
+.anilist-favorite-card.is-webnovel .anilist-favorite-title {
+  font-size: clamp(12px, 1.1vw, 15px);
+  font-weight: 700;
+}
+.favorites-heading > span {
+  color: var(--quiet);
+  font: 8px var(--mono);
+  letter-spacing: .12em;
+}
+@media (max-width: 560px) {
+  .anilist-favorite-title { font-size: 11px; }
+  .anilist-favorite-card.is-webnovel .anilist-favorite-title { font-size: 12px; }
+}
 </style>
