@@ -4,7 +4,7 @@ import AnimatedNumber from "./components/AnimatedNumber.vue";
 import NothingWebGL from "./components/NothingWebGL.vue";
 import { useCinematicMotion } from "./composables/useCinematicMotion";
 import { usePortfolioData } from "./composables/usePortfolioData";
-import type { CodeStatsLanguage, CodeStatsProjectEstimate, GenreItem } from "./types";
+import type { AniListFavoriteCategory, CodeStatsLanguage, CodeStatsProjectEstimate, GenreItem } from "./types";
 
 type TechKind = "LANGUAGE" | "FRAMEWORK" | "LIBRARY" | "GRAPHICS API" | "RUNTIME" | "FORMAT" | "WORKFLOW" | "LEARNING";
 interface TechCard {
@@ -16,6 +16,39 @@ interface TechCard {
 }
 const { codeStats, codeStatsStatus, live, spotify, lastFmAlbum } = usePortfolioData();
 const { scrollTo } = useCinematicMotion();
+
+const selectedFavoriteCategory = ref<AniListFavoriteCategory>("anime");
+const favoriteCategories: { key: AniListFavoriteCategory; label: string }[] = [
+  { key: "anime", label: "ANIME" },
+  { key: "manga", label: "MANGA" },
+  { key: "characters", label: "CHARACTERS" },
+  { key: "staff", label: "STAFF" },
+  { key: "studios", label: "STUDIOS" }
+];
+const favoriteItems = computed(() => live.value.anilistFavorites?.[selectedFavoriteCategory.value] ?? []);
+const hasAniListFavorites = computed(() => Object.values(live.value.anilistFavorites ?? {}).some((items) => items.length > 0));
+const genreListElement = ref<HTMLElement | null>(null);
+const genreBarsVisible = ref(false);
+let genreObserver: IntersectionObserver | null = null;
+
+watch(genreListElement, (node) => {
+  genreObserver?.disconnect();
+  genreObserver = null;
+  genreBarsVisible.value = false;
+  if (!node) return;
+  if (typeof IntersectionObserver === "undefined") {
+    genreBarsVisible.value = true;
+    return;
+  }
+  genreObserver = new IntersectionObserver(([entry]) => {
+    if (entry?.isIntersecting) {
+      genreBarsVisible.value = true;
+      genreObserver?.disconnect();
+      genreObserver = null;
+    }
+  }, { threshold: 0.3, rootMargin: "0px 0px -8% 0px" });
+  genreObserver.observe(node);
+}, { flush: "post" });
 
 const selectedTech = ref<TechCard | null>(null);
 const techGlassOpening = ref(false);
@@ -519,6 +552,8 @@ onBeforeUnmount(() => {
   window.removeEventListener("scroll", onScroll);
   window.removeEventListener("resize", updateProgress);
   window.removeEventListener("keydown", onEscape);
+  genreObserver?.disconnect();
+  genreObserver = null;
   document.body.style.overflow = "";
 });
 </script>
@@ -725,7 +760,7 @@ onBeforeUnmount(() => {
                 </div>
                 <div>
                   <span>YOUR TRACK PLAYS</span>
-                  <strong v-if="listeningStatsMatch && live.trackUserPlaycount !== undefined"><AnimatedNumber :value="live.trackUserPlaycount ?? 0" immediate  :duration="1250" /></strong>
+                  <strong v-if="listeningStatsMatch && live.trackUserPlaycount !== undefined"><AnimatedNumber :value="live.trackUserPlaycount" immediate :duration="1250" /></strong>
                   <strong v-else>—</strong>
                 </div>
               </aside>
@@ -756,8 +791,11 @@ onBeforeUnmount(() => {
               <span>{{ spotify.configured ? (spotify.isPlaying ? "SPOTIFY / PLAYING" : "SPOTIFY / PAUSED") : live.playing ? "LAST.FM / NOW PLAYING" : "LAST.FM / RECENT TRACK" }}</span>
               <time>{{ spotify.configured && spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : live.trackDurationMs ? formatPlaybackTime(live.trackDurationMs) : "—" }}</time>
             </div>
-            <div v-if="!spotify.configured" class="lastfm-track-stats">
-              <span v-if="live.trackPlaycount !== undefined">{{ formatted(live.trackPlaycount) }} GLOBAL TRACK PLAYS</span>
+            <div v-if="live.trackPlaycount !== undefined || live.trackListeners !== undefined || live.trackDurationMs" class="lastfm-track-stats">
+              <div v-if="live.trackPlaycount !== undefined" class="lastfm-global-track">
+                <span>GLOBAL TRACK PLAYS</span>
+                <strong><AnimatedNumber :value="live.trackPlaycount" immediate :duration="1250" /></strong>
+              </div>
               <span v-if="live.trackListeners !== undefined">{{ formatted(live.trackListeners) }} LISTENERS</span>
               <span v-if="live.trackDurationMs">{{ formatPlaybackTime(live.trackDurationMs) }} DURATION</span>
             </div>
@@ -783,11 +821,33 @@ onBeforeUnmount(() => {
             <div><strong><AnimatedNumber :value="live.manga ?? 0" immediate /></strong><span>MANGA</span></div>
             <div><strong><AnimatedNumber :value="live.mangaChapters ?? 0" immediate /></strong><span>CHAPTERS</span></div>
           </div>
-          <div v-if="live.animeGenres?.length" class="genre-list">
-            <div v-for="genre in live.animeGenres.slice(0, 4)" :key="genre.genre" class="genre-row"><span>{{ genre.genre }}</span><span class="genre-bar"><i :style="{ width: genreWidth(live.animeGenres, genre.count) + '%' }"></i></span></div>
+          <div v-if="live.animeGenres?.length" ref="genreListElement" class="genre-list" :class="{ 'is-visible': genreBarsVisible }">
+            <div v-for="(genre, index) in live.animeGenres.slice(0, 5)" :key="genre.genre" class="genre-row"><span>{{ genre.genre }}</span><span class="genre-bar"><i :style="{ '--genre-width': genreWidth(live.animeGenres, genre.count) + '%', transitionDelay: (index * 90) + 'ms' }"></i></span></div>
           </div>
         </article>
       </div>
+      <section v-if="hasAniListFavorites" class="favorites-section" aria-label="AniList favourites">
+        <div class="favorites-heading">
+          <div><span>ANILIST / COLLECTION</span><h3>FAVOURITES</h3></div>
+          <a href="https://anilist.co/user/Vireon/favourites" target="_blank" rel="noreferrer">VIEW ALL ↗</a>
+        </div>
+        <div class="favorites-controls" role="group" aria-label="Favourite category">
+          <button v-for="category in favoriteCategories" :key="category.key" type="button" class="favorite-category-button" :class="{ 'is-active': selectedFavoriteCategory === category.key }" :aria-pressed="selectedFavoriteCategory === category.key" @click="selectedFavoriteCategory = category.key">{{ category.label }}</button>
+        </div>
+        <Transition name="favorite-switch" mode="out-in">
+          <div :key="selectedFavoriteCategory" class="anilist-favorite-grid">
+            <a v-for="item in favoriteItems" :key="item.id" class="anilist-favorite-card" :href="item.url" target="_blank" rel="noreferrer" :title="item.title">
+              <span class="anilist-favorite-image">
+                <img v-if="item.image" :src="item.image" :alt="item.title" loading="lazy" />
+                <span v-else>{{ item.title.slice(0, 1) }}</span>
+              </span>
+              <span class="anilist-favorite-title">{{ item.title }}</span>
+              <span class="anilist-favorite-arrow" aria-hidden="true">↗</span>
+            </a>
+            <p v-if="!favoriteItems.length" class="favorites-empty">No favourites in this category.</p>
+          </div>
+        </Transition>
+      </section>
       <div class="social-area" id="elsewhere">
         <div class="social-area-heading"><span>ELSEWHERE</span></div>
         <div class="social-list">
@@ -3031,5 +3091,193 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
   .intro-loader.is-active .intro-loader-glass-leaf-right {
     animation: none;
   }
+}
+
+
+/* Live listening figures share the same high-contrast Last.fm count treatment. */
+.listening-edge-stats > div > strong {
+  color: #fff;
+  font: 600 clamp(23px, 2.2vw, 28px)/1 var(--sans);
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+}
+.listening-edge-stats > div > strong .animated-number {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.album-art img {
+  filter: none !important;
+}
+.lastfm-track-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px 20px;
+  padding-top: 12px;
+}
+.lastfm-global-track {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.lastfm-global-track > span {
+  color: #aaa9a3;
+  font: 8px var(--mono);
+  letter-spacing: .1em;
+}
+.lastfm-global-track > strong {
+  color: #fff;
+  font: 600 clamp(21px, 2vw, 26px)/1 var(--sans);
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+}
+.lastfm-global-track .animated-number { color: inherit; font: inherit; }
+.lastfm-track-stats > span {
+  color: #aaa9a3;
+  font: 8px var(--mono);
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.genre-list { display: grid; gap: 12px; }
+.genre-row { margin-top: 0; }
+.genre-bar { height: 3px; overflow: hidden; background: #252525; }
+.genre-bar i {
+  width: 0;
+  transition: width 1.15s cubic-bezier(.16, 1, .3, 1);
+}
+.genre-list.is-visible .genre-bar i { width: var(--genre-width); }
+.favorites-section {
+  margin-top: clamp(42px, 6vw, 74px);
+  padding-top: clamp(24px, 3.5vw, 40px);
+  border-top: 1px solid var(--line);
+}
+.favorites-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.favorites-heading > div > span,
+.favorites-heading > a {
+  color: var(--quiet);
+  font: 8px var(--mono);
+  letter-spacing: .12em;
+}
+.favorites-heading h3 {
+  margin: 10px 0 0;
+  color: var(--paper);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.07em;
+}
+.favorites-heading > a { color: #d7d7d1; white-space: nowrap; }
+.favorites-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 24px 0 15px;
+}
+.favorite-category-button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(242,241,237,.18);
+  background: transparent;
+  color: #aaa9a3;
+  font: 8px var(--mono);
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.favorite-category-button:hover,
+.favorite-category-button.is-active {
+  border-color: #f2f1ed;
+  background: #f2f1ed;
+  color: #080808;
+}
+.anilist-favorite-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.anilist-favorite-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+  padding: 9px;
+  border: 1px solid rgba(242,241,237,.13);
+  background: #080808;
+  transition: border-color .24s, transform .24s, background .24s;
+}
+.anilist-favorite-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.65);
+  background: #111;
+}
+.anilist-favorite-image {
+  display: grid;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  place-items: center;
+  background: #151515;
+  color: #f2f1ed;
+  font: 600 30px var(--sans);
+}
+.anilist-favorite-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.anilist-favorite-title {
+  min-width: 0;
+  overflow: hidden;
+  color: #e8e8e3;
+  font-size: 10px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.anilist-favorite-arrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity .2s, transform .2s;
+}
+.anilist-favorite-card:hover .anilist-favorite-arrow { opacity: 1; transform: translate(2px, -2px); }
+.favorites-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 20px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.favorite-switch-enter-active,
+.favorite-switch-leave-active { transition: opacity .18s, transform .18s; }
+.favorite-switch-enter-from,
+.favorite-switch-leave-to { opacity: 0; transform: translateY(5px); }
+@media (max-width: 800px) {
+  .anilist-favorite-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lastfm-track-stats { grid-template-columns: 1fr 1fr; }
+  .lastfm-global-track { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .listening-edge-stats > div > strong { font-size: 24px; }
+  .lastfm-global-track > strong { font-size: 24px; }
+  .anilist-favorite-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .anilist-favorite-card { padding: 7px; }
+  .favorites-heading { align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genre-bar i { transition: none; }
+  .genre-list .genre-bar i { width: var(--genre-width); }
+  .favorite-switch-enter-active,
+  .favorite-switch-leave-active,
+  .anilist-favorite-card,
+  .favorite-category-button { transition: none; }
 }
 </style>

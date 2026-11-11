@@ -1,5 +1,5 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
-import type { CodeStats, Live, Repo, SpotifyNowPlaying } from "../types";
+import type { AniListFavoriteCategory, AniListFavorites, CodeStats, Live, Repo, SpotifyNowPlaying } from "../types";
 
 type SpotifyPlaybackSnapshot = SpotifyNowPlaying & {
   progressMs: number | null;
@@ -41,6 +41,7 @@ export function usePortfolioData() {
   let lastFmTrackKey = "";
   let artworkLookupKey = "";
   let trackInfoKey = "";
+  let trackInfoFetchedAt = 0;
 
   async function loadCodeStats(signal: AbortSignal) {
     try {
@@ -136,7 +137,21 @@ export function usePortfolioData() {
   }
 
   async function loadAniList(signal: AbortSignal) {
-    const query = "query { User(name: \"Vireon\") { statistics { anime { count episodesWatched minutesWatched meanScore genres(limit: 5, sort: COUNT_DESC) { genre count } } manga { count chaptersRead volumesRead meanScore genres(limit: 5, sort: COUNT_DESC) { genre count } } } } }";
+    const query = `query PortfolioProfile {
+      User(name: "Vireon") {
+        statistics {
+          anime { count episodesWatched minutesWatched meanScore genres(limit: 5, sort: COUNT_DESC) { genre count } }
+          manga { count chaptersRead volumesRead meanScore genres(limit: 5, sort: COUNT_DESC) { genre count } }
+        }
+        favourites {
+          anime(page: 1, perPage: 5) { nodes { id siteUrl title { userPreferred } coverImage { large extraLarge } } }
+          manga(page: 1, perPage: 5) { nodes { id siteUrl title { userPreferred } coverImage { large extraLarge } } }
+          characters(page: 1, perPage: 5) { nodes { id siteUrl name { full } image { large } } }
+          staff(page: 1, perPage: 5) { nodes { id siteUrl name { full } image { large } } }
+          studios(page: 1, perPage: 5) { nodes { id siteUrl name isAnimationStudio } }
+        }
+      }
+    }`;
     try {
       const response = await fetch("https://graphql.anilist.co", {
         method: "POST",
@@ -146,20 +161,51 @@ export function usePortfolioData() {
       });
       if (!response.ok) return;
       const payload = await response.json();
-      const stats = payload?.data?.User?.statistics;
-      if (!stats) return;
+      const profile = payload?.data?.User;
+      const stats = profile?.statistics;
+      const favourites = profile?.favourites;
+      if (!stats && !favourites) return;
+
+      const mapFavourites = (category: AniListFavoriteCategory): AniListFavorites[AniListFavoriteCategory] => {
+        const nodes = favourites?.[category]?.nodes;
+        if (!Array.isArray(nodes)) return [];
+        return nodes.flatMap((item: any) => {
+          const id = Number(item?.id);
+          if (!Number.isFinite(id) || id <= 0) return [];
+          const title = String(item?.title?.userPreferred ?? item?.name?.full ?? item?.name ?? "").trim();
+          const image = item?.coverImage?.extraLarge ?? item?.coverImage?.large ?? item?.image?.large ?? item?.image?.medium;
+          const path = category === "characters" ? "character" : category === "studios" ? "studio" : category;
+          return [{
+            id,
+            title: title || "Untitled",
+            ...(typeof image === "string" && image.startsWith("http") ? { image } : {}),
+            url: typeof item?.siteUrl === "string" ? item.siteUrl : `https://anilist.co/${path}/${id}`
+          }];
+        });
+      };
+      const anilistFavorites: AniListFavorites = {
+        anime: mapFavourites("anime"),
+        manga: mapFavourites("manga"),
+        characters: mapFavourites("characters"),
+        staff: mapFavourites("staff"),
+        studios: mapFavourites("studios")
+      };
+
       live.value = {
         ...live.value,
-        anime: stats.anime?.count,
-        manga: stats.manga?.count,
-        animeEpisodes: stats.anime?.episodesWatched,
-        animeMinutes: stats.anime?.minutesWatched,
-        animeScore: stats.anime?.meanScore,
-        mangaChapters: stats.manga?.chaptersRead,
-        mangaVolumes: stats.manga?.volumesRead,
-        mangaScore: stats.manga?.meanScore,
-        animeGenres: Array.isArray(stats.anime?.genres) ? stats.anime.genres : [],
-        mangaGenres: Array.isArray(stats.manga?.genres) ? stats.manga.genres : []
+        ...(stats ? {
+          anime: stats.anime?.count,
+          manga: stats.manga?.count,
+          animeEpisodes: stats.anime?.episodesWatched,
+          animeMinutes: stats.anime?.minutesWatched,
+          animeScore: stats.anime?.meanScore,
+          mangaChapters: stats.manga?.chaptersRead,
+          mangaVolumes: stats.manga?.volumesRead,
+          mangaScore: stats.manga?.meanScore,
+          animeGenres: Array.isArray(stats.anime?.genres) ? stats.anime.genres : [],
+          mangaGenres: Array.isArray(stats.manga?.genres) ? stats.manga.genres : []
+        } : {}),
+        ...(favourites ? { anilistFavorites } : {})
       };
     } catch { /* AniList is non-blocking. */ }
   }
@@ -256,8 +302,12 @@ export function usePortfolioData() {
           trackListeners: undefined
         } : {})
       };
-      if (changed && artistName && trackInfoKey !== trackKey) {
+      const shouldRefreshTrackInfo = artistName && (
+        trackInfoKey !== trackKey || Date.now() - trackInfoFetchedAt >= 45_000
+      );
+      if (shouldRefreshTrackInfo) {
         trackInfoKey = trackKey;
+        trackInfoFetchedAt = Date.now();
         void loadLastFmTrackInfo(track.name, artistName, trackKey, signal);
       }
       if (!image && artistName && artworkLookupKey !== trackKey) {

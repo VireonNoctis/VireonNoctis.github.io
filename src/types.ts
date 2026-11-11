@@ -19,6 +19,14 @@ export interface GenreItem {
   genre: string;
   count: number;
 }
+export type AniListFavoriteCategory = "anime" | "manga" | "characters" | "staff" | "studios";
+export interface AniListFavorite {
+  id: number;
+  title: string;
+  image?: string;
+  url: string;
+}
+export type AniListFavorites = Record<AniListFavoriteCategory, AniListFavorite[]>;
 export interface Live {
   repos?: number;
   followers?: number;
@@ -44,6 +52,7 @@ export interface Live {
   mangaScore?: number;
   animeGenres?: GenreItem[];
   mangaGenres?: GenreItem[];
+  anilistFavorites?: AniListFavorites;
   topArtists?: RankedItem[];
   topTracks?: RankedItem[];
 }
