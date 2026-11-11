@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import AnimatedNumber from "./components/AnimatedNumber.vue";
 import BrailleText from "./components/BrailleText.vue";
+import NothingWebGL from "./components/NothingWebGL.vue";
 import { useCinematicMotion } from "./composables/useCinematicMotion";
 import { usePortfolioData } from "./composables/usePortfolioData";
 import type { CodeStatsLanguage, CodeStatsProjectEstimate, GenreItem } from "./types";
@@ -14,7 +15,7 @@ interface TechCard {
   learningStatus?: "IN USE" | "PLANNED";
   learningNote?: string;
 }
-const { repos, codeStats, codeStatsStatus, live, spotify } = usePortfolioData();
+const { codeStats, codeStatsStatus, live, spotify } = usePortfolioData();
 const { scrollTo } = useCinematicMotion();
 
 const menuOpen = ref(false);
@@ -23,14 +24,6 @@ const scrollProgress = ref(0);
 const year = new Date().getFullYear();
 let scrollFrame = 0;
 
-const heroFrames = [
-  { index: "01", name: "Lemegeton", label: "MEDIA & COMMUNITY", logo: "/brands/lemegeton.svg", mark: "" },
-  { index: "02", name: "LOOP", label: "COLLABORATIVE SOCIAL", logo: "", mark: "LOOP" },
-  { index: "03", name: "PrivaCage", label: "PRIVACY ENGINEERING", logo: "/brands/privacage.svg", mark: "" },
-  { index: "04", name: "Moonbyte", label: "GAME SYSTEMS", logo: "", mark: "MOONBYTE" },
-  { index: "05", name: "Driftglass", label: "UPDATE AUDITING", logo: "", mark: "DRIFTGLASS" },
-  { index: "06", name: "SkillTether", label: "AGENT TOOLING", logo: "", mark: "SKILLTETHER" }
-];
 const navigation = [
   { label: "Profile", href: "#profile" },
   { label: "Work", href: "#work" },
@@ -161,15 +154,6 @@ const projects = [
   }
 ];
 
-const projectsPerPage = 3;
-const projectPage = ref(0);
-const totalProjectPages = computed(() => Math.max(1, Math.ceil(projects.length / projectsPerPage)));
-const paginatedProjects = computed(() => projects.slice(projectPage.value * projectsPerPage, (projectPage.value + 1) * projectsPerPage));
-const projectPageStart = computed(() => projects.length ? projectPage.value * projectsPerPage + 1 : 0);
-const projectPageEnd = computed(() => Math.min((projectPage.value + 1) * projectsPerPage, projects.length));
-function changeProjectPage(page: number) {
-  projectPage.value = Math.min(Math.max(page, 0), totalProjectPages.value - 1);
-}
 const stackModules = [
   { name: "Vue 3", logo: "vuedotjs", kind: "REACTIVE UI", copy: "Composition API, reactive state, and single-file components." },
   { name: "Vite", logo: "terminal", kind: "BUILD", copy: "Fast development and static production output." },
@@ -300,22 +284,6 @@ const languageCards = computed(() => techOptions.value.map((tech) => {
     pendingScan: !scanned && manualLines === 0
   };
 }));
-const codePageSize = 4;
-const codePage = ref(0);
-const totalCodePages = computed(() => Math.max(1, Math.ceil(languageCards.value.length / codePageSize)));
-const paginatedLanguageCards = computed(() => languageCards.value.slice(codePage.value * codePageSize, (codePage.value + 1) * codePageSize));
-const codePageStart = computed(() => languageCards.value.length ? codePage.value * codePageSize + 1 : 0);
-const codePageEnd = computed(() => Math.min((codePage.value + 1) * codePageSize, languageCards.value.length));
-function changeCodePage(page: number) {
-  codePage.value = Math.min(Math.max(page, 0), totalCodePages.value - 1);
-}
-watch(totalCodePages, (pages) => {
-  if (codePage.value >= pages) codePage.value = Math.max(0, pages - 1);
-});
-watch([projectPage, codePage], async () => {
-  await nextTick();
-  window.dispatchEvent(new Event("portfolio:pagination"));
-});
 const selectedScannedLanguage = computed(() => selectedTech.value
   ? languages.value.find((language) => language.language.toLowerCase() === selectedTech.value?.name.toLowerCase())
   : undefined);
@@ -425,13 +393,6 @@ onBeforeUnmount(() => {
 <template>
   <main id="main-content" tabindex="-1" @keydown.esc="menuOpen = false" @click.capture="handleInternalNavigation">
     <div class="intro-loader" aria-hidden="true">
-      <div class="intro-loader-panels">
-        <div v-for="frame in heroFrames" :key="frame.index" class="intro-loader-panel">
-          <img v-if="frame.logo" :src="frame.logo" alt="" />
-          <span v-else class="intro-loader-panel-wordmark">{{ frame.mark }}</span>
-          <span class="intro-loader-panel-index">{{ frame.index }}</span>
-        </div>
-      </div>
       <div class="intro-loader-topline"><span>VIREON / NOCTIS</span><span>INDEPENDENT WORKS · 2026</span></div>
       <div class="intro-loader-title">
         <p class="intro-loader-kicker">A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
@@ -460,6 +421,10 @@ onBeforeUnmount(() => {
 
     <section class="hero section-shell" id="top">
       <div class="hero-meta"><span>VIREON NOCTIS <i>/</i> PORTFOLIO</span><span>BUSINESS · SOFTWARE · PROPERTY</span></div>
+      <div class="hero-art" aria-hidden="true">
+        <NothingWebGL />
+        <span class="hero-art-caption">FORM STUDY / 001 <i>—</i> REAL-TIME WEBGL</span>
+      </div>
       <div class="hero-main">
         <div class="hero-copy">
           <p class="hero-kicker">INDEPENDENT BUILDER · EST. 2026</p>
@@ -472,12 +437,6 @@ onBeforeUnmount(() => {
             </div>
           </div>
         </div>
-      </div>
-      <div class="hero-reveal-gallery" aria-label="Selected projects and identity">
-        <figure v-for="frame in heroFrames" :key="frame.index" class="hero-reveal-frame">
-          <div class="hero-frame-mark"><img v-if="frame.logo" :src="frame.logo" :alt="frame.name + ' mark'" width="110" height="110" /><span v-else class="hero-frame-wordmark">{{ frame.mark }}</span></div>
-          <figcaption><span>{{ frame.index }} / {{ frame.name }}</span><span>{{ frame.label }}</span></figcaption>
-        </figure>
       </div>
       <div class="hero-foot"><span>INDEPENDENT · DETAIL-LED · SYSTEMS-MINDED</span><span>SCROLL TO EXPLORE <i class="scroll-line" aria-hidden="true"></i></span></div>
     </section>
@@ -504,7 +463,7 @@ onBeforeUnmount(() => {
     <section class="work-section section-shell section-space" id="work">
       <div class="work-layout">
         <div class="work-intro">
-          <div class="section-bar"><span>02 / PROJECT SHOWCASE</span><span>14 CODE-BACKED PROJECTS</span></div>
+          <div class="section-bar"><span>02 / PROJECT SHOWCASE</span><span><AnimatedNumber :value="projects.length" /> CODE-BACKED PROJECTS</span></div>
           <h2>MADE TO<br /><em>MATTER.</em></h2>
           <p>Public codebases, tools, platforms, and creative systems with real implementations.</p>
           <a class="inline-link" href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">All repositories <span aria-hidden="true">↗</span></a>
@@ -514,58 +473,34 @@ onBeforeUnmount(() => {
             <small v-if="live.followers !== undefined"><AnimatedNumber :value="live.followers" /> followers</small>
           </div>
         </div>
-        <div class="project-stack">
-          <Transition name="project-page" mode="out-in">
-            <div class="project-stack-page" :key="projectPage">
-              <details v-for="(project, index) in paginatedProjects" :key="project.name" class="project-stack-card" :style="{ '--stack-index': index }">
-                <summary v-tactile class="project-card-shell tactile-surface">
-                  <div class="project-card-visual">
-                    <span class="project-card-index">{{ project.index }}</span>
-                    <div class="project-card-mark">
-                      <img v-if="project.logo" :src="'/brands/' + project.logo + '.svg'" :alt="project.name + ' mark'" width="112" height="112" loading="lazy" />
-                      <span v-else class="project-card-wordmark">{{ project.mark }}</span>
-                    </div>
-                    <span class="project-card-category">{{ project.type }}</span>
-                  </div>
-                  <div class="project-card-copy">
-                    <div class="project-card-topline"><span>PROJECT / {{ project.index }}</span><span aria-hidden="true">↗</span></div>
-                    <h3>{{ project.name }}</h3>
-                    <p class="project-card-subtitle">{{ project.subtitle }}</p>
-                    <p class="project-card-description">{{ project.description }}</p>
-                    <div class="tag-row"><span v-for="tag in project.tags" :key="tag">{{ tag }}</span></div>
-                    <div class="project-card-expand"><span>Project details</span><span class="expand-symbol" aria-hidden="true">＋</span></div>
-                  </div>
-                </summary>
-                <div class="project-expanded-content">
-                  <p>{{ project.detail }}</p>
-                  <a v-tactile class="tactile-surface" :href="project.url" target="_blank" rel="noreferrer">Open project <span aria-hidden="true">↗</span></a>
-                  <span v-if="project.role">{{ project.role }}</span>
+        <div class="project-gallery">
+          <details v-for="project in projects" :key="project.name" class="project-card-item">
+            <summary v-tactile class="project-card-shell tactile-surface">
+              <div class="project-card-visual">
+                <span class="project-card-index">{{ project.index }}</span>
+                <div class="project-card-mark">
+                  <img v-if="project.logo" :src="'/brands/' + project.logo + '.svg'" :alt="project.name + ' mark'" width="112" height="112" loading="lazy" />
+                  <span v-else class="project-card-wordmark">{{ project.mark }}</span>
                 </div>
-              </details>
+                <span class="project-card-category">{{ project.type }}</span>
+              </div>
+              <div class="project-card-copy">
+                <div class="project-card-topline"><span>PROJECT / {{ project.index }}</span><span aria-hidden="true">↗</span></div>
+                <h3>{{ project.name }}</h3>
+                <p class="project-card-subtitle">{{ project.subtitle }}</p>
+                <p class="project-card-description">{{ project.description }}</p>
+                <div class="tag-row"><span v-for="tag in project.tags" :key="tag">{{ tag }}</span></div>
+                <div class="project-card-expand"><span>Project details</span><span class="expand-symbol" aria-hidden="true">＋</span></div>
+              </div>
+            </summary>
+            <div class="project-expanded-content">
+              <p>{{ project.detail }}</p>
+              <a v-tactile class="tactile-surface" :href="project.url" target="_blank" rel="noreferrer">Open project <span aria-hidden="true">↗</span></a>
+              <span v-if="project.role">{{ project.role }}</span>
             </div>
-          </Transition>
+          </details>
         </div>
       </div>
-
-      <nav class="pagination project-pagination" aria-label="Project pages">
-        <div class="pagination-meta"><span>PROJECT INDEX</span><strong>{{ String(projectPageStart).padStart(2, "0") }}—{{ String(projectPageEnd).padStart(2, "0") }} / {{ String(projects.length).padStart(2, "0") }}</strong></div>
-        <div class="pagination-controls">
-          <button type="button" class="pagination-step" :disabled="projectPage === 0" aria-label="Previous project page" @click="changeProjectPage(projectPage - 1)">←</button>
-          <button v-for="page in totalProjectPages" :key="page" type="button" class="pagination-number" :class="{ 'is-current': projectPage === page - 1 }" :aria-current="projectPage === page - 1 ? 'page' : undefined" @click="changeProjectPage(page - 1)">{{ String(page).padStart(2, "0") }}</button>
-          <button type="button" class="pagination-step" :disabled="projectPage >= totalProjectPages - 1" aria-label="Next project page" @click="changeProjectPage(projectPage + 1)">→</button>
-        </div>
-      </nav>
-      <div v-if="repos.length" class="repo-live-area">
-        <div class="repo-live-heading"><span>RECENT REPOSITORIES</span><span>LIVE FROM GITHUB</span></div>
-        <div class="repo-live-list">
-          <a v-for="(repo, index) in repos.slice(0, 5)" :key="repo.name" v-tactile class="repo-live-row tactile-surface" :href="repo.html_url" target="_blank" rel="noreferrer">
-            <span class="repo-row-index">{{ String(index + 1).padStart(2, "0") }}</span>
-            <div class="repo-live-copy"><strong>{{ repo.name }}</strong><small>{{ repo.description?.trim() || "No description" }}</small><span class="repo-live-meta"><span>{{ repo.language || "Language not detected" }}</span><span>Updated {{ repo.updated_at.slice(0, 10) }}</span></span></div>
-            <span class="repo-stars"><AnimatedNumber :value="repo.stargazers_count" /> ★</span><span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      </div>
-    </section>
 
     <section class="stack-section section-shell section-space" id="stack" v-reveal>
       <div class="section-bar"><span>03 / TECHNICAL STACK</span><span>TOOLS & TELEMETRY</span></div>
@@ -583,34 +518,21 @@ onBeforeUnmount(() => {
             <p>Tracked source technologies and project estimates, separated by provenance.</p>
           </div>
           <div class="code-counted-totals">
-            <div><strong>{{ codeStats ? compact(codeStats.totals.lines) : "—" }}</strong><span>SCANNED LINES</span></div>
-            <div><strong>{{ codeStats ? formatted(codeStats.totals.repositories) : "—" }}</strong><span>REPOSITORIES</span></div>
-            <div><strong>{{ languageCards.length }}</strong><span>LANGUAGE PROFILES</span></div>
+            <div><strong><AnimatedNumber :value="codeStats?.totals.lines ?? 0" notation="compact" :decimals="1" /></strong><span>SCANNED LINES</span></div>
+            <div><strong><AnimatedNumber :value="codeStats?.totals.repositories ?? 0" /></strong><span>REPOSITORIES</span></div>
+            <div><strong><AnimatedNumber :value="languageCards.length" /></strong><span>LANGUAGE PROFILES</span></div>
           </div>
         </div>
         <div class="project-language-grid">
-          <button v-for="tech in paginatedLanguageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
+          <button v-for="tech in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
             <span class="project-language-logo">
               <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
               <span v-else class="project-language-generic">&lt;/&gt;</span>
             </span>
             <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
-            <span class="project-language-lines"><strong>{{ formatted(tech.lines) }}</strong><small>LINES</small></span>
+            <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" /></strong><small>LINES</small></span>
             <span class="project-language-arrow" aria-hidden="true">↗</span>
           </button>
-        </div>
-        <div class="code-pagination">
-          <div class="code-pagination-meta">
-            <span>SHOWING {{ String(codePageStart).padStart(2, "0") }}—{{ String(codePageEnd).padStart(2, "0") }} / {{ String(languageCards.length).padStart(2, "0") }}</span>
-            <span>04 PROFILES PER PAGE</span>
-          </div>
-          <nav class="pagination" aria-label="Code language pages">
-            <div class="pagination-controls">
-              <button type="button" class="pagination-step" :disabled="codePage === 0" aria-label="Previous code page" @click="changeCodePage(codePage - 1)">←</button>
-              <button v-for="page in totalCodePages" :key="page" type="button" class="pagination-number" :class="{ 'is-current': codePage === page - 1 }" :aria-current="codePage === page - 1 ? 'page' : undefined" @click="changeCodePage(page - 1)">{{ String(page).padStart(2, "0") }}</button>
-              <button type="button" class="pagination-step" :disabled="codePage >= totalCodePages - 1" aria-label="Next code page" @click="changeCodePage(codePage + 1)">→</button>
-            </div>
-          </nav>
         </div>
         <p class="project-language-note">{{ codeStatsStatus === "ready" ? "Snapshot generated " + new Date(codeStats!.generatedAt).toLocaleDateString() + ". Select a profile for its file, character, word, and repository breakdown." : codeStatsStatus === "loading" ? "Repository scan is being loaded." : "The repository snapshot is unavailable right now; the portfolio remains usable." }}</p>
       </div>

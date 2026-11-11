@@ -7,22 +7,20 @@ A cinematic, monochrome portfolio for business, software, and property developme
 
 ## Direction
 
-A typography-led opening with a six-panel image reveal, sequential motion, and restrained monochrome surfaces. The work section uses numbered pagination and editorial project cards. The Code Counted explorer uses the row-based language treatment, four profiles per page, and expandable source breakdowns.
+A real-time WebGL 3D hero built around a raymarched folded-metal sculpture, layered with a cinematic typographic intro. The hero contains no duplicate project tiles. The project showcase is one continuous gallery, with all fourteen verified code-backed projects visible together. Code Counted is one continuous list with animated figures and expandable repository breakdowns.
 
-The visual direction deliberately avoids planet, orbit, floating-square, and 3D-hero motifs.
+The visual direction is monochrome, responsive, motion-led, and accessible, with a reduced-motion and WebGL fallback.
 
 ## Project showcase
 
-The showcase lists fourteen public projects with implementation files: Lemegeton, LOOP, PrivaCage, Moonbyte, Lunar X, Driftglass, SkillTether, SwarmForge, Astra, Lunar Dungeons, Torrent Core, ASCII Magic Art, AniList CSS, and Lunar CSS. Private and empty repositories are excluded; prototypes and experimental subsystems are labelled accordingly.
+Fourteen public projects with implementation files are presented: Lemegeton, LOOP, PrivaCage, Moonbyte, Lunar X, Driftglass, SkillTether, SwarmForge, Astra, Lunar Dungeons, Torrent Core, ASCII Magic Art, AniList CSS, and Lunar CSS. Private and empty repositories are excluded; prototypes and experimental subsystems are labelled accordingly.
 
 ## Portfolio features
 
-- Fourteen-project showcase, three projects per page, with expandable project notes.
-- Six-project cinematic opening.
-- Live GitHub repositories and public profile metrics.
-- Code Counted: four language profiles per page, with line, character, file, word, and repository detail.
-- Supplied Lunar X estimates kept distinct from scanned repository statistics.
-- AniList, Last.fm, and optional Spotify profile data.
+- One continuous 14-project gallery, no sticky card stack or project pagination.
+- A raymarched WebGL 3D hero with pointer-responsive camera movement.
+- Code Counted: a single continuous language list with animated counters and detail panels.
+- Live GitHub, AniList, Last.fm, and optional Spotify profile data.
 - Responsive navigation, keyboard-accessible controls, reduced-motion support, and a custom 404 page.
 
 ## Stack
@@ -33,6 +31,7 @@ The showcase lists fourteen public projects with implementation files: Lemegeton
 | Types | TypeScript + vue-tsc |
 | Build | Vite |
 | Motion | GSAP + ScrollTrigger + Lenis |
+| Graphics | Native WebGL2 raymarching |
 | Styling | Native CSS, monochrome design system |
 | Hosting | GitHub Pages branch publishing |
 | Companion tooling | Rust / Axum under backend/ |

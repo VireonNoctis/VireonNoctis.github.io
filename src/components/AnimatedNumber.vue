@@ -7,7 +7,8 @@ const props = withDefaults(defineProps<{
   duration?: number;
   prefix?: string;
   suffix?: string;
-}>(), { decimals: 0, duration: 1250, prefix: "", suffix: "" });
+  notation?: "standard" | "compact";
+}>(), { decimals: 0, duration: 1250, prefix: "", suffix: "", notation: "standard" });
 
 const element = ref<HTMLElement | null>(null);
 const displayed = ref(0);
@@ -18,7 +19,9 @@ let current = 0;
 
 const formatter = computed(() => new Intl.NumberFormat("en-US", {
   minimumFractionDigits: props.decimals,
-  maximumFractionDigits: props.decimals
+  maximumFractionDigits: props.decimals,
+  notation: props.notation,
+  compactDisplay: "short"
 }));
 const targetText = computed(() => formatter.value.format(props.value));
 

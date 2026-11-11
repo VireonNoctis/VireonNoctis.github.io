@@ -9,7 +9,6 @@ let context: gsap.Context | null = null;
 let introFallbackTimer: number | null = null;
 
 export function useCinematicMotion() {
-  let paginationRefresh: (() => void) | null = null;
   onMounted(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     gsap.registerPlugin(ScrollTrigger);
@@ -36,7 +35,6 @@ export function useCinematicMotion() {
         const fill=introLayer.querySelector<HTMLElement>("#intro-fill");
         const intro=gsap.timeline({onComplete:finishIntro});
         intro
-          .to(".intro-loader-panel",{clipPath:"polygon(0 0,100% 0,100% 100%,0 100%)",duration:.95,stagger:.075,ease:"power4.out"},0)
           .to(counter,{value:100,duration:1.55,ease:"power2.inOut",onUpdate:()=>{if(readout)readout.textContent=Math.round(counter.value).toString().padStart(2,"0")+"%";}},0)
           .fromTo(".intro-loader-kicker",{autoAlpha:0,y:14},{autoAlpha:1,y:0,duration:.65,clearProps:"transform,opacity,visibility"},.12)
           .fromTo(".intro-loader-title-line",{autoAlpha:0,yPercent:120},{autoAlpha:1,yPercent:0,duration:.95,stagger:.12,ease:"power4.out",clearProps:"transform,opacity,visibility"},.2)
@@ -49,8 +47,7 @@ export function useCinematicMotion() {
         .fromTo(".hero-kicker",{autoAlpha:0,y:18},{autoAlpha:1,y:0,duration:.75,clearProps:"transform,opacity,visibility"},.12)
         .fromTo(".hero-title-line",{autoAlpha:0,yPercent:115},{autoAlpha:1,yPercent:0,duration:1.15,stagger:.12,clearProps:"transform,opacity,visibility"},.22)
         .fromTo(".hero-intro-row",{autoAlpha:0,y:22},{autoAlpha:1,y:0,duration:.85,clearProps:"transform,opacity,visibility"},.68)
-        .fromTo(".hero-reveal-frame",{clipPath:"inset(100% 0 0 0)"},{clipPath:"inset(0% 0 0 0)",duration:1.05,stagger:.12,ease:"power4.out",clearProps:"clipPath"},1.42)
-        .fromTo(".hero-frame-mark img,.hero-frame-wordmark",{scale:1.18,autoAlpha:0},{scale:1,autoAlpha:1,duration:1.15,stagger:.12,ease:"power4.out",clearProps:"transform,opacity,visibility"},1.42)
+        .fromTo(".hero-art",{autoAlpha:0,scale:1.045,filter:"blur(14px)"},{autoAlpha:1,scale:1,filter:"blur(0px)",duration:1.5,ease:"power3.out",clearProps:"transform,opacity,visibility,filter"},1.18)
         .fromTo(".hero-foot",{autoAlpha:0,y:12},{autoAlpha:1,y:0,duration:.7,clearProps:"transform,opacity,visibility"},1.78);
 
       const revealSelector=[".profile-layout",".role-item",".work-intro",".repo-live-row",".stack-module",".project-language-tile",".archive-card",".social-row",".contact-main"].join(", ");
@@ -62,8 +59,6 @@ export function useCinematicMotion() {
       });
     },document.body);
 
-    paginationRefresh=()=>window.requestAnimationFrame(()=>ScrollTrigger.refresh());
-    window.addEventListener("portfolio:pagination",paginationRefresh);
     window.requestAnimationFrame(()=>ScrollTrigger.refresh());
   });
 
@@ -73,8 +68,6 @@ export function useCinematicMotion() {
     return true;
   }
   onBeforeUnmount(()=>{
-    if(paginationRefresh)window.removeEventListener("portfolio:pagination",paginationRefresh);
-    paginationRefresh=null;
     if(introFallbackTimer!==null){window.clearTimeout(introFallbackTimer);introFallbackTimer=null;}
     context?.revert();context=null;
     if(ticker)gsap.ticker.remove(ticker);ticker=null;
