@@ -7,22 +7,18 @@ A cinematic, monochrome portfolio for business, software, and property developme
 
 ## Direction
 
-A typography-led opening with a six-panel image reveal, sequential motion, and restrained monochrome surfaces. The work section uses numbered pagination and sticky editorial cards. The Code Counted explorer uses the former row-based language treatment, four profiles per page, and expandable source breakdowns.
+A typography-led opening with a six-panel image reveal, sequential motion, and restrained monochrome surfaces. The work section uses numbered pagination and editorial project cards. The Code Counted explorer uses the row-based language treatment, four profiles per page, and expandable source breakdowns.
 
-The visual direction deliberately avoids the planet, orbit graphics, floating square motifs, and a 3D hero.
+The visual direction deliberately avoids planet, orbit, floating-square, and 3D-hero motifs.
 
-## Selected work
+## Project showcase
 
-- **Lemegeton** — multi-guild Discord media discovery and community archive.
-- **LOOP** — collaborative social platform with Circles, Loop Trees, and Co-Loop.
-- **PrivaCage** — local-first privacy auditing across Android and Windows.
-- **Moonbyte** — Rust game runtime and Discord multiplayer systems.
-- **Lunar X** — multi-surface community platform.
-- **vvd Reimagined** — research-led product reconstruction; current state is a research dossier and scaffold, not a finished application.
+The showcase lists fourteen public projects with implementation files: Lemegeton, LOOP, PrivaCage, Moonbyte, Lunar X, Driftglass, SkillTether, SwarmForge, Astra, Lunar Dungeons, Torrent Core, ASCII Magic Art, AniList CSS, and Lunar CSS. Private and empty repositories are excluded; prototypes and experimental subsystems are labelled accordingly.
 
 ## Portfolio features
 
-- Six-project showcase, three projects per page, with expandable project notes.
+- Fourteen-project showcase, three projects per page, with expandable project notes.
+- Six-project cinematic opening.
 - Live GitHub repositories and public profile metrics.
 - Code Counted: four language profiles per page, with line, character, file, word, and repository detail.
 - Supplied Lunar X estimates kept distinct from scanned repository statistics.
@@ -38,7 +34,7 @@ The visual direction deliberately avoids the planet, orbit graphics, floating sq
 | Build | Vite |
 | Motion | GSAP + ScrollTrigger + Lenis |
 | Styling | Native CSS, monochrome design system |
-| Deployment | GitHub Actions + GitHub Pages |
+| Hosting | GitHub Pages branch publishing |
 | Companion tooling | Rust / Axum under backend/ |
 
 ## Run locally
@@ -50,4 +46,6 @@ Requirements: Node.js 24+ and npm.
     npm run typecheck
     npm run build
 
-The site progressively loads GitHub, AniList, Last.fm, repository code statistics, and the public Spotify snapshot. The optional Rust companion service under `backend/` is independent of the GitHub Pages static deployment.
+The Vite source entry lives at `src/index.html`. A production build also copies the compiled bundle and public files to the repository root because this site uses GitHub Pages branch publishing. `index.html` at the root is generated output; edit the source entry instead.
+
+The site progressively loads GitHub, AniList, Last.fm, repository code statistics, and the public Spotify snapshot. The optional Rust companion service under `backend/` is independent of the static deployment.

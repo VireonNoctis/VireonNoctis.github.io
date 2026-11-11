@@ -1,4 +1,4 @@
-name: Build and deploy Vireon Noctis
+name: Build and publish Vireon Noctis
 
 on:
   push:
@@ -10,28 +10,26 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: pages
+  group: portfolio-static-publish
   cancel-in-progress: true
 
 jobs:
-  validate:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
         uses: actions/checkout@v4
-
-      - name: Configure GitHub Pages
-        uses: actions/configure-pages@v5
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: npm
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -39,30 +37,30 @@ jobs:
       - name: Type-check Vue components
         run: npm run typecheck
 
-      - name: Build static website
+      - name: Build and copy compiled site to Pages root
         run: npm run build
 
-      - name: Verify static output
+      - name: Verify branch deployment files
         run: |
-          test -s dist/index.html
-          test -s dist/robots.txt
-          test -s dist/sitemap.xml
-          test -d dist/brands
+          test -s index.html
+          test -s .nojekyll
+          test -s robots.txt
+          test -s sitemap.xml
+          test -d brands
+          test -d assets
+          ! grep -q '/src/main.ts\|/main.ts' index.html
+          grep -Eq 'assets/[^"]+\.js' index.html
+          grep -Eq 'assets/[^"]+\.css' index.html
 
-      - name: Upload website artifact
+      - name: Commit compiled Pages output
         if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    if: github.event_name != 'pull_request'
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: validate
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- .nojekyll 404.html index.html assets brands robots.txt sitemap.xml spotify-now-playing.json vireon-mark.svg vireon-preview.svg
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish compiled portfolio site [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "The deployed static snapshot is already current."
+          fi
