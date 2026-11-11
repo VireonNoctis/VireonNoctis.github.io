@@ -450,3 +450,5 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
  .listening-footer{align-items:flex-start;flex-direction:column}.listening-links{justify-content:flex-start}
  .hero-art{inset:36% 0 4% 0;opacity:.78}.hero-art-caption{right:18px;bottom:18px;font-size:6px}
 }
+
+.listening-copy h3 { white-space: normal; text-overflow: clip; }
