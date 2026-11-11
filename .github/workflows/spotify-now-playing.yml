@@ -53,8 +53,4 @@ jobs:
           git push origin main
           echo "changed=true" >> "$GITHUB_OUTPUT"
 
-      - name: Trigger GitHub Pages deployment
-        if: steps.publish.outputs.changed == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api --method POST "repos/${GITHUB_REPOSITORY}/dispatches" -f event_type=spotify_now_playing_updated
+      # The portfolio polls this public JSON directly, so frequent playback updates do not rebuild the static site.

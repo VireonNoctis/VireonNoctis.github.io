@@ -64,7 +64,7 @@ export function usePortfolioData() {
 
   async function loadSpotify(signal: AbortSignal) {
     try {
-      const path = new URL(import.meta.env.BASE_URL + "spotify-now-playing.json", window.location.origin);
+      const path = new URL("https://raw.githubusercontent.com/VireonNoctis/VireonNoctis.github.io/main/public/spotify-now-playing.json");
       path.searchParams.set("ts", String(Date.now()));
       const response = await fetch(path, { cache: "no-store", signal });
       if (!response.ok) return;

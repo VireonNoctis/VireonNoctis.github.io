@@ -629,7 +629,7 @@ onBeforeUnmount(() => {
               </div>
             </div>
             <div class="spotify-playback-readout">
-              <time>{{ spotify.durationMs ? formatPlaybackTime(spotifyProgressMs) : "0:00" }}</time>
+              <time>{{ spotify.durationMs ? formatPlaybackTime(spotifyProgressMs) : "--:--" }}</time>
               <span>{{ spotify.configured ? (spotify.isPlaying ? "PLAYING" : "PAUSED") : "LAST.FM · LIVE TRACK" }}</span>
               <time>{{ spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : "--:--" }}</time>
             </div>
