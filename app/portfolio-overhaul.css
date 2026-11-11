@@ -1380,10 +1380,11 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
   text-align: center;
 }
 .intro-loader-readout strong {
-  color: #fff;
-  font: 400 17px var(--mono);
-  letter-spacing: -.04em;
+  color: #fff !important;
+  font: 600 clamp(36px, 4.2vw, 48px)/.95 var(--sans);
+  letter-spacing: -.075em;
   font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 24px rgba(255,255,255,.22);
 }
 .intro-loader-wipe { z-index: 8; }
 @media (max-width: 700px) {
@@ -1425,3 +1426,16 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
   .intro-emblem-blade-right,
   .intro-emblem-pin { animation: none !important; }
 }
+
+
+/* Portfolio declutter and clearer hierarchy. */
+.work-intro h2 { margin-top: 0; }
+.project-card-topline { justify-content: flex-end; min-height: 20px; }
+.project-card-description { font-size: 12px; line-height: 1.65; }
+.tag-row span { font-size: 8px; color: #c4c4be; }
+.stack-module p { font-size: 12px; line-height: 1.65; color: #c4c4be; }
+.project-language-copy strong { font-size: 16px; }
+.project-language-lines small { font-size: 8px; color: #c6c6c0; }
+.code-counted-totals span { font-size: 9px; color: #c6c6c0; }
+.intro-loader-readout { font-size: 8px; color: rgba(255,255,255,.72); }
+.intro-loader-status { font-size: 8px; color: rgba(255,255,255,.78); }

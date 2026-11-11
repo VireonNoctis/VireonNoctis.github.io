@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import AnimatedNumber from "./components/AnimatedNumber.vue";
-import BrailleText from "./components/BrailleText.vue";
 import NothingWebGL from "./components/NothingWebGL.vue";
 import { useCinematicMotion } from "./composables/useCinematicMotion";
 import { usePortfolioData } from "./composables/usePortfolioData";
@@ -389,26 +388,49 @@ async function openTech(tech: TechCard, event?: MouseEvent) {
   const trigger = event?.currentTarget;
   const sourceImage = trigger instanceof HTMLElement ? trigger.querySelector<HTMLImageElement>(".project-language-logo img") : null;
   if (!sourceImage?.currentSrc || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
   const sourceRect = sourceImage.getBoundingClientRect();
   techIconFlightActive.value = true;
   await nextTick();
   await new Promise<void>(resolve => window.requestAnimationFrame(() => resolve()));
-  const destination = document.querySelector<HTMLElement>(".tech-modal-logo");
+
+  const destination = document.querySelector<HTMLImageElement>(".tech-modal-logo img");
   if (!destination) { techIconFlightActive.value = false; return; }
   const targetRect = destination.getBoundingClientRect();
+  if (!targetRect.width || !targetRect.height) { techIconFlightActive.value = false; return; }
+
   const clone = sourceImage.cloneNode(true) as HTMLImageElement;
   clone.className = "tech-logo-flight";
   clone.src = sourceImage.currentSrc;
-  Object.assign(clone.style, { left: sourceRect.left + "px", top: sourceRect.top + "px", width: sourceRect.width + "px", height: sourceRect.height + "px" });
+  Object.assign(clone.style, {
+    left: sourceRect.left + "px",
+    top: sourceRect.top + "px",
+    width: sourceRect.width + "px",
+    height: sourceRect.height + "px"
+  });
   document.body.append(clone);
   techIconFlight = clone;
-  const dx = targetRect.left + (targetRect.width - sourceRect.width) / 2 - sourceRect.left;
-  const dy = targetRect.top + (targetRect.height - sourceRect.height) / 2 - sourceRect.top;
+
+  const dx = targetRect.left - sourceRect.left;
+  const dy = targetRect.top - sourceRect.top;
+  const scaleX = targetRect.width / sourceRect.width;
+  const scaleY = targetRect.height / sourceRect.height;
   techIconAnimation = clone.animate([
-    { transform:"translate(0,0) scale(1)" },
-    { transform:"translate(" + dx + "px," + dy + "px) scale(" + (targetRect.width/sourceRect.width) + "," + (targetRect.height/sourceRect.height) + ")" }
-  ], { duration:760, easing:"cubic-bezier(.16,1,.3,1)", fill:"forwards" });
-  techIconAnimation.onfinish = () => { clone.remove(); techIconFlight=null; techIconAnimation=null; techIconFlightActive.value=false; };
+    { transform:"translate(0,0) scale(1,1)" },
+    { transform:"translate(" + dx + "px," + dy + "px) scale(" + scaleX + "," + scaleY + ")" }
+  ], { duration:820, easing:"cubic-bezier(.16,1,.3,1)", fill:"forwards" });
+
+  techIconAnimation.onfinish = async () => {
+    if (techIconFlight !== clone) return;
+    destination.style.transition = "none";
+    techIconFlightActive.value = false;
+    await nextTick();
+    if (techIconFlight !== clone) return;
+    clone.remove();
+    destination.style.removeProperty("transition");
+    techIconFlight = null;
+    techIconAnimation = null;
+  };
 }
 function closeTech() {
   clearTechIconFlight();
@@ -477,7 +499,7 @@ onBeforeUnmount(() => {
       <header class="intro-loader-frame">
         <div class="intro-loader-brand">
           <span class="intro-loader-monogram">V/N</span>
-          <span class="intro-loader-brand-copy"><strong>VIREON NOCTIS</strong><small>INDEPENDENT DIGITAL ATELIER</small></span>
+          <span class="intro-loader-brand-copy"><strong>VIREON NOCTIS</strong></span>
         </div>
       </header>
       <main class="intro-loader-stage">
@@ -534,12 +556,9 @@ onBeforeUnmount(() => {
             <path class="intro-emblem-cut" d="M310 30 L310 68 M310 322 L310 360" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
             <circle class="intro-emblem-pin" cx="310" cy="194" r="3" fill="#fff"/>
           </svg>
-          <span class="intro-loader-artwork-caption">FORM STUDY <i>/</i> 001</span>
         </div>
         <div class="intro-loader-title">
-          <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
           <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
-          <div class="intro-loader-subline"><span>FORM FOLLOWS FUNCTION</span><span>IRELAND <b>/</b> GLOBAL</span></div>
         </div>
         <div class="intro-loader-bottom">
           <div class="intro-loader-status"><span id="intro-stage">COMPOSING THE FORM</span></div>
@@ -557,31 +576,24 @@ onBeforeUnmount(() => {
 
 
     <section class="hero section-shell" id="top">
-      <div class="hero-meta"><span>VIREON NOCTIS <i>/</i> PORTFOLIO</span><span>BUSINESS / SOFTWARE / PROPERTY</span></div>
       <div class="hero-art" aria-hidden="true">
         <NothingWebGL />
-        <span class="hero-art-caption">LIGHT STUDY / 001 <i>—</i> LIVE WAVE FIELD</span>
       </div>
       <div class="hero-main">
         <div class="hero-copy">
-          <p class="hero-kicker">INDEPENDENT BUILDER / EST. 2026</p>
           <h1 aria-label="Vireon Noctis"><span class="hero-title-line">VIREON</span><span class="hero-title-line hero-title-outline">NOCTIS</span></h1>
           <div class="hero-intro-row">
             <p>Building businesses, software systems, and considered digital experiences.</p>
             <div class="hero-actions">
-              <a v-tactile class="action-link action-link-primary tactile-surface" href="#work"><BrailleText label="Explore selected work" /><span aria-hidden="true">↘</span></a>
+              <a v-tactile class="action-link action-link-primary tactile-surface" href="#work">Explore selected work<span aria-hidden="true">↘</span></a>
               <a class="action-link action-link-secondary" href="#profile">Discover the approach</a>
             </div>
           </div>
         </div>
       </div>
-      <div class="hero-foot"><span>INDEPENDENT / DETAIL-LED / SYSTEMS-MINDED</span><span>SCROLL TO EXPLORE <i class="scroll-line" aria-hidden="true"></i></span></div>
     </section>
 
-    <div class="marquee" aria-label="Business, software, development, and design"><div class="marquee-track" aria-hidden="true"><span v-for="n in 4" :key="n">BUSINESS <b>—</b> SOFTWARE <b>—</b> DEVELOPMENT <b>—</b> DIGITAL SYSTEMS <b>—</b></span></div></div>
-
     <section class="profile-section section-shell section-space" id="profile" v-reveal>
-      <div class="section-bar"><span>01 / PROFILE</span><span>THREE AREAS / ONE PRACTICE</span></div>
       <div class="profile-layout">
         <h2>BUILDING<br />BEYOND <em>CODE.</em></h2>
         <div class="profile-copy">
@@ -591,38 +603,33 @@ onBeforeUnmount(() => {
         </div>
       </div>
       <div class="role-grid">
-        <article class="role-item"><span>01</span><h3>Businessman</h3><p>Business and ventures</p></article>
-        <article class="role-item"><span>02</span><h3>Full-stack Developer</h3><p>Software and systems</p></article>
-        <article class="role-item"><span>03</span><h3>Real Estate Developer</h3><p>Property and development</p></article>
+        <article class="role-item"><h3>Businessman</h3></article>
+        <article class="role-item"><h3>Full-stack Developer</h3></article>
+        <article class="role-item"><h3>Real Estate Developer</h3></article>
       </div>
     </section>
 
     <section class="work-section section-shell section-space" id="work">
       <div class="work-layout">
         <div class="work-intro">
-          <div class="section-bar"><span>02 / PROJECT SHOWCASE</span><span><AnimatedNumber :value="projects.length" /> CODE-BACKED PROJECTS</span></div>
-          <h2>MADE TO<br /><em>MATTER.</em></h2>
+              <h2>MADE TO<br /><em>MATTER.</em></h2>
           <p>Public codebases, tools, platforms, and creative systems with real implementations.</p>
           <a class="inline-link" href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">All repositories <span aria-hidden="true">↗</span></a>
           <div class="work-live">
-            <span class="work-live-label">GITHUB / LIVE</span>
             <strong><template v-if="live.repos !== undefined"><AnimatedNumber :value="live.repos" /> repositories</template><template v-else>Repository data loading</template></strong>
-            <small v-if="live.followers !== undefined"><AnimatedNumber :value="live.followers" /> followers</small>
           </div>
         </div>
         <div class="project-stack">
           <details v-for="(project, index) in projects" :key="project.name" class="project-stack-card" :style="{ '--stack-top': (108 + index * 14) + 'px', zIndex: 10 + index }">
             <summary v-tactile class="project-card-shell tactile-surface">
               <div class="project-card-visual">
-                <span class="project-card-index">{{ project.index }}</span>
                 <div class="project-card-mark">
                   <img v-if="project.logo" :src="'/brands/' + project.logo + '.svg'" :alt="project.name + ' mark'" width="112" height="112" loading="lazy" />
                   <span v-else class="project-card-wordmark">{{ project.mark }}</span>
                 </div>
-                <span class="project-card-category">{{ project.type }}</span>
               </div>
               <div class="project-card-copy">
-                <div class="project-card-topline"><span>PROJECT / {{ project.index }}</span><span aria-hidden="true">↗</span></div>
+                <div class="project-card-topline"><span aria-hidden="true">↗</span></div>
                 <h3>{{ project.name }}</h3>
                 <p class="project-card-subtitle">{{ project.subtitle }}</p>
                 <p class="project-card-description">{{ project.description }}</p>
@@ -641,11 +648,10 @@ onBeforeUnmount(() => {
     </section>
 
     <section class="stack-section section-shell section-space" id="stack" v-reveal>
-      <div class="section-bar"><span>03 / TECHNICAL STACK</span><span>TOOLS & TELEMETRY</span></div>
       <div class="stack-heading"><h2>BUILT WITH<br /><em>INTENT.</em></h2><p>The technologies behind the work — from reactive interfaces to systems programming.</p></div>
       <div class="stack-modules">
         <article v-for="module in stackModules" :key="module.name" class="stack-module">
-          <div class="stack-module-head"><img :src="'/brands/tech-' + module.logo + '.svg'" :alt="module.name" width="26" height="26" loading="lazy" /><span>{{ module.kind }}</span></div>
+          <div class="stack-module-head"><img :src="'/brands/tech-' + module.logo + '.svg'" :alt="module.name" width="26" height="26" loading="lazy" /></div>
           <h3>{{ module.name }}</h3><p>{{ module.copy }}</p>
         </article>
       </div>
@@ -653,9 +659,8 @@ onBeforeUnmount(() => {
         <div class="code-counted-layout">
           <div class="code-counted-heading">
             <div class="code-counted-title">
-              <span class="work-live-label">02 / CODE COUNTED</span>
               <h3>Code, counted.</h3>
-              <p>Tracked source technologies and project estimates, separated by provenance.</p>
+              <p>Repository scans and separately supplied project estimates.</p>
             </div>
             <div class="code-counted-totals">
               <div><strong><AnimatedNumber :value="codeStats?.totals.lines ?? 0" notation="compact" :decimals="1" immediate /></strong><span>SCANNED LINES</span></div>
@@ -670,18 +675,16 @@ onBeforeUnmount(() => {
                 <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
                 <span v-else class="project-language-generic">&lt;/&gt;</span>
               </span>
-              <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X / ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile / scan pending" : "Tracked repository data" }}</small></span>
+              <span class="project-language-copy"><strong>{{ tech.name }}</strong></span>
               <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" immediate /></strong><small>LINES</small></span>
               <span class="project-language-arrow" aria-hidden="true">↗</span>
             </button>
           </div>
         </div>
-        <p class="project-language-note">{{ codeStatsStatus === "ready" ? "Snapshot generated " + new Date(codeStats!.generatedAt).toLocaleDateString() + ". Select a profile for its file, character, word, and repository breakdown." : codeStatsStatus === "loading" ? "Repository scan is being loaded." : "The repository snapshot is unavailable right now; the portfolio remains usable." }}</p>
       </div>
     </section>
 
     <section class="archive-section section-shell section-space" id="archive" v-reveal>
-      <div class="section-bar"><span>04 / PERSONAL ARCHIVE</span><span>OUTSIDE THE BUILD</span></div>
       <div class="archive-heading"><h2>MORE THAN<br /><em>WORK.</em></h2><p>Music, media, and the interests that keep the perspective wide.</p></div>
       <div class="archive-grid">
         <article class="archive-card listening-card">
@@ -734,7 +737,6 @@ onBeforeUnmount(() => {
               <span v-if="live.trackListeners !== undefined">{{ formatted(live.trackListeners) }} LISTENERS</span>
               <span v-if="live.trackDurationMs">{{ formatPlaybackTime(live.trackDurationMs) }} DURATION</span>
             </div>
-            <div v-if="!spotify.configured" class="spotify-connection-note">TRACK, ARTWORK & HISTORY VIA LAST.FM / SPOTIFY TIMING REQUIRES PLAYBACK ACCESS</div>
           </div>
           <div class="archive-card-bottom listening-footer">
             <div class="lastfm-scrobbles">
@@ -763,7 +765,7 @@ onBeforeUnmount(() => {
         </article>
       </div>
       <div class="social-area" id="elsewhere">
-        <div class="social-area-heading"><span>ELSEWHERE</span><span>PUBLIC PROFILES</span></div>
+        <div class="social-area-heading"><span>ELSEWHERE</span></div>
         <div class="social-list">
           <a v-for="social in socials" :key="social.name" v-tactile class="social-row tactile-surface" :href="social.href" target="_blank" rel="noreferrer">
             <img :src="'/brands/' + social.logo + '.svg'" :alt="social.name" width="22" height="22" loading="lazy" />
