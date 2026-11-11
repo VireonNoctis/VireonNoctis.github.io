@@ -28,7 +28,7 @@ export function useCinematicMotion() {
       if (reducedMotion) finishIntro();
       else {
         introLayer.classList.add("is-active");
-        introFallbackTimer = window.setTimeout(finishIntro, 11800);
+        introFallbackTimer = window.setTimeout(finishIntro, 13600);
       }
     }
     if (reducedMotion) return;
@@ -52,33 +52,47 @@ export function useCinematicMotion() {
         const readout = introLayer.querySelector<HTMLElement>("#intro-count");
         const fill = introLayer.querySelector<HTMLElement>("#intro-fill");
         const stage = introLayer.querySelector<HTMLElement>("#intro-stage");
+        const expansion = introLayer.querySelector<HTMLElement>("#intro-expansion");
         const intro = gsap.timeline({ onComplete: finishIntro });
 
         intro
           .to(counter, {
             value: 100,
-            duration: 7.2,
-            ease: "power2.inOut",
+            duration: 9.4,
+            ease: "power1.inOut",
             onUpdate: () => {
-              if (readout) readout.textContent = Math.round(counter.value).toString().padStart(2, "0") + "%";
-              if (stage) stage.textContent = counter.value < 28 ? "LOADING CORE SYSTEMS" : counter.value < 58 ? "COMPOSING INTERFACE" : counter.value < 86 ? "RENDERING EXPERIENCE" : "READY TO EXPLORE";
+              const progress = Math.round(counter.value);
+              if (readout) readout.textContent = progress.toString().padStart(2, "0") + "%";
+              if (stage) stage.textContent = progress < 24
+                ? "GATHERING THE ESSENTIALS"
+                : progress < 52
+                  ? "FORMING THE INTERFACE"
+                  : progress < 82
+                    ? "CALIBRATING THE DETAILS"
+                    : "READY TO EXPLORE";
             }
           }, 0)
-          .fromTo(".intro-loader-kicker", { autoAlpha: 0, y: 14 }, {
+          .fromTo(".intro-loader-kicker", { autoAlpha: 0, y: 12 }, {
             autoAlpha: 1, y: 0, duration: 1.05, clearProps: "transform,opacity,visibility"
-          }, 0.12)
-          .fromTo(".intro-loader-title-line", { autoAlpha: 0, yPercent: 120 }, {
-            autoAlpha: 1, yPercent: 0, duration: 1.35, stagger: 0.18,
+          }, 0.35)
+          .fromTo(".intro-loader-title-line", { autoAlpha: 0, yPercent: 112 }, {
+            autoAlpha: 1, yPercent: 0, duration: 1.45, stagger: 0.16,
             ease: "power4.out", clearProps: "transform,opacity,visibility"
-          }, 0.2)
+          }, 0.62)
+          .fromTo(".intro-loader-subline", { autoAlpha: 0, y: 10 }, {
+            autoAlpha: 1, y: 0, duration: 1.05, ease: "power3.out",
+            clearProps: "transform,opacity,visibility"
+          }, 1.25)
           .to(introLayer, {
             autoAlpha: 0,
-            y: -18,
-            duration: 1.05,
-            ease: "power3.inOut"
-          }, 8.15);
+            duration: 0.95,
+            ease: "power2.inOut"
+          }, 10.25);
 
-        if (fill) intro.to(fill, { scaleX: 1, duration: 7.2, ease: "power2.inOut" }, 0);
+        if (fill) intro.to(fill, { scaleX: 1, duration: 9.4, ease: "power1.inOut" }, 0);
+        if (expansion) intro.fromTo(expansion, { scale: 0.12, autoAlpha: 0.25 }, {
+          scale: 1.08, autoAlpha: 0.9, duration: 9.4, ease: "power1.inOut"
+        }, 0);
       }
 
       const heroIntro = gsap.timeline({ delay: 0.18, defaults: { ease: "power4.out" } });

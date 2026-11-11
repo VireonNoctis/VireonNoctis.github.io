@@ -440,21 +440,28 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <div class="intro-loader" aria-hidden="true">
       <div class="intro-loader-grain"></div>
-      <div class="intro-loader-grid" aria-hidden="true"></div>
-      <div class="intro-loader-orbit intro-loader-orbit-a"></div>
-      <div class="intro-loader-orbit intro-loader-orbit-b"></div>
-      <div class="intro-loader-topline"><span>V / N — DIGITAL ATELIER</span><span>INDEPENDENT WORKS <i>·</i> MMXXVI</span></div>
-      <div class="intro-loader-index"><span>EST.</span><strong>001</strong><span>PORTFOLIO SYSTEM</span></div>
-      <div class="intro-loader-title">
-        <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
-        <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
-        <div class="intro-loader-subline"><span>DESIGNing DIGITAL WORLDS</span><span>IRELAND <b>·</b> GLOBAL</span></div>
+      <header class="intro-loader-frame">
+        <div class="intro-loader-brand">
+          <span class="intro-loader-monogram">VN</span>
+          <span class="intro-loader-brand-copy"><strong>VIREON NOCTIS</strong><small>INDEPENDENT DIGITAL ATELIER</small></span>
+        </div>
+        <span class="intro-loader-edition">PERSONAL PORTFOLIO <i>—</i> MMXXVI</span>
+      </header>
+      <div class="intro-loader-center">
+        <div class="intro-loader-expansion" id="intro-expansion" aria-hidden="true">
+          <span class="intro-loader-expansion-inner"></span>
+          <span class="intro-loader-expansion-core"></span>
+        </div>
+        <div class="intro-loader-title">
+          <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
+          <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
+          <div class="intro-loader-subline"><span>FORM FOLLOWS FUNCTION</span><span>IRELAND <b>·</b> GLOBAL</span></div>
+        </div>
       </div>
-      <div class="intro-loader-side-note"><span>CREATIVE DEVELOPMENT</span><span>ENGINEERING / EXPERIMENTATION / FORM</span></div>
       <div class="intro-loader-bottom">
-        <div class="intro-loader-status"><span>INITIALIZING EXPERIENCE</span><span id="intro-stage">COMPOSING INTERFACE</span></div>
+        <div class="intro-loader-status"><span>BUILDING THE EXPERIENCE</span><span id="intro-stage">GATHERING THE ESSENTIALS</span></div>
         <div class="intro-loader-progress"><span id="intro-fill"></span></div>
-        <div class="intro-loader-readout"><span>PORTFOLIO / 001</span><strong id="intro-count">00%</strong><span class="intro-loader-coordinates">53°20' N&nbsp; 6°15' W</span></div>
+        <div class="intro-loader-readout"><span>INITIALIZING / 001</span><strong id="intro-count">00%</strong><span class="intro-loader-coordinates">READY WHEN COMPLETE</span></div>
       </div>
     </div>
   </Teleport>
