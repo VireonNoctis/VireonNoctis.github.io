@@ -501,6 +501,7 @@ onBeforeUnmount(() => {
           </details>
         </div>
       </div>
+    </section>
 
     <section class="stack-section section-shell section-space" id="stack" v-reveal>
       <div class="section-bar"><span>03 / TECHNICAL STACK</span><span>TOOLS & TELEMETRY</span></div>
