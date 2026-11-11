@@ -24,12 +24,12 @@ const year = new Date().getFullYear();
 let scrollFrame = 0;
 
 const heroFrames = [
-  { index: "01", name: "Lemegeton", label: "COMMUNITY SYSTEMS", logo: "/brands/lemegeton.svg", mark: "" },
+  { index: "01", name: "Lemegeton", label: "MEDIA & COMMUNITY", logo: "/brands/lemegeton.svg", mark: "" },
   { index: "02", name: "LOOP", label: "COLLABORATIVE SOCIAL", logo: "", mark: "LOOP" },
   { index: "03", name: "PrivaCage", label: "PRIVACY ENGINEERING", logo: "/brands/privacage.svg", mark: "" },
-  { index: "04", name: "Moonbyte", label: "DISCORD GAME SYSTEM", logo: "", mark: "MOONBYTE" },
-  { index: "05", name: "Lunar X", label: "COMMUNITY PLATFORM", logo: "/brands/lunarx.svg", mark: "" },
-  { index: "06", name: "vvd Reimagined", label: "PRODUCT RECONSTRUCTION", logo: "", mark: "VVD" }
+  { index: "04", name: "Moonbyte", label: "GAME SYSTEMS", logo: "", mark: "MOONBYTE" },
+  { index: "05", name: "Driftglass", label: "UPDATE AUDITING", logo: "", mark: "DRIFTGLASS" },
+  { index: "06", name: "SkillTether", label: "AGENT TOOLING", logo: "", mark: "SKILLTETHER" }
 ];
 const navigation = [
   { label: "Profile", href: "#profile" },
@@ -48,26 +48,26 @@ const socials = [
 ];
 const projects = [
   {
-    name: "Lemegeton", index: "01", logo: "lemegeton", mark: "", type: "COMMUNITY SYSTEMS",
+    name: "Lemegeton", index: "01", logo: "lemegeton", mark: "", type: "MEDIA / COMMUNITY",
     subtitle: "One Discord bot. Many media worlds.",
-    description: "Media discovery, community archives, and connected guild systems.",
-    detail: "A multi-guild Discord platform spanning anime, manga, novels, films, television, games, and community-created resources.",
-    tags: ["DISCORD", "MEDIA DISCOVERY", "MULTI-GUILD", "COMMUNITY ARCHIVE"],
-    url: "https://github.com/Kyerstorm/Lemegeton", role: "MAJOR CONTRIBUTOR · CO-OWNER"
+    description: "A multi-guild media-discovery and community archive platform.",
+    detail: "Connects anime, manga, novels, films, television, and games through Discord discovery, shared metadata, persistent guild boundaries, and dashboard components. The v3 migration is ongoing.",
+    tags: ["DISCORD", "MULTI-GUILD", "POSTGRESQL", "V3 MIGRATION"],
+    url: "https://github.com/Kyerstorm/Lemegeton", role: "CO-OWNER · MAJOR CONTRIBUTOR"
   },
   {
     name: "LOOP", index: "02", logo: "", mark: "LOOP", type: "SOCIAL PLATFORM",
     subtitle: "Create together. Discover everything.",
-    description: "A collaborative social ecosystem built around Circles, Loop Trees, and Co-Loop.",
-    detail: "Full-stack platform development across collaborative content, communities, creator systems, and a Rust server-side transition.",
-    tags: ["NEXT.JS", "REACT", "RUST", "COLLABORATION"],
+    description: "A collaborative social platform built around Circles, Loop Trees, and Co-Loop.",
+    detail: "A substantial Next.js 15 and React 19 codebase with community spaces, branching conversations, creator systems, collaborative content flows, API routes, and extensive feature tests.",
+    tags: ["NEXT.JS 15", "REACT 19", "TYPESCRIPT", "SUPABASE"],
     url: "https://github.com/VireonNoctis/loop-app", role: "PRODUCT / PLATFORM DEVELOPMENT"
   },
   {
     name: "PrivaCage", index: "03", logo: "privacage", mark: "", type: "PRIVACY / SYSTEMS",
     subtitle: "Understand what your device exposes.",
     description: "Local-first privacy auditing across Android and Windows.",
-    detail: "Evidence-backed tracker intelligence, bounded Android DNS controls, local APK and permission audits, metadata inspection, encrypted profile transfer, and reversible Windows controls.",
+    detail: "Combines evidence-backed tracker intelligence, bounded Android DNS controls, local APK and permission audits, metadata inspection, encrypted profile transfer, and reversible Windows privacy controls. Feature maturity is documented separately.",
     tags: ["ANDROID", "WINDOWS", "KOTLIN", "RUST"],
     url: "https://github.com/VireonNoctis/PrivaCage", role: "PROJECT DEVELOPMENT"
   },
@@ -75,25 +75,89 @@ const projects = [
     name: "Moonbyte", index: "04", logo: "", mark: "MOONBYTE", type: "DISCORD GAME SYSTEM",
     subtitle: "A little world of games, right inside Discord.",
     description: "A Rust game runtime for quick games, puzzles, and multiplayer sessions.",
-    detail: "The first durable runtime slice includes Tic-tac-toe, Connect Four, Memory Match, and Word Scramble, with guild-scoped sessions, transactional PostgreSQL state, and restart recovery.",
+    detail: "The implemented runtime slice includes Tic-tac-toe, Connect Four, Memory Match, and Word Scramble, with guild-scoped sessions, transactional PostgreSQL state, versioned snapshots, and restart recovery.",
     tags: ["RUST", "TOKIO", "SERENITY", "POSTGRESQL"],
     url: "https://github.com/VireonNoctis/Moonbyte", role: "PROJECT DEVELOPMENT"
   },
   {
     name: "Lunar X", index: "05", logo: "lunarx", mark: "", type: "PLATFORM / COMMUNITY",
-    subtitle: "Anime, manga, novels, profiles, and game systems.",
-    description: "A multi-surface community platform with a large connected codebase.",
-    detail: "A broad product ecosystem spanning community, media, profiles, and game systems. Supplied project estimates remain separate from scanned repository statistics.",
-    tags: ["RUST", "NEXT.JS", "REACT", "PYTHON"],
+    subtitle: "Anime, manga, profiles, and connected game systems.",
+    description: "A live community platform spanning media, profiles, and interactive systems.",
+    detail: "A connected product ecosystem across community, media discovery, profiles, and game surfaces. Its code figures in Code Counted are supplied estimates and are kept separate from scanned public-repository data.",
+    tags: ["RUST", "NEXT.JS", "REACT", "COMMUNITY"],
     url: "https://lunarx.to/profile/vvvx", role: "PLATFORM DEVELOPMENT"
   },
   {
-    name: "vvd Reimagined", index: "06", logo: "", mark: "VVD", type: "RESEARCH / RECONSTRUCTION",
-    subtitle: "A connected worldbuilding and publishing ecosystem.",
-    description: "A research-led reconstruction of worlds, documents, tools, and collaboration surfaces.",
-    detail: "The current repository contains the research dossier, product model, implementation decisions, and development scaffold. It does not yet claim a working frontend, backend, or production persistence layer.",
-    tags: ["PRODUCT RESEARCH", "NEXT.JS", "REACT", "RUST"],
-    url: "https://github.com/VireonNoctis/vvd-reimagined", role: "INDEPENDENT RECONSTRUCTION"
+    name: "Driftglass", index: "06", logo: "", mark: "DRIFTGLASS", type: "PRIVACY / AUDITING",
+    subtitle: "Every update leaves a trace.",
+    description: "A privacy-first application update auditor with evidence-linked reports.",
+    detail: "The C++20 CLI validates run manifests and reports, compares version behaviour deterministically, and stores bounded local history. Linux Rust and macOS Swift observers remain experimental; the Svelte report viewer is read-only.",
+    tags: ["C++20", "RUST", "SWIFT", "SQLITE"],
+    url: "https://github.com/VireonNoctis/Driftglass", role: "EARLY PROTOTYPE"
+  },
+  {
+    name: "SkillTether", index: "07", logo: "", mark: "SKILLTETHER", type: "DEVELOPER TOOLING",
+    subtitle: "Translate the words. Preserve the intent.",
+    description: "A local-first CLI for validating and localizing Agent Skills.",
+    detail: "Audits package metadata, links, resources, protected machine-facing content, operational invariants, and structural drift. It produces reviewable reports and evidence-backed export candidates; scripts are inspected statically rather than executed.",
+    tags: ["PYTHON", "CLI", "LOCAL-FIRST", "AGENT SKILLS"],
+    url: "https://github.com/VireonNoctis/SkillTether", role: "TOOLING DEVELOPMENT"
+  },
+  {
+    name: "SwarmForge", index: "08", logo: "", mark: "SWARMFORGE", type: "AGENT WORKFLOWS",
+    subtitle: "Coordinate the work. Verify the result.",
+    description: "A portable Agent Skill for coding-assistant orchestration.",
+    detail: "Breaks substantial work into bounded tasks, delegates to host-provided agents where available, manages dependencies and workspace ownership, then integrates and verifies results. It does not claim workers ran when the host exposes no delegation.",
+    tags: ["AGENT SKILL", "PYTHON", "VALIDATION", "WORKFLOWS"],
+    url: "https://github.com/VireonNoctis/SwarmForge", role: "OPEN-SOURCE DEVELOPER TOOLING"
+  },
+  {
+    name: "Astra", index: "09", logo: "", mark: "ASTRA", type: "INTERACTIVE / SCIENCE",
+    subtitle: "Explore the universe from one interactive map.",
+    description: "A 3D astronomy explorer connected to public science archives.",
+    detail: "A React and Three.js frontend with a Ruby/Sinatra API. It queries sources including NASA Exoplanet Archive, JPL Horizons, the Small-Body Database, and ESA Gaia, keeping live results bounded and linked to their sources.",
+    tags: ["REACT", "THREE.JS", "RUBY", "NASA / JPL DATA"],
+    url: "https://github.com/VireonNoctis/Universe-Explorer", role: "INTERACTIVE APPLICATION"
+  },
+  {
+    name: "Lunar Dungeons", index: "10", logo: "", mark: "LUNAR / DUNGEONS", type: "GAME / EXPLORATION",
+    subtitle: "A pixel-style world with 800 standard chambers.",
+    description: "A dungeon explorer with a Three.js world and Rust service layer.",
+    detail: "A Next.js interface and Three.js explorer connect to a Rust/Axum/SQLx backend for authenticated progression and server-validated combat. The documented design includes five tiers, 800 standard stages, boss encounters, and further progression.",
+    tags: ["RUST", "NEXT.JS", "THREE.JS", "AXUM"],
+    url: "https://github.com/VireonNoctis/waste-hub/tree/main/lunar-dungeons", role: "FEATURE DEVELOPMENT"
+  },
+  {
+    name: "Torrent Core", index: "11", logo: "", mark: "TORRENT CORE", type: "EXPERIMENTAL / BACKEND",
+    subtitle: "Keep long-running transfers out of the request cycle.",
+    description: "An experimental server-side torrent management subsystem.",
+    detail: "The code includes API routes and TypeScript modules for sessions, scheduling, bandwidth policy, retry and recovery, persistence, file management, and health events. It is documented as an experimental subsystem rather than a finished public service.",
+    tags: ["TYPESCRIPT", "NEXT.JS API", "NODE RUNTIME", "EXPERIMENTAL"],
+    url: "https://github.com/VireonNoctis/Wasting-Time-on./tree/main/Torrent", role: "EXPERIMENTAL BACKEND"
+  },
+  {
+    name: "ASCII Magic Art", index: "12", logo: "", mark: "ASCII MAGIC", type: "OPEN-SOURCE / CREATIVE TOOLING",
+    subtitle: "Motion and structure, built from characters.",
+    description: "A terminal-ready library of more than 730 animated ASCII pieces.",
+    detail: "An npm CLI and browser custom element for animated scenes, diagrams, interface elements, and visual experiments across 24 categories, with alternate character rendering and prompt generation.",
+    tags: ["NODE.JS", "CLI", "WEB COMPONENT", "734+ PIECES"],
+    url: "https://github.com/VireonNoctis/ascii-magic-art", role: "OPEN-SOURCE PACKAGE"
+  },
+  {
+    name: "AniList CSS", index: "13", logo: "", mark: "ANILIST", type: "INTERFACE / THEMING",
+    subtitle: "A multi-accent dark theme for AniList.",
+    description: "A customizable profile skin with animated, translucent surfaces.",
+    detail: "A custom CSS system with distinct accent palettes for anime, manga, and favourites, plus frosted panels, ambient overlays, and restrained motion.",
+    tags: ["CSS", "ANILIST", "MULTI-ACCENT", "THEME DESIGN"],
+    url: "https://github.com/VireonNoctis/Anilist-Css", role: "INTERFACE DESIGN"
+  },
+  {
+    name: "Lunar CSS", index: "14", logo: "", mark: "LUNAR CSS", type: "INTERFACE / THEMING",
+    subtitle: "A collection of visual themes for Lunar.",
+    description: "Custom CSS themes created for the Lunar Marketplace.",
+    detail: "A theme collection spanning space, stained-glass, character-inspired, and other visual treatments, maintained as reusable CSS files.",
+    tags: ["CSS", "THEME COLLECTION", "LUNAR MARKETPLACE"],
+    url: "https://github.com/VireonNoctis/Lunar-Css", role: "INTERFACE DESIGN"
   }
 ];
 
@@ -440,9 +504,9 @@ onBeforeUnmount(() => {
     <section class="work-section section-shell section-space" id="work">
       <div class="work-layout">
         <div class="work-intro">
-          <div class="section-bar"><span>02 / SELECTED WORK</span><span>PROJECTS</span></div>
+          <div class="section-bar"><span>02 / PROJECT SHOWCASE</span><span>14 CODE-BACKED PROJECTS</span></div>
           <h2>MADE TO<br /><em>MATTER.</em></h2>
-          <p>Products, platforms, and systems built around real use.</p>
+          <p>Public codebases, tools, platforms, and creative systems with real implementations.</p>
           <a class="inline-link" href="https://github.com/VireonNoctis?tab=repositories" target="_blank" rel="noreferrer">All repositories <span aria-hidden="true">↗</span></a>
           <div class="work-live">
             <span class="work-live-label">GITHUB / LIVE</span>
