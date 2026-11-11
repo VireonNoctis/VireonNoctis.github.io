@@ -59,14 +59,6 @@ export function useCinematicMotion() {
             y:0, scale:1, filter:"blur(0px)", duration:1.55, ease:"power4.out",
             clearProps:"transform,filter"
           }, .12)
-          .to(".intro-emblem-glass-left", {
-            x:-88, rotation:-9, transformOrigin:"100% 50%",
-            duration:2.25, ease:"power4.out"
-          }, .18)
-          .to(".intro-emblem-glass-right", {
-            x:88, rotation:9, transformOrigin:"0% 50%",
-            duration:2.25, ease:"power4.out"
-          }, .18)
           .to(counter, {
             value: 100, duration: 9.6, ease: "power1.inOut",
             onUpdate: () => {
