@@ -36,6 +36,10 @@ export function usePortfolioData() {
   const spotify = ref<SpotifyPlaybackSnapshot>({ ...EMPTY_SPOTIFY });
   let controller: AbortController | null = null;
   let spotifyRefresh = 0;
+  let lastFmRefresh = 0;
+  let lastFmTrackKey = "";
+  let artworkLookupKey = "";
+  let trackInfoKey = "";
 
   async function loadCodeStats(signal: AbortSignal) {
     try {
@@ -101,9 +105,12 @@ export function usePortfolioData() {
 
   async function loadGithub(signal: AbortSignal) {
     try {
-      const [userResponse, repoResponse] = await Promise.all([
+      const [userResponse, repoResponse, commitsResponse] = await Promise.all([
         fetch("https://api.github.com/users/VireonNoctis", { signal }),
-        fetch("https://api.github.com/users/VireonNoctis/repos?type=owner&sort=updated&per_page=100", { signal })
+        fetch("https://api.github.com/users/VireonNoctis/repos?type=owner&sort=updated&per_page=100", { signal }),
+        fetch("https://api.github.com/search/commits?q=author%3AVireonNoctis&per_page=1", {
+          signal, headers: { Accept: "application/vnd.github+json" }
+        })
       ]);
       if (userResponse.ok) {
         const user = await userResponse.json() as { followers?: number; public_repos?: number };
@@ -116,6 +123,12 @@ export function usePortfolioData() {
             .filter((repo) => typeof repo.name === "string" && typeof repo.html_url === "string" && !repo.fork && !repo.archived)
             .sort((a, b) => Date.parse(b.updated_at) - Date.parse(a.updated_at))
             .slice(0, 8);
+        }
+      }
+      if (commitsResponse.ok) {
+        const payload = await commitsResponse.json() as { total_count?: number };
+        if (typeof payload.total_count === "number" && Number.isFinite(payload.total_count)) {
+          live.value = { ...live.value, commits: payload.total_count };
         }
       }
     } catch { /* Public profile widgets never block the page. */ }
@@ -150,53 +163,98 @@ export function usePortfolioData() {
     } catch { /* AniList is non-blocking. */ }
   }
 
-  async function loadLastFm(signal: AbortSignal) {
-    const request = async (method: string, params: Record<string, string> = {}) => {
-      const query = new URLSearchParams({
-        method, user: "reasfeetadmirer", api_key: LASTFM_KEY, format: "json", ...params
-      });
-      const response = await fetch("https://ws.audioscrobbler.com/2.0/?" + query, { signal });
-      if (!response.ok) throw new Error("Last.fm request failed");
-      return response.json();
-    };
+  async function requestLastFm(method: string, params: Record<string, string>, signal: AbortSignal) {
+    const query = new URLSearchParams({ method, user: "reasfeetadmirer", api_key: LASTFM_KEY, format: "json", ...params });
+    const response = await fetch("https://ws.audioscrobbler.com/2.0/?" + query, { signal, cache: "no-store" });
+    if (!response.ok) throw new Error("Last.fm request failed");
+    const payload = await response.json();
+    if (payload?.error) throw new Error(String(payload.message || "Last.fm API error"));
+    return payload;
+  }
+
+  async function lookupArtwork(trackName: string, artistName: string, trackKey: string, signal: AbortSignal) {
     try {
-      const [recent, info, artists, tracks] = await Promise.all([
-        request("user.getrecenttracks", { limit: "1" }),
-        request("user.getinfo"),
-        request("user.gettopartists", { limit: "5", period: "overall" }),
-        request("user.gettoptracks", { limit: "5", period: "overall" })
-      ]);
-      const track = recent?.recenttracks?.track?.[0];
-      const user = info?.user;
-      if (typeof track?.album?.["#text"] === "string" && track.album["#text"]) {
-        lastFmAlbum.value = track.album["#text"];
-      }
-      const trackImages = Array.isArray(track?.image) ? track.image : [];
-      const trackImage = [...trackImages].reverse().find((item: any) =>
-        typeof item?.["#text"] === "string" && item["#text"].startsWith("http")
-      )?.["#text"];
+      const params = new URLSearchParams({ term: artistName + " " + trackName, entity: "song", limit: "1" });
+      const response = await fetch("https://itunes.apple.com/search?" + params, { signal, cache: "no-store" });
+      if (!response.ok) return;
+      const payload = await response.json() as { results?: Array<{ artworkUrl100?: string }> };
+      const artwork = payload.results?.[0]?.artworkUrl100;
+      if (!artwork || lastFmTrackKey !== trackKey) return;
+      live.value = { ...live.value, trackImage: artwork.replace(/100x100bb\./, "600x600bb.") };
+    } catch { /* Artwork lookup is an optional fallback. */ }
+  }
+
+  async function loadLastFmTrackInfo(trackName: string, artistName: string, trackKey: string, signal: AbortSignal) {
+    try {
+      const payload = await requestLastFm("track.getInfo", { track: trackName, artist: artistName }, signal);
+      if (lastFmTrackKey !== trackKey) return;
+      const track = payload?.track;
+      const albumImages = Array.isArray(track?.album?.image) ? track.album.image : [];
+      const albumImage = [...albumImages].reverse().find((item: any) => typeof item?.["#text"] === "string" && item["#text"].startsWith("http"))?.["#text"];
+      const duration = Number(track?.duration), playcount = Number(track?.playcount), listeners = Number(track?.listeners);
       live.value = {
         ...live.value,
-        ...(track ? {
-          track: track.name,
-          trackUrl: typeof track.url === "string" ? track.url : undefined,
-          trackImage,
-          artist: track.artist?.["#text"],
-          playing: track["@attr"]?.nowplaying === "true"
-        } : {}),
+        ...(Number.isFinite(duration) && duration > 0 ? { trackDurationMs: duration } : {}),
+        ...(Number.isFinite(playcount) && playcount >= 0 ? { trackPlaycount: playcount } : {}),
+        ...(Number.isFinite(listeners) && listeners >= 0 ? { trackListeners: listeners } : {}),
+        ...(albumImage && !live.value.trackImage ? { trackImage: albumImage.replace(/^http:/, "https:") } : {})
+      };
+    } catch { /* Track enrichment is best-effort. */ }
+  }
+
+  async function loadLastFmPlayback(signal: AbortSignal) {
+    try {
+      const payload = await requestLastFm("user.getrecenttracks", { limit: "1" }, signal);
+      const rawTrack = payload?.recenttracks?.track;
+      const track = Array.isArray(rawTrack) ? rawTrack[0] : rawTrack;
+      if (!track || typeof track.name !== "string") { live.value = { ...live.value, playing: false }; return; }
+      const artistName = String(track.artist?.["#text"] || track.artist?.name || "");
+      const albumName = String(track.album?.["#text"] || "");
+      const trackKey = [artistName, track.name, albumName].join("::");
+      const changed = trackKey !== lastFmTrackKey;
+      lastFmTrackKey = trackKey;
+      const images = Array.isArray(track.image) ? track.image : [];
+      const image = [...images].reverse().find((item: any) => typeof item?.["#text"] === "string" && item["#text"].startsWith("http"))?.["#text"];
+      if (albumName) lastFmAlbum.value = albumName;
+      live.value = {
+        ...live.value,
+        track: track.name,
+        trackUrl: typeof track.url === "string" ? track.url : undefined,
+        trackImage: image ? image.replace(/^http:/, "https:") : changed ? undefined : live.value.trackImage,
+        artist: artistName || "Unknown artist",
+        playing: track["@attr"]?.nowplaying === "true",
+        ...(changed ? { trackDurationMs: undefined, trackPlaycount: undefined, trackListeners: undefined } : {})
+      };
+      if (changed && artistName && trackInfoKey !== trackKey) {
+        trackInfoKey = trackKey;
+        void loadLastFmTrackInfo(track.name, artistName, trackKey, signal);
+      }
+      if (!image && artistName && artworkLookupKey !== trackKey) {
+        artworkLookupKey = trackKey;
+        void lookupArtwork(track.name, artistName, trackKey, signal);
+      }
+    } catch { /* Live listening data never blocks the page. */ }
+  }
+
+  async function loadLastFm(signal: AbortSignal) {
+    try {
+      const [info, artists, tracks] = await Promise.all([
+        requestLastFm("user.getinfo", {}, signal),
+        requestLastFm("user.gettopartists", { limit: "5", period: "overall" }, signal),
+        requestLastFm("user.gettoptracks", { limit: "5", period: "overall" }, signal)
+      ]);
+      const user = info?.user;
+      live.value = {
+        ...live.value,
         ...(user ? { scrobbles: Number(user.playcount) } : {}),
         ...(Array.isArray(artists?.topartists?.artist) ? {
-          topArtists: artists.topartists.artist.map((item: any) => ({
-            name: String(item.name), playcount: Number(item.playcount), url: item.url
-          }))
+          topArtists: artists.topartists.artist.map((item: any) => ({ name: String(item.name), playcount: Number(item.playcount), url: item.url }))
         } : {}),
         ...(Array.isArray(tracks?.toptracks?.track) ? {
-          topTracks: tracks.toptracks.track.map((item: any) => ({
-            name: String(item.name), artist: item.artist?.name, playcount: Number(item.playcount), url: item.url
-          }))
+          topTracks: tracks.toptracks.track.map((item: any) => ({ name: String(item.name), artist: item.artist?.name, playcount: Number(item.playcount), url: item.url }))
         } : {})
       };
-    } catch { /* Last.fm is non-blocking. */ }
+    } catch { /* Last.fm profile data is non-blocking. */ }
   }
 
   onMounted(() => {
@@ -207,14 +265,19 @@ export function usePortfolioData() {
     void loadGithub(signal);
     void loadAniList(signal);
     void loadLastFm(signal);
+    void loadLastFmPlayback(signal);
     spotifyRefresh = window.setInterval(() => {
       if (controller && !controller.signal.aborted) void loadSpotify(controller.signal);
-    }, 60_000);
+    }, 45_000);
+    lastFmRefresh = window.setInterval(() => {
+      if (controller && !controller.signal.aborted) void loadLastFmPlayback(controller.signal);
+    }, 20_000);
   });
 
   onBeforeUnmount(() => {
     controller?.abort();
     if (spotifyRefresh) window.clearInterval(spotifyRefresh);
+    if (lastFmRefresh) window.clearInterval(lastFmRefresh);
   });
 
   return { repos, codeStats, codeStatsStatus, live, spotify, lastFmAlbum };

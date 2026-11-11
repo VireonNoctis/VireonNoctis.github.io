@@ -22,6 +22,7 @@ export interface GenreItem {
 export interface Live {
   repos?: number;
   followers?: number;
+  commits?: number;
   anime?: number;
   manga?: number;
   scrobbles?: number;
@@ -30,6 +31,9 @@ export interface Live {
   trackImage?: string;
   artist?: string;
   playing?: boolean;
+  trackDurationMs?: number;
+  trackPlaycount?: number;
+  trackListeners?: number;
   animeEpisodes?: number;
   animeMinutes?: number;
   animeScore?: number;

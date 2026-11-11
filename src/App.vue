@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import AnimatedNumber from "./components/AnimatedNumber.vue";
 import BrailleText from "./components/BrailleText.vue";
 import NothingWebGL from "./components/NothingWebGL.vue";
@@ -33,13 +33,21 @@ const playbackWaveBars = Array.from({ length: 64 }, (_, index) => {
   );
   return Math.round(16 + envelope * 82);
 });
+const introSignalBars = Array.from({ length: 72 }, (_, index) => {
+  const center = Math.abs(index - 35.5) / 35.5;
+  const envelope = Math.abs(Math.sin(index * .37) * .46 + Math.sin(index * .13 + .8) * .33 + Math.cos(index * .91) * .21);
+  return Math.round(14 + envelope * (92 - center * 48));
+});
+const techIconFlightActive = ref(false);
+let techIconFlight: HTMLImageElement | null = null;
+let techIconAnimation: Animation | null = null;
 
 const navigation = [
   { label: "Profile", href: "#profile" },
   { label: "Work", href: "#work" },
   { label: "Stack", href: "#stack" },
   { label: "Archive", href: "#archive" },
-  { label: "Contact", href: "#contact" }
+  { label: "Elsewhere", href: "#elsewhere" }
 ];
 const socials = [
   { name: "GitHub", logo: "github", handle: "@VireonNoctis", href: "https://github.com/VireonNoctis" },
@@ -360,6 +368,12 @@ const spotifyProgressPercent = computed(() => {
   const duration = spotify.value.durationMs ?? 0;
   return duration > 0 ? Math.min(100, Math.max(0, (spotifyProgressMs.value / duration) * 100)) : 0;
 });
+function handleArtworkError(event: Event) {
+  const image = event.target;
+  if (!(image instanceof HTMLImageElement) || image.dataset.fallback === "true") return;
+  image.dataset.fallback = "true";
+  image.src = "/brands/lastfm.svg";
+}
 function formatPlaybackTime(milliseconds: number | null | undefined): string {
   if (typeof milliseconds !== "number" || !Number.isFinite(milliseconds) || milliseconds <= 0) return "0:00";
   const seconds = Math.floor(milliseconds / 1000);
@@ -374,10 +388,42 @@ function genreWidth(items: GenreItem[] | undefined, count: number): number {
   const max = Math.max(1, ...(items ?? []).map((item) => item.count));
   return Math.max(3, Math.round((count / max) * 100));
 }
-function openTech(tech: TechCard) {
+function clearTechIconFlight() {
+  techIconAnimation?.cancel();
+  techIconAnimation = null;
+  techIconFlight?.remove();
+  techIconFlight = null;
+  techIconFlightActive.value = false;
+}
+async function openTech(tech: TechCard, event?: MouseEvent) {
+  clearTechIconFlight();
   selectedTech.value = tech;
+  const trigger = event?.currentTarget;
+  const sourceImage = trigger instanceof HTMLElement ? trigger.querySelector<HTMLImageElement>(".project-language-logo img") : null;
+  if (!sourceImage?.currentSrc || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const sourceRect = sourceImage.getBoundingClientRect();
+  techIconFlightActive.value = true;
+  await nextTick();
+  await new Promise<void>(resolve => window.requestAnimationFrame(() => resolve()));
+  const destination = document.querySelector<HTMLElement>(".tech-modal-logo");
+  if (!destination) { techIconFlightActive.value = false; return; }
+  const targetRect = destination.getBoundingClientRect();
+  const clone = sourceImage.cloneNode(true) as HTMLImageElement;
+  clone.className = "tech-logo-flight";
+  clone.src = sourceImage.currentSrc;
+  Object.assign(clone.style, { left: sourceRect.left + "px", top: sourceRect.top + "px", width: sourceRect.width + "px", height: sourceRect.height + "px" });
+  document.body.append(clone);
+  techIconFlight = clone;
+  const dx = targetRect.left + (targetRect.width - sourceRect.width) / 2 - sourceRect.left;
+  const dy = targetRect.top + (targetRect.height - sourceRect.height) / 2 - sourceRect.top;
+  techIconAnimation = clone.animate([
+    { transform:"translate(0,0) scale(1)" },
+    { transform:"translate(" + dx + "px," + dy + "px) scale(" + (targetRect.width/sourceRect.width) + "," + (targetRect.height/sourceRect.height) + ")" }
+  ], { duration:760, easing:"cubic-bezier(.16,1,.3,1)", fill:"forwards" });
+  techIconAnimation.onfinish = () => { clone.remove(); techIconFlight=null; techIconAnimation=null; techIconFlightActive.value=false; };
 }
 function closeTech() {
+  clearTechIconFlight();
   selectedTech.value = null;
 }
 watch(selectedTech, (value) => {
@@ -416,7 +462,7 @@ function handleInternalNavigation(event: MouseEvent) {
 function onEscape(event: KeyboardEvent) {
   if (event.key === "Escape") {
     menuOpen.value = false;
-    selectedTech.value = null;
+    closeTech();
   }
 }
 onMounted(() => {
@@ -427,6 +473,7 @@ onMounted(() => {
   window.addEventListener("keydown", onEscape);
 });
 onBeforeUnmount(() => {
+  clearTechIconFlight();
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
   if (playbackClockTimer) window.clearInterval(playbackClockTimer);
   window.removeEventListener("scroll", onScroll);
@@ -440,29 +487,36 @@ onBeforeUnmount(() => {
   <Teleport to="body">
     <div class="intro-loader" aria-hidden="true">
       <div class="intro-loader-grain"></div>
+      <div class="intro-loader-field-lines"></div>
       <header class="intro-loader-frame">
         <div class="intro-loader-brand">
-          <span class="intro-loader-monogram">VN</span>
+          <span class="intro-loader-monogram">V/N</span>
           <span class="intro-loader-brand-copy"><strong>VIREON NOCTIS</strong><small>INDEPENDENT DIGITAL ATELIER</small></span>
         </div>
         <span class="intro-loader-edition">PERSONAL PORTFOLIO <i>—</i> MMXXVI</span>
       </header>
-      <div class="intro-loader-center">
-        <div class="intro-loader-expansion" id="intro-expansion" aria-hidden="true">
-          <span class="intro-loader-expansion-inner"></span>
-          <span class="intro-loader-expansion-core"></span>
+      <div class="intro-loader-side-index"><span>01 / 01</span><span>FORM · SYSTEM · MOTION</span></div>
+      <main class="intro-loader-stage">
+        <div class="intro-loader-signal" aria-hidden="true">
+          <div class="intro-loader-signal-bars">
+            <i v-for="(height, index) in introSignalBars" :key="'intro-signal-' + index" :style="{ height: height + '%', '--signal-index': index }"></i>
+          </div>
+          <div class="intro-loader-signal-fill" id="intro-signal-fill"></div>
+          <div class="intro-loader-signal-scan" id="intro-signal-scan"></div>
         </div>
         <div class="intro-loader-title">
           <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
           <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
           <div class="intro-loader-subline"><span>FORM FOLLOWS FUNCTION</span><span>IRELAND <b>·</b> GLOBAL</span></div>
         </div>
-      </div>
+        <div class="intro-loader-progress-number"><strong id="intro-count">00</strong><span>%</span></div>
+      </main>
       <div class="intro-loader-bottom">
-        <div class="intro-loader-status"><span>BUILDING THE EXPERIENCE</span><span id="intro-stage">GATHERING THE ESSENTIALS</span></div>
+        <div class="intro-loader-status"><span>BUILDING THE EXPERIENCE</span><span id="intro-stage">ASSEMBLING THE SIGNAL</span></div>
         <div class="intro-loader-progress"><span id="intro-fill"></span></div>
-        <div class="intro-loader-readout"><span>INITIALIZING / 001</span><strong id="intro-count">00%</strong><span class="intro-loader-coordinates">READY WHEN COMPLETE</span></div>
+        <div class="intro-loader-readout"><span>INITIALIZING / 001</span><span class="intro-loader-coordinates">READY TO EXPLORE</span></div>
       </div>
+      <div class="intro-loader-wipe" id="intro-wipe" aria-hidden="true"></div>
     </div>
   </Teleport>
   <main id="main-content" tabindex="-1" @keydown.esc="menuOpen = false" @click.capture="handleInternalNavigation">
@@ -476,7 +530,7 @@ onBeforeUnmount(() => {
       </a>
       <nav id="primary-navigation" :class="menuOpen ? 'navigation navigation-open' : 'navigation'" aria-label="Main navigation">
         <a v-for="item in navigation" :key="item.href" :href="item.href" @click="menuOpen = false">{{ item.label }}</a>
-        <a v-tactile class="nav-contact tactile-surface" href="#contact" @click="menuOpen = false">Start a conversation <span aria-hidden="true">↗</span></a>
+        <a v-tactile class="nav-contact tactile-surface" href="#elsewhere" @click="menuOpen = false">Find me elsewhere <span aria-hidden="true">↗</span></a>
       </nav>
       <button v-tactile class="menu-toggle tactile-surface" type="button" :aria-label="menuOpen ? 'Close navigation' : 'Open navigation'" aria-controls="primary-navigation" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen"><span aria-hidden="true">{{ menuOpen ? "×" : "☰" }}</span></button>
     </header>
@@ -583,19 +637,20 @@ onBeforeUnmount(() => {
               <p>Tracked source technologies and project estimates, separated by provenance.</p>
             </div>
             <div class="code-counted-totals">
-              <div><strong><AnimatedNumber :value="codeStats?.totals.lines ?? 0" notation="compact" :decimals="1" /></strong><span>SCANNED LINES</span></div>
-              <div><strong><AnimatedNumber :value="codeStats?.totals.repositories ?? 0" /></strong><span>REPOSITORIES</span></div>
-              <div><strong><AnimatedNumber :value="languageCards.length" /></strong><span>LANGUAGE PROFILES</span></div>
+              <div><strong><AnimatedNumber :value="codeStats?.totals.lines ?? 0" notation="compact" :decimals="1" immediate /></strong><span>SCANNED LINES</span></div>
+              <div><strong><AnimatedNumber :value="codeStats?.totals.repositories ?? 0" immediate /></strong><span>REPOSITORIES</span></div>
+              <div><strong><AnimatedNumber :value="languageCards.length" immediate /></strong><span>LANGUAGE PROFILES</span></div>
+              <div><strong><AnimatedNumber :value="live.commits ?? 0" immediate /></strong><span>TOTAL COMMITS</span></div>
             </div>
           </div>
           <div class="project-language-grid">
-            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-top': (108 + index * 6) + 'px', zIndex: 10 + index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
+            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-top': (108 + index * 6) + 'px', zIndex: 10 + index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech, $event)">
               <span class="project-language-logo">
                 <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
                 <span v-else class="project-language-generic">&lt;/&gt;</span>
               </span>
               <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
-              <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" /></strong><small>LINES</small></span>
+              <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" immediate /></strong><small>LINES</small></span>
               <span class="project-language-arrow" aria-hidden="true">↗</span>
             </button>
           </div>
@@ -612,13 +667,19 @@ onBeforeUnmount(() => {
           <div class="archive-card-top"><span>LISTENING / LIVE</span><span class="archive-live-dot">●</span></div>
           <div class="listening-main">
             <div class="album-art">
-              <img v-if="listeningArtwork" :src="listeningArtwork" alt="Current track artwork" loading="lazy" />
-              <img v-else src="/brands/lastfm.svg" alt="Last.fm" />
+              <Transition name="track-art" mode="out-in">
+                <img v-if="listeningArtwork" :key="listeningArtwork" :src="listeningArtwork" alt="Current track artwork" loading="lazy" @error="handleArtworkError" />
+                <img v-else key="lastfm-fallback" src="/brands/lastfm.svg" alt="Last.fm" />
+              </Transition>
             </div>
             <div class="listening-copy">
               <span>{{ listeningStatus }}</span>
-              <h3 :title="listeningTrack">{{ listeningTrack }}</h3>
-              <p>{{ listeningArtist }}</p>
+              <Transition name="track-copy" mode="out-in">
+                <div :key="listeningTrack + '::' + listeningArtist" class="listening-track-copy">
+                  <h3 :title="listeningTrack">{{ listeningTrack }}</h3>
+                  <p>{{ listeningArtist }}</p>
+                </div>
+              </Transition>
             </div>
           </div>
           <div class="listening-metadata">
@@ -632,27 +693,32 @@ onBeforeUnmount(() => {
             <div v-if="spotify.deviceName"><span>DEVICE</span><strong>{{ spotify.deviceName }}</strong></div>
           </div>
           <div class="spotify-playback-panel">
-            <div class="spotify-wavefield" :class="{ 'is-playing': spotify.isPlaying }" aria-hidden="true">
+            <div class="spotify-wavefield" :class="{ 'is-playing': spotify.configured ? spotify.isPlaying : live.playing }" aria-hidden="true">
               <div class="spotify-wavefield-bars">
                 <i v-for="(height, index) in playbackWaveBars" :key="'base-' + index" :style="{ height: height + '%', '--wave-index': index }"></i>
               </div>
-              <div class="spotify-wavefield-progress" :style="{ width: spotifyProgressPercent + '%' }">
+              <div v-if="spotify.configured" class="spotify-wavefield-progress" :style="{ width: spotifyProgressPercent + '%' }">
                 <div class="spotify-wavefield-bars">
                   <i v-for="(height, index) in playbackWaveBars" :key="'progress-' + index" :style="{ height: height + '%', '--wave-index': index }"></i>
                 </div>
               </div>
             </div>
             <div class="spotify-playback-readout">
-              <time>{{ spotify.durationMs ? formatPlaybackTime(spotifyProgressMs) : "--:--" }}</time>
-              <span>{{ spotify.configured ? (spotify.isPlaying ? "PLAYING" : "PAUSED") : "LAST.FM · LIVE TRACK" }}</span>
-              <time>{{ spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : "--:--" }}</time>
+              <time>{{ spotify.configured && spotify.durationMs ? formatPlaybackTime(spotifyProgressMs) : "LIVE" }}</time>
+              <span>{{ spotify.configured ? (spotify.isPlaying ? "SPOTIFY · PLAYING" : "SPOTIFY · PAUSED") : live.playing ? "LAST.FM · NOW PLAYING" : "LAST.FM · RECENT TRACK" }}</span>
+              <time>{{ spotify.configured && spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : live.trackDurationMs ? formatPlaybackTime(live.trackDurationMs) : "—" }}</time>
             </div>
-            <div v-if="!spotify.configured" class="spotify-connection-note">SPOTIFY PLAYBACK NOT CONNECTED · LIVE TRACK VIA LAST.FM</div>
+            <div v-if="!spotify.configured" class="lastfm-track-stats">
+              <span v-if="live.trackPlaycount !== undefined">{{ formatted(live.trackPlaycount) }} TRACK PLAYS</span>
+              <span v-if="live.trackListeners !== undefined">{{ formatted(live.trackListeners) }} LISTENERS</span>
+              <span v-if="live.trackDurationMs">{{ formatPlaybackTime(live.trackDurationMs) }} DURATION</span>
+            </div>
+            <div v-if="!spotify.configured" class="spotify-connection-note">TRACK, ARTWORK & HISTORY VIA LAST.FM · SPOTIFY TIMING REQUIRES PLAYBACK ACCESS</div>
           </div>
           <div class="archive-card-bottom listening-footer">
             <div class="lastfm-scrobbles">
               <span>LAST.FM / SCROBBLES</span>
-              <strong v-if="live.scrobbles !== undefined"><AnimatedNumber :value="live.scrobbles" /></strong>
+              <strong v-if="live.scrobbles !== undefined"><AnimatedNumber :value="live.scrobbles" immediate /></strong>
               <strong v-else>—</strong>
             </div>
             <div class="listening-links">
@@ -665,17 +731,17 @@ onBeforeUnmount(() => {
           <div class="archive-card-top"><span>ANILIST / PROFILE</span><a href="https://anilist.co/user/Vireon" target="_blank" rel="noreferrer">Open profile ↗</a></div>
           <h3>Anime & manga</h3>
           <div class="media-stats">
-            <div><strong><AnimatedNumber :value="live.anime ?? 0" /></strong><span>ANIME</span></div>
-            <div><strong><AnimatedNumber :value="live.animeEpisodes ?? 0" /></strong><span>EPISODES</span></div>
-            <div><strong><AnimatedNumber :value="live.manga ?? 0" /></strong><span>MANGA</span></div>
-            <div><strong><AnimatedNumber :value="live.mangaChapters ?? 0" /></strong><span>CHAPTERS</span></div>
+            <div><strong><AnimatedNumber :value="live.anime ?? 0" immediate /></strong><span>ANIME</span></div>
+            <div><strong><AnimatedNumber :value="live.animeEpisodes ?? 0" immediate /></strong><span>EPISODES</span></div>
+            <div><strong><AnimatedNumber :value="live.manga ?? 0" immediate /></strong><span>MANGA</span></div>
+            <div><strong><AnimatedNumber :value="live.mangaChapters ?? 0" immediate /></strong><span>CHAPTERS</span></div>
           </div>
           <div v-if="live.animeGenres?.length" class="genre-list">
             <div v-for="genre in live.animeGenres.slice(0, 4)" :key="genre.genre" class="genre-row"><span>{{ genre.genre }}</span><span class="genre-bar"><i :style="{ width: genreWidth(live.animeGenres, genre.count) + '%' }"></i></span></div>
           </div>
         </article>
       </div>
-      <div class="social-area">
+      <div class="social-area" id="elsewhere">
         <div class="social-area-heading"><span>ELSEWHERE</span><span>PUBLIC PROFILES</span></div>
         <div class="social-list">
           <a v-for="social in socials" :key="social.name" v-tactile class="social-row tactile-surface" :href="social.href" target="_blank" rel="noreferrer">
@@ -686,13 +752,7 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
-    <section class="contact-section section-shell section-space" id="contact" v-reveal>
-      <div class="section-bar"><span>05 / CONTACT</span><span>OPEN TO THE RIGHT THINGS</span></div>
-      <div class="contact-main">
-        <p>HAVE A GOOD IDEA?</p><h2>LET'S MAKE<br /><em>IT REAL.</em></h2>
-        <div class="contact-bottom"><span>For projects, partnerships, and conversations.</span><a v-tactile class="contact-link tactile-surface" href="https://t.me/Imperialism12" target="_blank" rel="noreferrer"><BrailleText label="Get in touch" /><span aria-hidden="true">↗</span></a></div>
-      </div>
-    </section>
+
 
     <footer class="site-footer section-shell">
       <a class="footer-mark" href="#top">VIREON<span> / </span>NOCTIS</a>
@@ -703,7 +763,7 @@ onBeforeUnmount(() => {
       <Transition name="tech-dialog">
         <div v-if="selectedTech" class="tech-modal-backdrop" role="presentation" @click.self="closeTech">
           <section class="tech-modal" role="dialog" aria-modal="true" :aria-label="selectedTech.name + ' details'">
-            <header class="tech-modal-header"><div><span class="work-live-label">{{ selectedTech.kind }}</span><h2>{{ selectedTech.name }}</h2></div><button v-tactile type="button" class="tech-modal-close tactile-surface" aria-label="Close technology details" @click="closeTech">×</button></header>
+            <header class="tech-modal-header"><div class="tech-modal-heading"><span class="tech-modal-logo"><img v-if="selectedTech.logo" :class="{ 'is-flight-hidden': techIconFlightActive }" :src="'/brands/tech-' + selectedTech.logo + '.svg'" :alt="selectedTech.name" /><span v-else>&lt;/&gt;</span></span><div><span class="work-live-label">{{ selectedTech.kind }}</span><h2>{{ selectedTech.name }}</h2></div></div><button v-tactile type="button" class="tech-modal-close tactile-surface" aria-label="Close technology details" @click="closeTech">×</button></header>
             <p v-if="selectedTech.learningNote" class="tech-modal-note">{{ selectedTech.learningNote }} <strong>{{ selectedTech.learningStatus }}</strong></p>
             <div class="tech-modal-grid">
               <div><span>TOTAL LINES</span><strong><AnimatedNumber :value="selectedTotalLines" /></strong></div>

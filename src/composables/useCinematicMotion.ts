@@ -52,47 +52,40 @@ export function useCinematicMotion() {
         const readout = introLayer.querySelector<HTMLElement>("#intro-count");
         const fill = introLayer.querySelector<HTMLElement>("#intro-fill");
         const stage = introLayer.querySelector<HTMLElement>("#intro-stage");
-        const expansion = introLayer.querySelector<HTMLElement>("#intro-expansion");
+        const signalFill = introLayer.querySelector<HTMLElement>("#intro-signal-fill");
+        const signalScan = introLayer.querySelector<HTMLElement>("#intro-signal-scan");
+        const wipe = introLayer.querySelector<HTMLElement>("#intro-wipe");
         const intro = gsap.timeline({ onComplete: finishIntro });
-
         intro
           .to(counter, {
-            value: 100,
-            duration: 9.4,
-            ease: "power1.inOut",
+            value: 100, duration: 9.6, ease: "power1.inOut",
             onUpdate: () => {
               const progress = Math.round(counter.value);
-              if (readout) readout.textContent = progress.toString().padStart(2, "0") + "%";
-              if (stage) stage.textContent = progress < 24
-                ? "GATHERING THE ESSENTIALS"
-                : progress < 52
-                  ? "FORMING THE INTERFACE"
-                  : progress < 82
-                    ? "CALIBRATING THE DETAILS"
-                    : "READY TO EXPLORE";
+              if (readout) readout.textContent = progress.toString().padStart(2, "0");
+              if (stage) stage.textContent = progress < 22 ? "ASSEMBLING THE SIGNAL"
+                : progress < 48 ? "FORMING THE INTERFACE"
+                : progress < 78 ? "CALIBRATING THE EXPERIENCE" : "READY TO EXPLORE";
             }
           }, 0)
-          .fromTo(".intro-loader-kicker", { autoAlpha: 0, y: 12 }, {
-            autoAlpha: 1, y: 0, duration: 1.05, clearProps: "transform,opacity,visibility"
-          }, 0.35)
-          .fromTo(".intro-loader-title-line", { autoAlpha: 0, yPercent: 112 }, {
-            autoAlpha: 1, yPercent: 0, duration: 1.45, stagger: 0.16,
-            ease: "power4.out", clearProps: "transform,opacity,visibility"
-          }, 0.62)
-          .fromTo(".intro-loader-subline", { autoAlpha: 0, y: 10 }, {
-            autoAlpha: 1, y: 0, duration: 1.05, ease: "power3.out",
-            clearProps: "transform,opacity,visibility"
-          }, 1.25)
-          .to(introLayer, {
-            autoAlpha: 0,
-            duration: 0.95,
-            ease: "power2.inOut"
-          }, 10.25);
-
-        if (fill) intro.to(fill, { scaleX: 1, duration: 9.4, ease: "power1.inOut" }, 0);
-        if (expansion) intro.fromTo(expansion, { scale: 0.12, autoAlpha: 0.25 }, {
-          scale: 1.08, autoAlpha: 0.9, duration: 9.4, ease: "power1.inOut"
-        }, 0);
+          .fromTo(".intro-loader-kicker", { autoAlpha:0, y:18, letterSpacing:".34em" }, {
+            autoAlpha:1, y:0, letterSpacing:".2em", duration:1.1, ease:"power3.out",
+            clearProps:"transform,opacity,visibility,letterSpacing"
+          }, .24)
+          .fromTo(".intro-loader-title-line", { autoAlpha:0, yPercent:115, filter:"blur(12px)" }, {
+            autoAlpha:1, yPercent:0, filter:"blur(0px)", duration:1.35, stagger:.17, ease:"power4.out",
+            clearProps:"transform,opacity,visibility,filter"
+          }, .48)
+          .fromTo(".intro-loader-subline", { autoAlpha:0, y:16 }, {
+            autoAlpha:1, y:0, duration:1, ease:"power3.out", clearProps:"transform,opacity,visibility"
+          }, 1.15)
+          .fromTo(".intro-loader-progress-number", { autoAlpha:0, y:20, scale:.92 }, {
+            autoAlpha:1, y:0, scale:1, duration:1.05, ease:"power3.out", clearProps:"transform,opacity,visibility"
+          }, 1.05)
+          .to(introLayer, { autoAlpha:0, duration:.92, ease:"power2.inOut" }, 10.5);
+        if (fill) intro.to(fill, { scaleX:1, duration:9.6, ease:"power1.inOut" }, 0);
+        if (signalFill) intro.fromTo(signalFill, { scaleX:.015 }, { scaleX:1.18, duration:9.6, ease:"power1.inOut" }, 0);
+        if (signalScan) intro.fromTo(signalScan, { xPercent:-110, autoAlpha:0 }, { xPercent:110, autoAlpha:1, duration:9.6, ease:"none" }, 0);
+        if (wipe) intro.fromTo(wipe, { scaleX:0, autoAlpha:.92 }, { scaleX:1, autoAlpha:1, duration:1.15, ease:"power4.in" }, 9.35);
       }
 
       const heroIntro = gsap.timeline({ delay: 0.18, defaults: { ease: "power4.out" } });
@@ -118,7 +111,7 @@ export function useCinematicMotion() {
       const revealSelector = [
         ".profile-layout", ".role-item", ".work-intro", ".stack-module",
         ".project-stack-card", ".project-language-tile", ".archive-card",
-        ".social-row", ".contact-main"
+        ".social-row"
       ].join(", ");
       gsap.utils.toArray<HTMLElement>(revealSelector).forEach((element, index) => {
         gsap.fromTo(element, { autoAlpha: 0, y: 24 }, {

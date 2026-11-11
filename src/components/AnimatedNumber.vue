@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-const props=withDefaults(defineProps<{value:number;decimals?:number;duration?:number;prefix?:string;suffix?:string;notation?:"standard"|"compact";}>(),{decimals:0,duration:1250,prefix:"",suffix:"",notation:"standard"});
+const props=withDefaults(defineProps<{value:number;decimals?:number;duration?:number;prefix?:string;suffix?:string;notation?:"standard"|"compact";immediate?:boolean;}>(),{decimals:0,duration:1250,prefix:"",suffix:"",notation:"standard",immediate:false});
 const element=ref<HTMLElement|null>(null),displayed=ref(0),visible=ref(false);
 let observer:IntersectionObserver|null=null,frame=0,generation=0;
 const safeValue=computed(()=>Number.isFinite(props.value)?Math.max(0,props.value):0);
@@ -22,11 +22,11 @@ function animate(){
 }
 onMounted(()=>{
   if(!element.value)return;
-  if(!("IntersectionObserver"in window)){visible.value=true;animate();return;}
+  if(props.immediate || !("IntersectionObserver"in window)){visible.value=true;animate();return;}
   observer=new IntersectionObserver(entries=>{
     if(!entries.some(entry=>entry.isIntersecting))return;
     visible.value=true;observer?.disconnect();observer=null;animate();
-  },{threshold:.25});
+  },{threshold:.01});
   observer.observe(element.value);
 });
 watch(()=>safeValue.value,()=>{if(visible.value)animate();});
