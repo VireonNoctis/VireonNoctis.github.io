@@ -439,15 +439,22 @@ onBeforeUnmount(() => {
 <template>
   <Teleport to="body">
     <div class="intro-loader" aria-hidden="true">
-      <div class="intro-loader-topline"><span>VIREON / NOCTIS</span><span>INDEPENDENT WORKS · 2026</span></div>
+      <div class="intro-loader-grain"></div>
+      <div class="intro-loader-grid" aria-hidden="true"></div>
+      <div class="intro-loader-orbit intro-loader-orbit-a"></div>
+      <div class="intro-loader-orbit intro-loader-orbit-b"></div>
+      <div class="intro-loader-topline"><span>V / N — DIGITAL ATELIER</span><span>INDEPENDENT WORKS <i>·</i> MMXXVI</span></div>
+      <div class="intro-loader-index"><span>EST.</span><strong>001</strong><span>PORTFOLIO SYSTEM</span></div>
       <div class="intro-loader-title">
-        <p class="intro-loader-kicker">A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
+        <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
         <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
+        <div class="intro-loader-subline"><span>DESIGNing DIGITAL WORLDS</span><span>IRELAND <b>·</b> GLOBAL</span></div>
       </div>
+      <div class="intro-loader-side-note"><span>CREATIVE DEVELOPMENT</span><span>ENGINEERING / EXPERIMENTATION / FORM</span></div>
       <div class="intro-loader-bottom">
-        <div class="intro-loader-status"><span>INTRO SEQUENCE</span><span>PROJECT SIGNALS / REVEAL</span></div>
+        <div class="intro-loader-status"><span>INITIALIZING EXPERIENCE</span><span id="intro-stage">COMPOSING INTERFACE</span></div>
         <div class="intro-loader-progress"><span id="intro-fill"></span></div>
-        <div class="intro-loader-readout"><span>PORTFOLIO / 001</span><strong id="intro-count">00%</strong></div>
+        <div class="intro-loader-readout"><span>PORTFOLIO / 001</span><strong id="intro-count">00%</strong><span class="intro-loader-coordinates">53°20' N&nbsp; 6°15' W</span></div>
       </div>
     </div>
   </Teleport>

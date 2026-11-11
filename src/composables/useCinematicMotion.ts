@@ -28,7 +28,7 @@ export function useCinematicMotion() {
       if (reducedMotion) finishIntro();
       else {
         introLayer.classList.add("is-active");
-        introFallbackTimer = window.setTimeout(finishIntro, 8200);
+        introFallbackTimer = window.setTimeout(finishIntro, 11800);
       }
     }
     if (reducedMotion) return;
@@ -51,15 +51,17 @@ export function useCinematicMotion() {
         const counter = { value: 0 };
         const readout = introLayer.querySelector<HTMLElement>("#intro-count");
         const fill = introLayer.querySelector<HTMLElement>("#intro-fill");
+        const stage = introLayer.querySelector<HTMLElement>("#intro-stage");
         const intro = gsap.timeline({ onComplete: finishIntro });
 
         intro
           .to(counter, {
             value: 100,
-            duration: 3.35,
+            duration: 7.2,
             ease: "power2.inOut",
             onUpdate: () => {
               if (readout) readout.textContent = Math.round(counter.value).toString().padStart(2, "0") + "%";
+              if (stage) stage.textContent = counter.value < 28 ? "LOADING CORE SYSTEMS" : counter.value < 58 ? "COMPOSING INTERFACE" : counter.value < 86 ? "RENDERING EXPERIENCE" : "READY TO EXPLORE";
             }
           }, 0)
           .fromTo(".intro-loader-kicker", { autoAlpha: 0, y: 14 }, {
@@ -72,11 +74,11 @@ export function useCinematicMotion() {
           .to(introLayer, {
             autoAlpha: 0,
             y: -18,
-            duration: 0.72,
+            duration: 1.05,
             ease: "power3.inOut"
-          }, 4.35);
+          }, 8.15);
 
-        if (fill) intro.to(fill, { scaleX: 1, duration: 3.35, ease: "power2.inOut" }, 0);
+        if (fill) intro.to(fill, { scaleX: 1, duration: 7.2, ease: "power2.inOut" }, 0);
       }
 
       const heroIntro = gsap.timeline({ delay: 0.18, defaults: { ease: "power4.out" } });
