@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
 import AnimatedNumber from "./components/AnimatedNumber.vue";
 import BrailleText from "./components/BrailleText.vue";
 import NothingWebGL from "./components/NothingWebGL.vue";
@@ -49,7 +49,7 @@ const projects = [
     url: "https://github.com/Kyerstorm/Lemegeton", role: "CO-OWNER · MAJOR CONTRIBUTOR"
   },
   {
-    name: "LOOP", index: "02", logo: "", mark: "LOOP", type: "SOCIAL PLATFORM",
+    name: "LOOP", index: "02", logo: "loop", mark: "LOOP", type: "SOCIAL PLATFORM",
     subtitle: "Create together. Discover everything.",
     description: "A collaborative social platform built around Circles, Loop Trees, and Co-Loop.",
     detail: "A substantial Next.js 15 and React 19 codebase with community spaces, branching conversations, creator systems, collaborative content flows, API routes, and extensive feature tests.",
@@ -65,7 +65,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/PrivaCage", role: "PROJECT DEVELOPMENT"
   },
   {
-    name: "Moonbyte", index: "04", logo: "", mark: "MOONBYTE", type: "DISCORD GAME SYSTEM",
+    name: "Moonbyte", index: "04", logo: "moonbyte", mark: "MOONBYTE", type: "DISCORD GAME SYSTEM",
     subtitle: "A little world of games, right inside Discord.",
     description: "A Rust game runtime for quick games, puzzles, and multiplayer sessions.",
     detail: "The implemented runtime slice includes Tic-tac-toe, Connect Four, Memory Match, and Word Scramble, with guild-scoped sessions, transactional PostgreSQL state, versioned snapshots, and restart recovery.",
@@ -81,7 +81,7 @@ const projects = [
     url: "https://lunarx.to/profile/vvvx", role: "PLATFORM DEVELOPMENT"
   },
   {
-    name: "Driftglass", index: "06", logo: "", mark: "DRIFTGLASS", type: "PRIVACY / AUDITING",
+    name: "Driftglass", index: "06", logo: "driftglass", mark: "DRIFTGLASS", type: "PRIVACY / AUDITING",
     subtitle: "Every update leaves a trace.",
     description: "A privacy-first application update auditor with evidence-linked reports.",
     detail: "The C++20 CLI validates run manifests and reports, compares version behaviour deterministically, and stores bounded local history. Linux Rust and macOS Swift observers remain experimental; the Svelte report viewer is read-only.",
@@ -89,7 +89,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/Driftglass", role: "EARLY PROTOTYPE"
   },
   {
-    name: "SkillTether", index: "07", logo: "", mark: "SKILLTETHER", type: "DEVELOPER TOOLING",
+    name: "SkillTether", index: "07", logo: "skilltether", mark: "SKILLTETHER", type: "DEVELOPER TOOLING",
     subtitle: "Translate the words. Preserve the intent.",
     description: "A local-first CLI for validating and localizing Agent Skills.",
     detail: "Audits package metadata, links, resources, protected machine-facing content, operational invariants, and structural drift. It produces reviewable reports and evidence-backed export candidates; scripts are inspected statically rather than executed.",
@@ -97,7 +97,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/SkillTether", role: "TOOLING DEVELOPMENT"
   },
   {
-    name: "SwarmForge", index: "08", logo: "", mark: "SWARMFORGE", type: "AGENT WORKFLOWS",
+    name: "SwarmForge", index: "08", logo: "swarmforge", mark: "SWARMFORGE", type: "AGENT WORKFLOWS",
     subtitle: "Coordinate the work. Verify the result.",
     description: "A portable Agent Skill for coding-assistant orchestration.",
     detail: "Breaks substantial work into bounded tasks, delegates to host-provided agents where available, manages dependencies and workspace ownership, then integrates and verifies results. It does not claim workers ran when the host exposes no delegation.",
@@ -105,7 +105,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/SwarmForge", role: "OPEN-SOURCE DEVELOPER TOOLING"
   },
   {
-    name: "Astra", index: "09", logo: "", mark: "ASTRA", type: "INTERACTIVE / SCIENCE",
+    name: "Astra", index: "09", logo: "astra", mark: "ASTRA", type: "INTERACTIVE / SCIENCE",
     subtitle: "Explore the universe from one interactive map.",
     description: "A 3D astronomy explorer connected to public science archives.",
     detail: "A React and Three.js frontend with a Ruby/Sinatra API. It queries sources including NASA Exoplanet Archive, JPL Horizons, the Small-Body Database, and ESA Gaia, keeping live results bounded and linked to their sources.",
@@ -113,7 +113,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/Universe-Explorer", role: "INTERACTIVE APPLICATION"
   },
   {
-    name: "Lunar Dungeons", index: "10", logo: "", mark: "LUNAR / DUNGEONS", type: "GAME / EXPLORATION",
+    name: "Lunar Dungeons", index: "10", logo: "lunar-dungeons", mark: "LUNAR / DUNGEONS", type: "GAME / EXPLORATION",
     subtitle: "A pixel-style world with 800 standard chambers.",
     description: "A dungeon explorer with a Three.js world and Rust service layer.",
     detail: "A Next.js interface and Three.js explorer connect to a Rust/Axum/SQLx backend for authenticated progression and server-validated combat. The documented design includes five tiers, 800 standard stages, boss encounters, and further progression.",
@@ -121,7 +121,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/waste-hub/tree/main/lunar-dungeons", role: "FEATURE DEVELOPMENT"
   },
   {
-    name: "Torrent Core", index: "11", logo: "", mark: "TORRENT CORE", type: "EXPERIMENTAL / BACKEND",
+    name: "Torrent Core", index: "11", logo: "torrent-core", mark: "TORRENT CORE", type: "EXPERIMENTAL / BACKEND",
     subtitle: "Keep long-running transfers out of the request cycle.",
     description: "An experimental server-side torrent management subsystem.",
     detail: "The code includes API routes and TypeScript modules for sessions, scheduling, bandwidth policy, retry and recovery, persistence, file management, and health events. It is documented as an experimental subsystem rather than a finished public service.",
@@ -129,7 +129,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/Wasting-Time-on./tree/main/Torrent", role: "EXPERIMENTAL BACKEND"
   },
   {
-    name: "ASCII Magic Art", index: "12", logo: "", mark: "ASCII MAGIC", type: "OPEN-SOURCE / CREATIVE TOOLING",
+    name: "ASCII Magic Art", index: "12", logo: "ascii-magic-art", mark: "ASCII MAGIC", type: "OPEN-SOURCE / CREATIVE TOOLING",
     subtitle: "Motion and structure, built from characters.",
     description: "A terminal-ready library of more than 730 animated ASCII pieces.",
     detail: "An npm CLI and browser custom element for animated scenes, diagrams, interface elements, and visual experiments across 24 categories, with alternate character rendering and prompt generation.",
@@ -137,7 +137,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/ascii-magic-art", role: "OPEN-SOURCE PACKAGE"
   },
   {
-    name: "AniList CSS", index: "13", logo: "", mark: "ANILIST", type: "INTERFACE / THEMING",
+    name: "AniList CSS", index: "13", logo: "anilist-css", mark: "ANILIST", type: "INTERFACE / THEMING",
     subtitle: "A multi-accent dark theme for AniList.",
     description: "A customizable profile skin with animated, translucent surfaces.",
     detail: "A custom CSS system with distinct accent palettes for anime, manga, and favourites, plus frosted panels, ambient overlays, and restrained motion.",
@@ -145,7 +145,7 @@ const projects = [
     url: "https://github.com/VireonNoctis/Anilist-Css", role: "INTERFACE DESIGN"
   },
   {
-    name: "Lunar CSS", index: "14", logo: "", mark: "LUNAR CSS", type: "INTERFACE / THEMING",
+    name: "Lunar CSS", index: "14", logo: "lunar-css", mark: "LUNAR CSS", type: "INTERFACE / THEMING",
     subtitle: "A collection of visual themes for Lunar.",
     description: "Custom CSS themes created for the Lunar Marketplace.",
     detail: "A theme collection spanning space, stained-glass, character-inspired, and other visual treatments, maintained as reusable CSS files.",
@@ -153,16 +153,6 @@ const projects = [
     url: "https://github.com/VireonNoctis/Lunar-Css", role: "INTERFACE DESIGN"
   }
 ];
-
-const projectsPerPage = 3;
-const projectPage = ref(0);
-const totalProjectPages = computed(() => Math.max(1, Math.ceil(projects.length / projectsPerPage)));
-const paginatedProjects = computed(() => projects.slice(projectPage.value * projectsPerPage, (projectPage.value + 1) * projectsPerPage));
-const projectPageStart = computed(() => projects.length ? projectPage.value * projectsPerPage + 1 : 0);
-const projectPageEnd = computed(() => Math.min((projectPage.value + 1) * projectsPerPage, projects.length));
-function changeProjectPage(page: number) {
-  projectPage.value = Math.min(Math.max(page, 0), totalProjectPages.value - 1);
-}
 
 const stackModules = [
   { name: "Vue 3", logo: "vuedotjs", kind: "REACTIVE UI", copy: "Composition API, reactive state, and single-file components." },
@@ -295,23 +285,6 @@ const languageCards = computed(() => techOptions.value.map((tech) => {
   };
 }));
 
-const codePageSize = 4;
-const codePage = ref(0);
-const totalCodePages = computed(() => Math.max(1, Math.ceil(languageCards.value.length / codePageSize)));
-const paginatedLanguageCards = computed(() => languageCards.value.slice(codePage.value * codePageSize, (codePage.value + 1) * codePageSize));
-const codePageStart = computed(() => languageCards.value.length ? codePage.value * codePageSize + 1 : 0);
-const codePageEnd = computed(() => Math.min((codePage.value + 1) * codePageSize, languageCards.value.length));
-function changeCodePage(page: number) {
-  codePage.value = Math.min(Math.max(page, 0), totalCodePages.value - 1);
-}
-watch(totalCodePages, (pages) => {
-  if (codePage.value >= pages) codePage.value = Math.max(0, pages - 1);
-});
-watch([projectPage, codePage], async () => {
-  await nextTick();
-  window.dispatchEvent(new Event("portfolio:pagination"));
-});
-
 const selectedScannedLanguage = computed(() => selectedTech.value
   ? languages.value.find((language) => language.language.toLowerCase() === selectedTech.value?.name.toLowerCase())
   : undefined);
@@ -343,16 +316,27 @@ const selectedFrameworkRepositories = computed(() => {
     (project.frameworks ?? []).some((framework) => framework.toLowerCase() === selectedTech.value?.name.toLowerCase())
   );
 });
-const liveNowPlaying = computed(() => {
-  if (spotify.value.track) {
-    return (spotify.value.isPlaying ? "SPOTIFY · PLAYING NOW" : "SPOTIFY · PAUSED") +
-      " — " + spotify.value.track + " — " + (spotify.value.artist ?? "Unknown artist");
-  }
-  if (live.value.track) {
-    return (live.value.playing ? "LAST.FM · PLAYING NOW" : "LAST.FM · LAST SCROBBLE") +
-      " — " + live.value.track + " — " + (live.value.artist ?? "Unknown artist");
-  }
-  return spotify.value.configured ? "NOTHING PLAYING ON SPOTIFY · LAST.FM IS QUIET" : "SPOTIFY LIVE STATUS NEEDS SETUP";
+const listeningTrack = computed(() => {
+  if (spotify.value.isPlaying && spotify.value.track) return spotify.value.track;
+  return live.value.track || spotify.value.track || "Listening profile";
+});
+const listeningArtist = computed(() => {
+  if (spotify.value.isPlaying && spotify.value.artist) return spotify.value.artist;
+  return live.value.artist || spotify.value.artist || "Spotify and Last.fm";
+});
+const listeningStatus = computed(() => {
+  if (spotify.value.isPlaying) return "SPOTIFY · NOW PLAYING";
+  if (live.value.playing) return "LAST.FM · NOW PLAYING";
+  if (live.value.track || spotify.value.track) return "RECENT TRACK";
+  return "LISTENING PROFILE";
+});
+const listeningArtwork = computed(() => {
+  if (spotify.value.isPlaying && spotify.value.albumImage) return spotify.value.albumImage;
+  return live.value.trackImage || spotify.value.albumImage || null;
+});
+const listeningTrackUrl = computed(() => {
+  if (spotify.value.isPlaying && spotify.value.url) return spotify.value.url;
+  return live.value.trackUrl || spotify.value.url || null;
 });
 function genreWidth(items: GenreItem[] | undefined, count: number): number {
   const max = Math.max(1, ...(items ?? []).map((item) => item.count));
@@ -453,7 +437,7 @@ onBeforeUnmount(() => {
       <div class="hero-meta"><span>VIREON NOCTIS <i>/</i> PORTFOLIO</span><span>BUSINESS · SOFTWARE · PROPERTY</span></div>
       <div class="hero-art" aria-hidden="true">
         <NothingWebGL />
-        <span class="hero-art-caption">FORM STUDY / 001 <i>—</i> REAL-TIME WEBGL</span>
+        <span class="hero-art-caption">LIGHT STUDY / 001 <i>—</i> LIVE WAVE FIELD</span>
       </div>
       <div class="hero-main">
         <div class="hero-copy">
@@ -503,44 +487,32 @@ onBeforeUnmount(() => {
             <small v-if="live.followers !== undefined"><AnimatedNumber :value="live.followers" /> followers</small>
           </div>
         </div>
-        <div class="project-stack">
-          <Transition name="project-page" mode="out-in">
-            <div class="project-stack-page" :key="projectPage">
-              <details v-for="(project, index) in paginatedProjects" :key="project.name" class="project-stack-card" :style="{ '--stack-index': index }">
-                <summary v-tactile class="project-card-shell tactile-surface">
-                  <div class="project-card-visual">
-                    <span class="project-card-index">{{ project.index }}</span>
-                    <div class="project-card-mark">
-                      <img v-if="project.logo" :src="'/brands/' + project.logo + '.svg'" :alt="project.name + ' mark'" width="112" height="112" loading="lazy" />
-                      <span v-else class="project-card-wordmark">{{ project.mark }}</span>
-                    </div>
-                    <span class="project-card-category">{{ project.type }}</span>
-                  </div>
-                  <div class="project-card-copy">
-                    <div class="project-card-topline"><span>PROJECT / {{ project.index }}</span><span aria-hidden="true">↗</span></div>
-                    <h3>{{ project.name }}</h3>
-                    <p class="project-card-subtitle">{{ project.subtitle }}</p>
-                    <p class="project-card-description">{{ project.description }}</p>
-                    <div class="tag-row"><span v-for="tag in project.tags" :key="tag">{{ tag }}</span></div>
-                    <div class="project-card-expand"><span>Project details</span><span class="expand-symbol" aria-hidden="true">＋</span></div>
-                  </div>
-                </summary>
-                <div class="project-expanded-content">
-                  <p>{{ project.detail }}</p>
-                  <a v-tactile class="tactile-surface" :href="project.url" target="_blank" rel="noreferrer">Open project <span aria-hidden="true">↗</span></a>
-                  <span v-if="project.role">{{ project.role }}</span>
+        <div class="project-gallery">
+          <details v-for="project in projects" :key="project.name" class="project-card-item">
+            <summary v-tactile class="project-card-shell tactile-surface">
+              <div class="project-card-visual">
+                <span class="project-card-index">{{ project.index }}</span>
+                <div class="project-card-mark">
+                  <img v-if="project.logo" :src="'/brands/' + project.logo + '.svg'" :alt="project.name + ' mark'" width="112" height="112" loading="lazy" />
+                  <span v-else class="project-card-wordmark">{{ project.mark }}</span>
                 </div>
-              </details>
+                <span class="project-card-category">{{ project.type }}</span>
+              </div>
+              <div class="project-card-copy">
+                <div class="project-card-topline"><span>PROJECT / {{ project.index }}</span><span aria-hidden="true">↗</span></div>
+                <h3>{{ project.name }}</h3>
+                <p class="project-card-subtitle">{{ project.subtitle }}</p>
+                <p class="project-card-description">{{ project.description }}</p>
+                <div class="tag-row"><span v-for="tag in project.tags" :key="tag">{{ tag }}</span></div>
+                <div class="project-card-expand"><span>Project details</span><span class="expand-symbol" aria-hidden="true">＋</span></div>
+              </div>
+            </summary>
+            <div class="project-expanded-content">
+              <p>{{ project.detail }}</p>
+              <a v-tactile class="tactile-surface" :href="project.url" target="_blank" rel="noreferrer">Open project <span aria-hidden="true">↗</span></a>
+              <span v-if="project.role">{{ project.role }}</span>
             </div>
-          </Transition>
-          <nav class="pagination project-pagination" aria-label="Project pages">
-            <div class="pagination-meta"><span>PROJECT INDEX</span><strong>{{ String(projectPageStart).padStart(2, "0") }}—{{ String(projectPageEnd).padStart(2, "0") }} / {{ String(projects.length).padStart(2, "0") }}</strong></div>
-            <div class="pagination-controls">
-              <button type="button" class="pagination-step" :disabled="projectPage === 0" aria-label="Previous project page" @click="changeProjectPage(projectPage - 1)">←</button>
-              <button v-for="page in totalProjectPages" :key="page" type="button" class="pagination-number" :class="{ 'is-current': projectPage === page - 1 }" :aria-current="projectPage === page - 1 ? 'page' : undefined" @click="changeProjectPage(page - 1)">{{ String(page).padStart(2, "0") }}</button>
-              <button type="button" class="pagination-step" :disabled="projectPage >= totalProjectPages - 1" aria-label="Next project page" @click="changeProjectPage(projectPage + 1)">→</button>
-            </div>
-          </nav>
+          </details>
         </div>
       </div>
     </section>
@@ -566,33 +538,16 @@ onBeforeUnmount(() => {
             <div><strong><AnimatedNumber :value="languageCards.length" /></strong><span>LANGUAGE PROFILES</span></div>
           </div>
         </div>
-        <Transition name="project-page" mode="out-in">
-          <div class="project-language-page" :key="codePage">
-            <div class="project-language-grid">
-              <button v-for="tech in paginatedLanguageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
-                <span class="project-language-logo">
-                  <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
-                  <span v-else class="project-language-generic">&lt;/&gt;</span>
-                </span>
-                <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
-                <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" /></strong><small>LINES</small></span>
-                <span class="project-language-arrow" aria-hidden="true">↗</span>
-              </button>
-            </div>
-          </div>
-        </Transition>
-        <div class="code-pagination">
-          <div class="code-pagination-meta">
-            <span>SHOWING {{ String(codePageStart).padStart(2, "0") }}—{{ String(codePageEnd).padStart(2, "0") }} / {{ String(languageCards.length).padStart(2, "0") }}</span>
-            <span>04 PROFILES PER PAGE</span>
-          </div>
-          <nav class="pagination" aria-label="Code language pages">
-            <div class="pagination-controls">
-              <button type="button" class="pagination-step" :disabled="codePage === 0" aria-label="Previous code page" @click="changeCodePage(codePage - 1)">←</button>
-              <button v-for="page in totalCodePages" :key="page" type="button" class="pagination-number" :class="{ 'is-current': codePage === page - 1 }" :aria-current="codePage === page - 1 ? 'page' : undefined" @click="changeCodePage(page - 1)">{{ String(page).padStart(2, "0") }}</button>
-              <button type="button" class="pagination-step" :disabled="codePage >= totalCodePages - 1" aria-label="Next code page" @click="changeCodePage(codePage + 1)">→</button>
-            </div>
-          </nav>
+        <div class="project-language-grid">
+          <button v-for="tech in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
+            <span class="project-language-logo">
+              <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
+              <span v-else class="project-language-generic">&lt;/&gt;</span>
+            </span>
+            <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
+            <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" /></strong><small>LINES</small></span>
+            <span class="project-language-arrow" aria-hidden="true">↗</span>
+          </button>
         </div>
         <p class="project-language-note">{{ codeStatsStatus === "ready" ? "Snapshot generated " + new Date(codeStats!.generatedAt).toLocaleDateString() + ". Select a profile for its file, character, word, and repository breakdown." : codeStatsStatus === "loading" ? "Repository scan is being loaded." : "The repository snapshot is unavailable right now; the portfolio remains usable." }}</p>
       </div>
@@ -605,19 +560,36 @@ onBeforeUnmount(() => {
         <article class="archive-card listening-card">
           <div class="archive-card-top"><span>LISTENING / LIVE</span><span class="archive-live-dot">●</span></div>
           <div class="listening-main">
-            <div class="album-art"><img v-if="spotify.albumImage" :src="spotify.albumImage" alt="Current album artwork" loading="lazy" /><img v-else src="/brands/spotify.svg" alt="Spotify" /></div>
-            <div class="listening-copy"><span>{{ spotify.isPlaying || live.playing ? "NOW PLAYING" : "RECENT LISTENING" }}</span><h3>{{ spotify.track || live.track || "Listening profile" }}</h3><p>{{ spotify.artist || live.artist || "Spotify and Last.fm" }}</p></div>
+            <div class="album-art">
+              <img v-if="listeningArtwork" :src="listeningArtwork" alt="Current track artwork" loading="lazy" />
+              <img v-else src="/brands/lastfm.svg" alt="Last.fm" />
+            </div>
+            <div class="listening-copy">
+              <span>{{ listeningStatus }}</span>
+              <h3 :title="listeningTrack">{{ listeningTrack }}</h3>
+              <p>{{ listeningArtist }}</p>
+            </div>
           </div>
-          <div class="archive-card-bottom"><span>{{ liveNowPlaying }}</span><a v-if="spotify.url" :href="spotify.url" target="_blank" rel="noreferrer">Open track ↗</a><a v-else href="https://last.fm/user/reasfeetadmirer" target="_blank" rel="noreferrer">Last.fm ↗</a></div>
+          <div class="archive-card-bottom listening-footer">
+            <div class="lastfm-scrobbles">
+              <span>LAST.FM / SCROBBLES</span>
+              <strong v-if="live.scrobbles !== undefined"><AnimatedNumber :value="live.scrobbles" /></strong>
+              <strong v-else>—</strong>
+            </div>
+            <div class="listening-links">
+              <a v-if="listeningTrackUrl" :href="listeningTrackUrl" target="_blank" rel="noreferrer">Open track ↗</a>
+              <a href="https://last.fm/user/reasfeetadmirer" target="_blank" rel="noreferrer">Last.fm profile ↗</a>
+            </div>
+          </div>
         </article>
         <article class="archive-card media-card">
           <div class="archive-card-top"><span>ANILIST / PROFILE</span><a href="https://anilist.co/user/Vireon" target="_blank" rel="noreferrer">Open profile ↗</a></div>
           <h3>Anime & manga</h3>
           <div class="media-stats">
-            <div><strong><AnimatedNumber :value="live.anime ?? 0" /></strong><span>Anime</span></div>
-            <div><strong><AnimatedNumber :value="live.animeEpisodes ?? 0" /></strong><span>Episodes</span></div>
-            <div><strong><AnimatedNumber :value="live.manga ?? 0" /></strong><span>Manga</span></div>
-            <div><strong><AnimatedNumber :value="live.mangaChapters ?? 0" /></strong><span>Chapters</span></div>
+            <div><strong><AnimatedNumber :value="live.anime ?? 0" /></strong><span>ANIME</span></div>
+            <div><strong><AnimatedNumber :value="live.animeEpisodes ?? 0" /></strong><span>EPISODES</span></div>
+            <div><strong><AnimatedNumber :value="live.manga ?? 0" /></strong><span>MANGA</span></div>
+            <div><strong><AnimatedNumber :value="live.mangaChapters ?? 0" /></strong><span>CHAPTERS</span></div>
           </div>
           <div v-if="live.animeGenres?.length" class="genre-list">
             <div v-for="genre in live.animeGenres.slice(0, 4)" :key="genre.genre" class="genre-row"><span>{{ genre.genre }}</span><span class="genre-bar"><i :style="{ width: genreWidth(live.animeGenres, genre.count) + '%' }"></i></span></div>

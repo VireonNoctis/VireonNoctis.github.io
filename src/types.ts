@@ -26,6 +26,8 @@ export interface Live {
   manga?: number;
   scrobbles?: number;
   track?: string;
+  trackUrl?: string;
+  trackImage?: string;
   artist?: string;
   playing?: boolean;
   animeEpisodes?: number;

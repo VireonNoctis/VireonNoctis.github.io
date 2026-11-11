@@ -7,7 +7,7 @@ A cinematic, monochrome portfolio for business, software, and property developme
 
 ## Direction
 
-A real-time WebGL 3D hero built around a raymarched folded-metal sculpture, layered with a viewport-contained typographic intro and a safe fallback exit. The hero contains no duplicate project tiles. The project showcase is one continuous gallery, with all fourteen verified code-backed projects visible together. Code Counted is one continuous list with animated figures and expandable repository breakdowns.
+A real-time WebGL2 monochrome flow field behind a viewport-contained typographic intro. The hero contains no duplicate project tiles. The project showcase is one continuous gallery, with all fourteen verified code-backed projects visible together. Code Counted is one continuous list with animated figures and expandable repository breakdowns.
 
 The visual direction is monochrome, responsive, motion-led, and accessible, with a reduced-motion and WebGL fallback.
 
@@ -17,9 +17,9 @@ Fourteen public projects with implementation files are presented: Lemegeton, LOO
 
 ## Portfolio features
 
-- A right-aligned, paginated project panel with three moving stacked cards per page and expandable details.
+- A continuous two-column project gallery with every project visible and expandable details.
 - A raymarched WebGL 3D hero with pointer-responsive camera movement.
-- Code Counted: a matching four-profile moving language panel with page transitions, animated counters, and detail panels.
+- Code Counted: one continuous language list with every profile visible, animated counters, and detail panels.
 - Live GitHub, AniList, Last.fm, and optional Spotify profile data.
 - Responsive navigation, keyboard-accessible controls, reduced-motion support, and a custom 404 page.
 
@@ -31,7 +31,7 @@ Fourteen public projects with implementation files are presented: Lemegeton, LOO
 | Types | TypeScript + vue-tsc |
 | Build | Vite |
 | Motion | GSAP + ScrollTrigger + Lenis |
-| Graphics | Native WebGL2 raymarching |
+| Graphics | Native WebGL2 shader rendering |
 | Styling | Native CSS, monochrome design system |
 | Hosting | GitHub Pages branch publishing |
 | Companion tooling | Rust / Axum under backend/ |

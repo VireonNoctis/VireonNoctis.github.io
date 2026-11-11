@@ -128,10 +128,16 @@ export function usePortfolioData() {
       ]);
       const track = recent?.recenttracks?.track?.[0];
       const user = info?.user;
+      const trackImages = Array.isArray(track?.image) ? track.image : [];
+      const trackImage = [...trackImages].reverse().find((item: any) =>
+        typeof item?.["#text"] === "string" && item["#text"].startsWith("http")
+      )?.["#text"];
       live.value = {
         ...live.value,
         ...(track ? {
           track: track.name,
+          trackUrl: typeof track.url === "string" ? track.url : undefined,
+          trackImage,
           artist: track.artist?.["#text"],
           playing: track["@attr"]?.nowplaying === "true"
         } : {}),

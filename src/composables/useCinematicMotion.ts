@@ -101,7 +101,7 @@ export function useCinematicMotion() {
 
       const revealSelector = [
         ".profile-layout", ".role-item", ".work-intro", ".stack-module",
-        ".project-stack-card", ".project-language-tile", ".archive-card",
+        ".project-card-item", ".project-language-tile", ".archive-card",
         ".social-row", ".contact-main"
       ].join(", ");
       gsap.utils.toArray<HTMLElement>(revealSelector).forEach((element, index) => {
