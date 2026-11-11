@@ -144,11 +144,11 @@ export function usePortfolioData() {
           manga { count chaptersRead volumesRead meanScore genres(limit: 5, sort: COUNT_DESC) { genre count } }
         }
         favourites {
-          anime(page: 1, perPage: 5) { nodes { id siteUrl title { userPreferred } coverImage { large extraLarge } } }
-          manga(page: 1, perPage: 5) { nodes { id siteUrl title { userPreferred } coverImage { large extraLarge } } }
-          characters(page: 1, perPage: 5) { nodes { id siteUrl name { full } image { large } } }
-          staff(page: 1, perPage: 5) { nodes { id siteUrl name { full } image { large } } }
-          studios(page: 1, perPage: 5) { nodes { id siteUrl name isAnimationStudio } }
+          anime(page: 1, perPage: 50) { nodes { id siteUrl title { userPreferred } coverImage { large extraLarge } } }
+          manga(page: 1, perPage: 50) { nodes { id siteUrl title { userPreferred } coverImage { large extraLarge } } }
+          characters(page: 1, perPage: 50) { nodes { id siteUrl name { full } image { large } } }
+          staff(page: 1, perPage: 50) { nodes { id siteUrl name { full } image { large } } }
+          studios(page: 1, perPage: 50) { nodes { id siteUrl name isAnimationStudio } }
         }
       }
     }`;

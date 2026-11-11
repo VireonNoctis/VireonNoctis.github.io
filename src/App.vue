@@ -17,6 +17,21 @@ interface TechCard {
 const { codeStats, codeStatsStatus, live, spotify, lastFmAlbum } = usePortfolioData();
 const { scrollTo } = useCinematicMotion();
 
+interface WebnovelCard {
+  id: string;
+  index: string;
+  title: string;
+  mark: string;
+  source: string;
+  href: string;
+}
+const webnovels: WebnovelCard[] = [
+  { id: "orv", index: "01", title: "Omniscient Reader's Viewpoint", mark: "ORV", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/omniscient-readers-viewpoint/" },
+  { id: "reverend", index: "02", title: "Reverend Insanity", mark: "RI", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/reverend-insanity/" },
+  { id: "lotm", index: "03", title: "Lord of the Mysteries", mark: "LOTM", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/lord-of-the-mysteries/" },
+  { id: "reincarnator", index: "04", title: "Reincarnator", mark: "RE", source: "NOVEL UPDATES", href: "https://www.novelupdates.com/series/reincarnator/" },
+  { id: "shadow-slave", index: "05", title: "Shadow Slave", mark: "SS", source: "WEBNOVEL · OFFICIAL", href: "https://www.webnovel.com/book/22196546206090805" }
+];
 const selectedFavoriteCategory = ref<AniListFavoriteCategory>("anime");
 const favoriteCategories: { key: AniListFavoriteCategory; label: string }[] = [
   { key: "anime", label: "ANIME" },
@@ -221,7 +236,12 @@ const logoByName: Record<string, string> = {
   "Environment config": "terminal", "Git config": "git", Config: "terminal",
   Dockerfile: "docker", "Docker config": "docker", "Go module": "go",
   "Next.js": "nextdotjs", React: "react", WebGL: "webgl", "Three.js": "threejs",
-  "Vue.js": "vuedotjs", Vue: "vuedotjs"
+  "Vue.js": "vuedotjs", Vue: "vuedotjs", Lua: "lua",
+  Markdown: "markdown", JSON: "json", SQL: "postgresql", "C++": "cplusplus",
+  "Plain text": "plaintext", SVG: "svg", XML: "xml", Swift: "swift",
+  "Terraform (HCL)": "terraform", TOML: "terminal", Gradle: "terminal",
+  EditorConfig: "git", Java: "openjdk", Properties: "terminal",
+  "NPM config": "javascript"
 };
 const formatLanguages = new Set([
   "Batch", "Markdown", "JSON", "Plain text", "YAML", "TOML", "Environment config",
@@ -796,8 +816,14 @@ onBeforeUnmount(() => {
                 <span>GLOBAL TRACK PLAYS</span>
                 <strong><AnimatedNumber :value="live.trackPlaycount" immediate :duration="1250" /></strong>
               </div>
-              <span v-if="live.trackListeners !== undefined">{{ formatted(live.trackListeners) }} LISTENERS</span>
-              <span v-if="live.trackDurationMs">{{ formatPlaybackTime(live.trackDurationMs) }} DURATION</span>
+              <div v-if="live.trackListeners !== undefined" class="lastfm-global-track">
+                <span>LISTENERS</span>
+                <strong><AnimatedNumber :value="live.trackListeners" immediate :duration="1250" /></strong>
+              </div>
+              <div v-if="live.trackDurationMs" class="lastfm-global-track">
+                <span>DURATION</span>
+                <strong><time :key="live.trackDurationMs" class="lastfm-duration-value">{{ formatPlaybackTime(live.trackDurationMs) }}</time></strong>
+              </div>
             </div>
           </div>
           <div class="archive-card-bottom listening-footer">
@@ -835,7 +861,7 @@ onBeforeUnmount(() => {
           <button v-for="category in favoriteCategories" :key="category.key" type="button" class="favorite-category-button" :class="{ 'is-active': selectedFavoriteCategory === category.key }" :aria-pressed="selectedFavoriteCategory === category.key" @click="selectedFavoriteCategory = category.key">{{ category.label }}</button>
         </div>
         <Transition name="favorite-switch" mode="out-in">
-          <div :key="selectedFavoriteCategory" class="anilist-favorite-grid">
+          <div :key="selectedFavoriteCategory" class="anilist-favorite-grid" :class="{ 'is-seven': favoriteItems.length === 7 }">
             <a v-for="item in favoriteItems" :key="item.id" class="anilist-favorite-card" :href="item.url" target="_blank" rel="noreferrer" :title="item.title">
               <span class="anilist-favorite-image">
                 <img v-if="item.image" :src="item.image" :alt="item.title" loading="lazy" />
@@ -847,6 +873,27 @@ onBeforeUnmount(() => {
             <p v-if="!favoriteItems.length" class="favorites-empty">No favourites in this category.</p>
           </div>
         </Transition>
+      </section>
+      <section class="webnovel-section" aria-label="Webnovels">
+        <div class="webnovel-heading">
+          <div><span>READING / COLLECTION</span><h3>WEBNOVELS</h3></div>
+          <span>05 TITLES</span>
+        </div>
+        <div class="webnovel-grid">
+          <a v-for="novel in webnovels" :key="novel.id" class="webnovel-card" :class="'webnovel-' + novel.id" :href="novel.href" target="_blank" rel="noreferrer">
+            <span class="webnovel-cover" aria-hidden="true">
+              <span class="webnovel-cover-frame"></span>
+              <span class="webnovel-cover-index">{{ novel.index }}</span>
+              <span class="webnovel-cover-mark">{{ novel.mark }}</span>
+              <span class="webnovel-cover-title">{{ novel.title }}</span>
+              <span class="webnovel-cover-foot">{{ novel.source }}</span>
+            </span>
+            <span class="webnovel-card-meta">
+              <strong>{{ novel.title }}</strong>
+              <small>{{ novel.source }} <span aria-hidden="true">↗</span></small>
+            </span>
+          </a>
+        </div>
       </section>
       <div class="social-area" id="elsewhere">
         <div class="social-area-heading"><span>ELSEWHERE</span></div>
@@ -3280,4 +3327,233 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
   .anilist-favorite-card,
   .favorite-category-button { transition: none; }
 }
+
+/* Complete metrics, favourites and webnovel collections. */
+.lastfm-track-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 10px;
+}
+.lastfm-track-stats .lastfm-global-track {
+  grid-column: auto;
+  min-width: 0;
+  min-height: 76px;
+  padding: 12px 8px;
+  border: 1px solid rgba(242,241,237,.13);
+  background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.012));
+  align-content: center;
+}
+.lastfm-track-stats .lastfm-global-track > span {
+  color: #aaa9a3;
+  font: 7px var(--mono);
+  letter-spacing: .09em;
+  text-align: center;
+  white-space: nowrap;
+}
+.lastfm-track-stats .lastfm-global-track > strong {
+  color: #fff;
+  font: 600 clamp(19px, 2vw, 25px)/1.05 var(--sans);
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+.lastfm-track-stats .lastfm-global-track .animated-number {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.lastfm-duration-value {
+  display: block;
+  animation: lastfmDurationIn .55s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes lastfmDurationIn {
+  from { opacity: .25; transform: translateY(5px); filter: blur(4px); }
+  to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.anilist-favorite-grid {
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  align-items: start;
+}
+.anilist-favorite-card { grid-column: span 2; }
+.anilist-favorite-grid.is-seven .anilist-favorite-card:nth-child(6) { grid-column: 2 / span 2; }
+.anilist-favorite-grid.is-seven .anilist-favorite-card:nth-child(7) { grid-column: 8 / span 2; }
+
+.webnovel-section {
+  margin-top: clamp(42px, 6vw, 74px);
+  padding-top: clamp(24px, 3.5vw, 40px);
+  border-top: 1px solid var(--line);
+}
+.webnovel-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.webnovel-heading > div { display: grid; gap: 7px; }
+.webnovel-heading > div > span,
+.webnovel-heading > span {
+  color: var(--quiet);
+  font: 8px var(--mono);
+  letter-spacing: .12em;
+}
+.webnovel-heading h3 {
+  margin: 0;
+  color: var(--paper);
+  font: 500 clamp(25px, 3vw, 38px)/.98 var(--sans);
+  letter-spacing: -.065em;
+}
+.webnovel-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: clamp(9px, 1.25vw, 17px);
+}
+.webnovel-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 11px;
+  color: inherit;
+  text-decoration: none;
+}
+.webnovel-cover {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  aspect-ratio: 3 / 4.35;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: clamp(10px, 1.3vw, 17px);
+  border: 1px solid rgba(242,241,237,.2);
+  background: #0b0b0b;
+  isolation: isolate;
+  transition: transform .45s cubic-bezier(.16,1,.3,1), border-color .3s, filter .3s;
+}
+.webnovel-cover::before,
+.webnovel-cover::after,
+.webnovel-cover-frame {
+  position: absolute;
+  z-index: -1;
+  content: "";
+  pointer-events: none;
+}
+.webnovel-cover-frame {
+  inset: 7px;
+  border: 1px solid rgba(242,241,237,.11);
+}
+.webnovel-cover::before {
+  top: 14%;
+  right: -18%;
+  width: 88%;
+  aspect-ratio: 1;
+  border: 1px solid rgba(242,241,237,.42);
+  border-radius: 50%;
+  box-shadow: 0 0 0 9px rgba(242,241,237,.035), 0 0 0 22px rgba(242,241,237,.025), 0 0 70px rgba(242,241,237,.08);
+}
+.webnovel-cover::after {
+  inset: 0;
+  opacity: .23;
+  background: repeating-linear-gradient(135deg, transparent 0 13px, rgba(255,255,255,.12) 14px, transparent 15px 31px);
+  mask-image: linear-gradient(130deg, #000, transparent 65%);
+}
+.webnovel-cover-index,
+.webnovel-cover-foot {
+  color: rgba(244,243,238,.68);
+  font: 7px var(--mono);
+  letter-spacing: .13em;
+}
+.webnovel-cover-mark {
+  position: absolute;
+  top: 40%;
+  left: 10%;
+  color: rgba(255,255,255,.88);
+  font: 500 clamp(34px, 5vw, 68px)/.85 var(--sans);
+  letter-spacing: -.09em;
+  text-shadow: 0 8px 38px rgba(0,0,0,.7);
+}
+.webnovel-cover-title {
+  position: relative;
+  z-index: 1;
+  max-width: 95%;
+  color: #f5f4ef;
+  font: 600 clamp(10px, 1.15vw, 15px)/1.12 var(--sans);
+  letter-spacing: -.035em;
+  text-wrap: balance;
+  text-shadow: 0 2px 16px #000;
+}
+.webnovel-cover-foot { font-size: 6px; }
+.webnovel-reverend .webnovel-cover { background: radial-gradient(ellipse at 75% 25%, #48413a 0, #1b1a19 34%, #080808 78%); }
+.webnovel-reverend .webnovel-cover::before {
+  top: 17%; right: -23%; width: 105%; border-radius: 0;
+  transform: rotate(34deg); box-shadow: 0 0 0 10px rgba(255,255,255,.025), 0 0 0 21px rgba(255,255,255,.02);
+}
+.webnovel-lotm .webnovel-cover { background: radial-gradient(ellipse at 50% 35%, #55534f 0, #242321 35%, #090909 78%); }
+.webnovel-lotm .webnovel-cover::before {
+  top: 11%; right: 13%; width: 66%; border-radius: 50% 50% 0 0;
+  border-bottom: 0; box-shadow: 0 0 0 8px rgba(255,255,255,.035), 0 0 0 17px rgba(255,255,255,.025);
+}
+.webnovel-reincarnator .webnovel-cover { background: linear-gradient(155deg, #343b3e, #111516 52%, #070808); }
+.webnovel-reincarnator .webnovel-cover::before {
+  top: 17%; right: -4%; width: 73%; border-radius: 0;
+  transform: rotate(45deg); box-shadow: 0 0 0 10px rgba(255,255,255,.03), 0 0 0 22px rgba(255,255,255,.02);
+}
+.webnovel-shadow-slave .webnovel-cover { background: radial-gradient(circle at 72% 27%, #777 0, #292929 16%, #101010 43%, #050505 80%); }
+.webnovel-shadow-slave .webnovel-cover::before {
+  top: 10%; right: 6%; width: 57%; border: 0;
+  background: radial-gradient(circle at 35% 35%, #f4f2e9 0 1%, #bbb 3%, #626262 34%, rgba(20,20,20,.2) 69%);
+  box-shadow: 0 0 35px rgba(255,255,255,.18);
+}
+.webnovel-card-meta { display: grid; gap: 5px; min-width: 0; }
+.webnovel-card-meta > strong {
+  overflow: hidden;
+  color: var(--paper);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+}
+.webnovel-card-meta > small {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: var(--quiet);
+  font: 7px var(--mono);
+  letter-spacing: .07em;
+}
+.webnovel-card:hover .webnovel-cover,
+.webnovel-card:focus-visible .webnovel-cover {
+  transform: translateY(-5px);
+  border-color: rgba(255,255,255,.72);
+  filter: brightness(1.13);
+}
+.webnovel-card:focus-visible { outline: 1px solid var(--paper); outline-offset: 5px; }
+@media (max-width: 800px) {
+  .lastfm-track-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lastfm-track-stats .lastfm-global-track { grid-column: auto; }
+  .anilist-favorite-grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .anilist-favorite-card { grid-column: span 2; }
+  .anilist-favorite-grid.is-seven .anilist-favorite-card:nth-child(7) { grid-column: 3 / span 2; }
+  .webnovel-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .lastfm-track-stats { gap: 6px; }
+  .lastfm-track-stats .lastfm-global-track { min-height: 66px; padding: 9px 4px; }
+  .lastfm-track-stats .lastfm-global-track > span { font-size: 6px; letter-spacing: .04em; }
+  .lastfm-track-stats .lastfm-global-track > strong { font-size: clamp(15px, 4.6vw, 20px); }
+  .anilist-favorite-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .anilist-favorite-card { grid-column: span 2; }
+  .webnovel-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 10px; }
+  .webnovel-cover-mark { font-size: clamp(32px, 10vw, 54px); }
+  .webnovel-cover-title { font-size: 12px; }
+  .webnovel-card-meta > strong { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lastfm-duration-value { animation: none; }
+  .webnovel-cover, .webnovel-card:hover .webnovel-cover { transition: none; transform: none; }
+}
+
 </style>
