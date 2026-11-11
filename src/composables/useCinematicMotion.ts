@@ -52,19 +52,21 @@ export function useCinematicMotion() {
         const readout = introLayer.querySelector<HTMLElement>("#intro-count");
         const fill = introLayer.querySelector<HTMLElement>("#intro-fill");
         const stage = introLayer.querySelector<HTMLElement>("#intro-stage");
-        const signalFill = introLayer.querySelector<HTMLElement>("#intro-signal-fill");
-        const signalScan = introLayer.querySelector<HTMLElement>("#intro-signal-scan");
         const wipe = introLayer.querySelector<HTMLElement>("#intro-wipe");
         const intro = gsap.timeline({ onComplete: finishIntro });
         intro
+          .fromTo(".intro-loader-artwork", { autoAlpha:0, y:26, scale:.9, filter:"blur(10px)" }, {
+            autoAlpha:1, y:0, scale:1, filter:"blur(0px)", duration:1.55, ease:"power4.out",
+            clearProps:"transform,opacity,visibility,filter"
+          }, .12)
           .to(counter, {
             value: 100, duration: 9.6, ease: "power1.inOut",
             onUpdate: () => {
               const progress = Math.round(counter.value);
               if (readout) readout.textContent = progress.toString().padStart(2, "0");
-              if (stage) stage.textContent = progress < 22 ? "ASSEMBLING THE SIGNAL"
-                : progress < 48 ? "FORMING THE INTERFACE"
-                : progress < 78 ? "CALIBRATING THE EXPERIENCE" : "READY TO EXPLORE";
+              if (stage) stage.textContent = progress < 22 ? "COMPOSING THE FORM"
+                : progress < 48 ? "REFINING THE STRUCTURE"
+                : progress < 78 ? "LIGHTING THE SURFACE" : "READY TO EXPLORE";
             }
           }, 0)
           .fromTo(".intro-loader-kicker", { autoAlpha:0, y:18, letterSpacing:".34em" }, {
@@ -78,13 +80,12 @@ export function useCinematicMotion() {
           .fromTo(".intro-loader-subline", { autoAlpha:0, y:16 }, {
             autoAlpha:1, y:0, duration:1, ease:"power3.out", clearProps:"transform,opacity,visibility"
           }, 1.15)
-          .fromTo(".intro-loader-progress-number", { autoAlpha:0, y:20, scale:.92 }, {
-            autoAlpha:1, y:0, scale:1, duration:1.05, ease:"power3.out", clearProps:"transform,opacity,visibility"
-          }, 1.05)
+          .fromTo(".intro-loader-bottom", { autoAlpha:0, y:20, filter:"blur(8px)" }, {
+            autoAlpha:1, y:0, filter:"blur(0px)", duration:1.05, ease:"power3.out",
+            clearProps:"transform,opacity,visibility,filter"
+          }, 1.32)
           .to(introLayer, { autoAlpha:0, duration:.92, ease:"power2.inOut" }, 10.5);
         if (fill) intro.to(fill, { scaleX:1, duration:9.6, ease:"power1.inOut" }, 0);
-        if (signalFill) intro.fromTo(signalFill, { scaleX:.015 }, { scaleX:1.18, duration:9.6, ease:"power1.inOut" }, 0);
-        if (signalScan) intro.fromTo(signalScan, { xPercent:-110, autoAlpha:0 }, { xPercent:110, autoAlpha:1, duration:9.6, ease:"none" }, 0);
         if (wipe) intro.fromTo(wipe, { scaleX:0, autoAlpha:.92 }, { scaleX:1, autoAlpha:1, duration:1.15, ease:"power4.in" }, 9.35);
       }
 

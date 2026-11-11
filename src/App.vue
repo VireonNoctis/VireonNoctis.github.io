@@ -32,11 +32,6 @@ const playbackWaveBars = Array.from({ length: 64 }, (_, index) => {
   );
   return Math.round(16 + envelope * 82);
 });
-const introSignalBars = Array.from({ length: 72 }, (_, index) => {
-  const center = Math.abs(index - 35.5) / 35.5;
-  const envelope = Math.abs(Math.sin(index * .37) * .46 + Math.sin(index * .13 + .8) * .33 + Math.cos(index * .91) * .21);
-  return Math.round(14 + envelope * (92 - center * 48));
-});
 const techIconFlightActive = ref(false);
 let techIconFlight: HTMLImageElement | null = null;
 let techIconAnimation: Animation | null = null;
@@ -484,29 +479,74 @@ onBeforeUnmount(() => {
           <span class="intro-loader-monogram">V/N</span>
           <span class="intro-loader-brand-copy"><strong>VIREON NOCTIS</strong><small>INDEPENDENT DIGITAL ATELIER</small></span>
         </div>
-        <span class="intro-loader-edition">PERSONAL PORTFOLIO <i>—</i> MMXXVI</span>
       </header>
-      <div class="intro-loader-side-index"><span>01 / 01</span><span>FORM / SYSTEM / MOTION</span></div>
       <main class="intro-loader-stage">
-        <div class="intro-loader-signal" aria-hidden="true">
-          <div class="intro-loader-signal-bars">
-            <i v-for="(height, index) in introSignalBars" :key="'intro-signal-' + index" :style="{ height: height + '%', '--signal-index': index }"></i>
-          </div>
-          <div class="intro-loader-signal-fill" id="intro-signal-fill"></div>
-          <div class="intro-loader-signal-scan" id="intro-signal-scan"></div>
+        <div class="intro-loader-artwork" aria-hidden="true">
+          <div class="intro-loader-artwork-guides"></div>
+          <svg class="intro-loader-emblem" viewBox="0 0 620 390" role="presentation">
+            <defs>
+              <linearGradient id="intro-face-light" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#fff"/>
+                <stop offset=".42" stop-color="#d5d5d5"/>
+                <stop offset="1" stop-color="#777"/>
+              </linearGradient>
+              <linearGradient id="intro-face-mid" x1="0" y1="0" x2=".9" y2="1">
+                <stop offset="0" stop-color="#e8e8e8"/>
+                <stop offset=".5" stop-color="#888"/>
+                <stop offset="1" stop-color="#292929"/>
+              </linearGradient>
+              <linearGradient id="intro-face-dark" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#858585"/>
+                <stop offset=".48" stop-color="#292929"/>
+                <stop offset="1" stop-color="#090909"/>
+              </linearGradient>
+              <linearGradient id="intro-edge-light" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+                <stop offset=".48" stop-color="#fff"/>
+                <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+              </linearGradient>
+              <filter id="intro-emblem-shadow" x="-30%" y="-30%" width="160%" height="170%">
+                <feGaussianBlur stdDeviation="12"/>
+              </filter>
+              <pattern id="intro-face-lines" width="8" height="8" patternUnits="userSpaceOnUse">
+                <path d="M0 8 L8 0" stroke="#fff" stroke-opacity=".12" stroke-width=".65"/>
+              </pattern>
+            </defs>
+            <g class="intro-emblem-guides" fill="none" stroke="#fff" stroke-opacity=".15" stroke-width="1">
+              <path d="M72 195 H548 M310 24 V366"/>
+              <path d="M125 62 H495 M125 328 H495" stroke-dasharray="2 8"/>
+              <path d="M95 88 V302 M525 88 V302" stroke-dasharray="2 8"/>
+              <path d="M102 82 h20 M102 82 v20 M518 82 h-20 M518 82 v20 M102 308 h20 M102 308 v-20 M518 308 h-20 M518 308 v-20"/>
+            </g>
+            <path class="intro-emblem-shadow" d="M164 93 L244 93 L310 211 L376 93 L456 93 L342 313 L278 313 Z" fill="#000" opacity=".72" filter="url(#intro-emblem-shadow)"/>
+            <g class="intro-emblem-object" stroke="#fff" stroke-opacity=".36" stroke-width="1.15" stroke-linejoin="round">
+              <path class="intro-emblem-blade intro-emblem-blade-left" d="M164 82 L244 82 L342 286 L278 326 Z" fill="url(#intro-face-light)"/>
+              <path d="M164 82 L202 82 L300 286 L278 326 Z" fill="#fff" opacity=".18"/>
+              <path class="intro-emblem-blade intro-emblem-blade-right" d="M456 82 L376 82 L278 286 L342 326 Z" fill="url(#intro-face-dark)"/>
+              <path d="M456 82 L418 82 L320 286 L342 326 Z" fill="#fff" opacity=".11"/>
+              <path class="intro-emblem-blade intro-emblem-blade-cross" d="M244 82 L326 82 L424 286 L342 326 Z" fill="url(#intro-face-mid)"/>
+              <path d="M244 82 L326 82 L424 286 L384 286 L286 82 Z" fill="url(#intro-face-lines)" opacity=".72"/>
+              <path d="M244 82 L342 286 L326 326 L228 122 Z" fill="#fff" opacity=".14"/>
+              <path d="M164 82 L244 82 L342 286 L326 326 L228 122 Z" fill="none" stroke="url(#intro-edge-light)" stroke-width="2"/>
+              <path d="M456 82 L376 82 L278 286 L294 326 L392 122 Z" fill="none" stroke="#fff" stroke-opacity=".36" stroke-width="1"/>
+            </g>
+            <path class="intro-emblem-specular" d="M164 82 L244 82 L342 286" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".72"/>
+            <path class="intro-emblem-cut" d="M310 30 L310 68 M310 322 L310 360" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
+            <circle class="intro-emblem-pin" cx="310" cy="194" r="3" fill="#fff"/>
+          </svg>
+          <span class="intro-loader-artwork-caption">FORM STUDY <i>/</i> 001</span>
         </div>
         <div class="intro-loader-title">
           <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
           <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
           <div class="intro-loader-subline"><span>FORM FOLLOWS FUNCTION</span><span>IRELAND <b>/</b> GLOBAL</span></div>
         </div>
-        <div class="intro-loader-progress-number"><strong id="intro-count">00</strong><span>%</span></div>
+        <div class="intro-loader-bottom">
+          <div class="intro-loader-status"><span id="intro-stage">COMPOSING THE FORM</span></div>
+          <div class="intro-loader-progress"><span id="intro-fill"></span></div>
+          <div class="intro-loader-readout"><span>LOADING</span><strong id="intro-count">00</strong><span>%</span></div>
+        </div>
       </main>
-      <div class="intro-loader-bottom">
-        <div class="intro-loader-status"><span>BUILDING THE EXPERIENCE</span><span id="intro-stage">ASSEMBLING THE SIGNAL</span></div>
-        <div class="intro-loader-progress"><span id="intro-fill"></span></div>
-        <div class="intro-loader-readout"><span>INITIALIZING / 001</span><span class="intro-loader-coordinates">READY TO EXPLORE</span></div>
-      </div>
       <div class="intro-loader-wipe" id="intro-wipe" aria-hidden="true"></div>
     </div>
   </Teleport>
