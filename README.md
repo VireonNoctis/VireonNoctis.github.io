@@ -1,50 +1,40 @@
 # Vireon Noctis — Personal Portfolio
 
-A cinematic, monochrome portfolio for business, software, and property development.
+A monochrome, motion-led portfolio for software, business, and property development.
 
 **Live site:** https://vireonnoctis.github.io/  
-**GitHub:** https://github.com/VireonNoctis
+**Repository:** https://github.com/VireonNoctis/VireonNoctis.github.io
 
-## Direction
+## Application
 
-A real-time WebGL2 monochrome flow field behind a viewport-contained typographic intro. The hero contains no duplicate project tiles. The project showcase is one continuous gallery, with all fourteen verified code-backed projects visible together. Code Counted is one continuous list with animated figures and expandable repository breakdowns.
+The site is built as a Vue 3 Single-File Component application. Page markup, reactive UI, and the global presentation layer live in Vue SFCs; TypeScript remains for composables, data contracts, and interaction directives.
 
-The visual direction is monochrome, responsive, motion-led, and accessible, with a reduced-motion and WebGL fallback.
+- Vue 3 + TypeScript + Vite
+- GSAP, ScrollTrigger, and Lenis for motion and navigation
+- Native WebGL2 for the hero visual
+- Rust command-line utilities for Spotify OAuth and playback snapshots
+- GitHub Pages branch publishing
 
-## Project showcase
+## Features
 
-Fourteen public projects with implementation files are presented: Lemegeton, LOOP, PrivaCage, Moonbyte, Lunar X, Driftglass, SkillTether, SwarmForge, Astra, Lunar Dungeons, Torrent Core, ASCII Magic Art, AniList CSS, and Lunar CSS. Private and empty repositories are excluded; prototypes and experimental subsystems are labelled accordingly.
-
-## Portfolio features
-
-- A continuous two-column project gallery with every project visible and expandable details.
-- A raymarched WebGL 3D hero with pointer-responsive camera movement.
-- Code Counted: one continuous language list with every profile visible, animated counters, and detail panels.
-- Live GitHub, AniList, Last.fm, and optional Spotify profile data.
+- A continuous, responsive project gallery.
+- Repository language and project metrics with animated count-up.
+- Live GitHub, AniList, Last.fm, and Spotify profile data.
 - Responsive navigation, keyboard-accessible controls, reduced-motion support, and a custom 404 page.
 
-## Stack
+## Local development
 
-| Layer | Implementation |
-| --- | --- |
-| UI | Vue 3 Single-File Components |
-| Types | TypeScript + vue-tsc |
-| Build | Vite |
-| Motion | GSAP + ScrollTrigger + Lenis |
-| Graphics | Native WebGL2 shader rendering |
-| Styling | Native CSS, monochrome design system |
-| Hosting | GitHub Pages branch publishing |
-| Companion tooling | Rust / Axum under backend/ |
+Requires Node.js 24+ and npm.
 
-## Run locally
+```sh
+npm install
+npm run dev
+npm run typecheck
+npm run build
+```
 
-Requirements: Node.js 24+ and npm.
+The Vite source entry is `src/index.html`. The root `index.html`, `assets/`, and copied `brands/` are generated deployment output; edit `src/` and `public/` instead.
 
-    npm install
-    npm run dev
-    npm run typecheck
-    npm run build
+## Spotify utilities
 
-The Vite source entry lives at `src/index.html`. A production build also copies the compiled bundle and public files to the repository root because this site uses GitHub Pages branch publishing. `index.html` at the root is generated output; edit the source entry instead.
-
-The site progressively loads GitHub, AniList, Last.fm, repository code statistics, and the public Spotify snapshot. The optional Rust companion service under `backend/` is independent of the static deployment.
+The optional Rust tools are under `backend/`. See [backend/README.md](backend/README.md) for OAuth setup and playback snapshot refresh instructions.

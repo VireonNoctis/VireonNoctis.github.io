@@ -48,30 +48,6 @@ export function useCinematicMotion() {
 
     context = gsap.context(() => {
       if (introLayer) {
-        const glassLeft = introLayer.querySelector<HTMLElement>(".intro-loader-glass-leaf-left");
-        const glassRight = introLayer.querySelector<HTMLElement>(".intro-loader-glass-leaf-right");
-        if (glassLeft && glassRight) {
-          const compact = window.matchMedia("(max-width: 700px)").matches;
-          const travel = compact ? 38 : 68;
-          gsap.set(glassLeft, {
-            x: 0, y: 0, rotationY: 0, rotationZ: 0,
-            transformOrigin: "100% 50%", transformPerspective: 1400, force3D: true
-          });
-          gsap.set(glassRight, {
-            x: 0, y: 0, rotationY: 0, rotationZ: 0,
-            transformOrigin: "0% 50%", transformPerspective: 1400, force3D: true
-          });
-          const glassMotion = gsap.timeline({ repeat: 4, yoyo: true });
-          glassMotion
-            .to(glassLeft, {
-              x: -travel, y: -5, rotationY: -27, rotationZ: -4,
-              duration: 2.05, ease: "sine.inOut"
-            }, 0)
-            .to(glassRight, {
-              x: travel, y: 5, rotationY: 27, rotationZ: 4,
-              duration: 2.05, ease: "sine.inOut"
-            }, 0);
-        }
         const counter = { value: 0 };
         const readout = introLayer.querySelector<HTMLElement>("#intro-count");
         const fill = introLayer.querySelector<HTMLElement>("#intro-fill");

@@ -1,0 +1,4 @@
+/assets/** linguist-generated=true
+/brands/** linguist-detectable=false
+/public/brands/** linguist-detectable=false
+/public/*.svg linguist-detectable=false

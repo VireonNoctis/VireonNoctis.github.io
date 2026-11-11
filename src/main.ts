@@ -1,7 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import { revealDirective, tactileDirective } from "./directives/interaction";
-import "../app/portfolio-overhaul.css";
 import "lenis/dist/lenis.css";
 
 document.documentElement.dataset.theme = "nothing";

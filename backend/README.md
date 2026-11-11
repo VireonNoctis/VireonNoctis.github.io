@@ -1,30 +1,31 @@
-# Vireon Noctis Rust API
+# Spotify utilities
 
-The former JavaScript data-service modules and DOM card renderers have been migrated to Rust. The Next.js/React frontend remains TypeScript because browsers do not execute Rust source files directly; the obsolete standalone JavaScript bootstrap and legacy card scripts were removed.
+These small Rust binaries support the portfolio's scheduled Spotify snapshot.
 
-## Run locally
+## OAuth setup
 
-Requirements: Rust stable.
+Run the local callback utility to authorize the Spotify application and obtain a refresh token:
 
 ```sh
-cargo test --manifest-path backend/Cargo.toml
-cargo run --manifest-path backend/Cargo.toml
+cargo run --manifest-path backend/Cargo.toml --bin spotify-auth
 ```
 
-The server listens on `0.0.0.0:8080` by default. Configure `HOST` and `PORT` as needed.
+Keep the returned refresh token private. Store it as the repository Actions secret `SPOTIFY_REFRESH_TOKEN`, alongside `SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET`.
 
-## Endpoints
+## Playback snapshot
 
-- `GET /health` — process health
-- `GET /api/v1/site` — service metadata
-- `GET /api/v1/archive` — aggregated GitHub, AniList and Last.fm profile data
+The scheduled GitHub Actions workflow runs this binary every five minutes:
 
-## Configuration
+```sh
+cargo run --manifest-path backend/Cargo.toml --release --bin spotify-now-playing
+```
 
-- `GITHUB_USERNAME` (default: `VireonNoctis`)
-- `ANILIST_USERNAME` (default: `Vireon`)
-- `LASTFM_USERNAME` (default: `reasfeetadmirer`)
-- `LASTFM_API_KEY` (required for Last.fm data)
-- `CACHE_TTL_SECONDS` (default: `900`)
+It updates `public/spotify-now-playing.json` only when the current playback snapshot changes. The site reads that public JSON directly.
 
-GitHub Pages only hosts the static frontend; this Rust API must be deployed separately to a Rust-capable host before it can be reached publicly. Third-party API failures return missing data rather than taking down the server.
+## Build
+
+Requires the stable Rust toolchain.
+
+```sh
+cargo check --manifest-path backend/Cargo.toml --all-targets
+```
