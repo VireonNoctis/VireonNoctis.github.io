@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Lunar X logo">
+  <rect width="96" height="96" rx="20" fill="#10131e"/>
+  <path d="M60 14a33 33 0 1 0 22 54A30 30 0 0 1 60 14Z" fill="#c4d8ee"/>
+  <circle cx="68" cy="25" r="3" fill="#8ea6c1"/>
+  <path d="M19 77h58" stroke="#596e89" stroke-width="1.5"/>
+  <path d="m74 37 2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#edf4fb"/>
+</svg>
