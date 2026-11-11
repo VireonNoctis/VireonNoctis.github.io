@@ -1465,3 +1465,119 @@ body,button,a{-webkit-tap-highlight-color:transparent}button,input{font:inherit}
   height: 100%;
   object-fit: contain;
 }
+
+
+/* Loader refinement: two glass leaves part around a steady white core. */
+.intro-loader-wavefield {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: .62;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, transparent 18%, rgba(0,0,0,.38) 48%, #000 100%);
+}
+.intro-loader-wavefield g:first-child { opacity: .72; }
+.intro-loader-wavefield g:last-child { opacity: .5; }
+.intro-loader-artwork::after {
+  display: none !important;
+  animation: none !important;
+}
+.intro-loader-artwork::before {
+  inset: 0 10%;
+  background:
+    radial-gradient(ellipse at 50% 48%, rgba(255,255,255,.22), rgba(255,255,255,.075) 32%, transparent 72%);
+  filter: blur(24px);
+}
+.intro-loader-light-core {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  top: 51%;
+  width: 55%;
+  height: 78%;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,.74) 0%, rgba(255,255,255,.24) 18%, rgba(255,255,255,.075) 42%, transparent 72%);
+  filter: blur(13px);
+  transform: translate(-50%,-50%) scale(.58);
+  animation: introGlassLightReveal 2.15s cubic-bezier(.16,1,.3,1) .32s both;
+  pointer-events: none;
+}
+.intro-loader-light-core::after {
+  position: absolute;
+  left: 50%;
+  top: 12%;
+  width: 1px;
+  height: 76%;
+  content: "";
+  background: linear-gradient(transparent, rgba(255,255,255,.62) 24%, rgba(255,255,255,.82) 50%, rgba(255,255,255,.52) 76%, transparent);
+  box-shadow: 0 0 22px 5px rgba(255,255,255,.12);
+  transform: translateX(-50%);
+}
+@keyframes introGlassLightReveal {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.58); }
+  58% { opacity: .82; }
+  100% { opacity: .68; transform: translate(-50%,-50%) scale(1); }
+}
+.intro-emblem-object { animation: introEmblemFloat 8.5s ease-in-out infinite; }
+.intro-emblem-blade-left,
+.intro-emblem-blade-right { animation: none !important; }
+.intro-emblem-glass {
+  transform-box: fill-box;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+.intro-emblem-glass-left {
+  transform-origin: 100% 50%;
+  animation: introGlassOpenLeft 2.2s cubic-bezier(.16,1,.3,1) .34s both;
+}
+.intro-emblem-glass-right {
+  transform-origin: 0% 50%;
+  animation: introGlassOpenRight 2.2s cubic-bezier(.16,1,.3,1) .34s both;
+}
+@keyframes introGlassOpenLeft {
+  0% { transform: perspective(900px) rotateY(0deg) translateX(0) rotateZ(0deg); }
+  100% { transform: perspective(900px) rotateY(-38deg) translateX(-15px) rotateZ(-4deg); }
+}
+@keyframes introGlassOpenRight {
+  0% { transform: perspective(900px) rotateY(0deg) translateX(0) rotateZ(0deg); }
+  100% { transform: perspective(900px) rotateY(38deg) translateX(15px) rotateZ(4deg); }
+}
+.intro-emblem-pin {
+  animation: none !important;
+  opacity: .72;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,.32));
+}
+
+/* Keep metric figures consistent with the Last.fm scrobble figure. */
+.media-stats strong,
+.project-language-lines strong,
+.code-counted-totals strong,
+.tech-modal-grid strong,
+.lastfm-scrobbles > strong {
+  display: block;
+  color: var(--paper);
+  font: 500 clamp(25px,3vw,36px)/1 var(--sans);
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-loader-light-core {
+    opacity: .68;
+    transform: translate(-50%,-50%) scale(1);
+    animation: none !important;
+  }
+  .intro-emblem-glass-left {
+    transform: perspective(900px) rotateY(-38deg) translateX(-15px) rotateZ(-4deg);
+    animation: none !important;
+  }
+  .intro-emblem-glass-right {
+    transform: perspective(900px) rotateY(38deg) translateX(15px) rotateZ(4deg);
+    animation: none !important;
+  }
+}

@@ -496,6 +496,23 @@ onBeforeUnmount(() => {
     <div class="intro-loader" aria-hidden="true">
       <div class="intro-loader-grain"></div>
       <div class="intro-loader-field-lines"></div>
+      <svg class="intro-loader-wavefield" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <g fill="none" stroke="rgba(255,255,255,.16)" stroke-width="1" vector-effect="non-scaling-stroke">
+          <path d="M-90 205 C 110 70 230 325 430 218 S 690 88 850 192" />
+          <path d="M-120 236 C 95 120 242 363 448 254 S 690 128 840 226" />
+          <path d="M-130 270 C 105 160 250 395 470 290 S 695 166 830 264" />
+          <path d="M-110 690 C 92 560 244 802 446 694 S 682 568 840 670" />
+          <path d="M-130 724 C 95 592 256 842 462 730 S 700 600 858 704" />
+          <path d="M760 190 C 940 75 1105 315 1290 208 S 1510 95 1695 205" />
+          <path d="M770 226 C 950 112 1118 350 1305 242 S 1530 130 1710 240" />
+          <path d="M770 666 C 948 548 1115 790 1300 684 S 1520 566 1710 676" />
+          <path d="M760 704 C 942 586 1104 830 1290 722 S 1518 604 1700 714" />
+        </g>
+        <g fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.25" vector-effect="non-scaling-stroke">
+          <path d="M-80 452 C 105 352 240 540 410 454 S 650 352 810 444" />
+          <path d="M790 454 C 962 348 1110 550 1280 452 S 1515 348 1680 444" />
+        </g>
+      </svg>
       <header class="intro-loader-frame">
         <div class="intro-loader-brand">
           <span class="intro-loader-monogram"><img src="/brands/vireon-mark.svg" alt="" width="36" height="36" /></span>
@@ -505,6 +522,7 @@ onBeforeUnmount(() => {
       <main class="intro-loader-stage">
         <div class="intro-loader-artwork" aria-hidden="true">
           <div class="intro-loader-artwork-guides"></div>
+          <div class="intro-loader-light-core"></div>
           <svg class="intro-loader-emblem" viewBox="0 0 620 390" role="presentation">
             <defs>
               <linearGradient id="intro-face-light" x1="0" y1="0" x2="1" y2="1">
@@ -542,17 +560,18 @@ onBeforeUnmount(() => {
             </g>
             <path class="intro-emblem-shadow" d="M164 93 L244 93 L310 211 L376 93 L456 93 L342 313 L278 313 Z" fill="#000" opacity=".72" filter="url(#intro-emblem-shadow)"/>
             <g class="intro-emblem-object" stroke="#fff" stroke-opacity=".36" stroke-width="1.15" stroke-linejoin="round">
-              <path class="intro-emblem-blade intro-emblem-blade-left" d="M164 82 L244 82 L342 286 L278 326 Z" fill="url(#intro-face-light)"/>
-              <path d="M164 82 L202 82 L300 286 L278 326 Z" fill="#fff" opacity=".18"/>
-              <path class="intro-emblem-blade intro-emblem-blade-right" d="M456 82 L376 82 L278 286 L342 326 Z" fill="url(#intro-face-dark)"/>
-              <path d="M456 82 L418 82 L320 286 L342 326 Z" fill="#fff" opacity=".11"/>
-              <path class="intro-emblem-blade intro-emblem-blade-cross" d="M244 82 L326 82 L424 286 L342 326 Z" fill="url(#intro-face-mid)"/>
-              <path d="M244 82 L326 82 L424 286 L384 286 L286 82 Z" fill="url(#intro-face-lines)" opacity=".72"/>
-              <path d="M244 82 L342 286 L326 326 L228 122 Z" fill="#fff" opacity=".14"/>
-              <path d="M164 82 L244 82 L342 286 L326 326 L228 122 Z" fill="none" stroke="url(#intro-edge-light)" stroke-width="2"/>
-              <path d="M456 82 L376 82 L278 286 L294 326 L392 122 Z" fill="none" stroke="#fff" stroke-opacity=".36" stroke-width="1"/>
+              <g class="intro-emblem-glass intro-emblem-glass-left">
+                <path class="intro-emblem-blade intro-emblem-blade-left" d="M164 82 L244 82 L342 286 L278 326 Z" fill="url(#intro-face-light)"/>
+                <path d="M164 82 L202 82 L300 286 L278 326 Z" fill="#fff" opacity=".18"/>
+                <path d="M164 82 L244 82 L342 286 L278 326 Z" fill="none" stroke="url(#intro-edge-light)" stroke-width="2"/>
+                <path class="intro-emblem-specular" d="M164 82 L244 82 L342 286" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".58"/>
+              </g>
+              <g class="intro-emblem-glass intro-emblem-glass-right">
+                <path class="intro-emblem-blade intro-emblem-blade-right" d="M456 82 L376 82 L278 286 L342 326 Z" fill="url(#intro-face-dark)"/>
+                <path d="M456 82 L418 82 L320 286 L342 326 Z" fill="#fff" opacity=".11"/>
+                <path d="M456 82 L376 82 L278 286 L342 326 Z" fill="none" stroke="#fff" stroke-opacity=".48" stroke-width="1.4"/>
+              </g>
             </g>
-            <path class="intro-emblem-specular" d="M164 82 L244 82 L342 286" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-opacity=".72"/>
             <path class="intro-emblem-cut" d="M310 30 L310 68 M310 322 L310 360" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/>
             <circle class="intro-emblem-pin" cx="310" cy="194" r="3" fill="#fff"/>
           </svg>
