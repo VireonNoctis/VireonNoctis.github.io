@@ -18,7 +18,6 @@ interface TechCard {
 const { codeStats, codeStatsStatus, live, spotify, lastFmAlbum } = usePortfolioData();
 const { scrollTo } = useCinematicMotion();
 
-const menuOpen = ref(false);
 const selectedTech = ref<TechCard | null>(null);
 const scrollProgress = ref(0);
 const year = new Date().getFullYear();
@@ -42,13 +41,7 @@ const techIconFlightActive = ref(false);
 let techIconFlight: HTMLImageElement | null = null;
 let techIconAnimation: Animation | null = null;
 
-const navigation = [
-  { label: "Profile", href: "#profile" },
-  { label: "Work", href: "#work" },
-  { label: "Stack", href: "#stack" },
-  { label: "Archive", href: "#archive" },
-  { label: "Elsewhere", href: "#elsewhere" }
-];
+
 const socials = [
   { name: "GitHub", logo: "github", handle: "@VireonNoctis", href: "https://github.com/VireonNoctis" },
   { name: "AniList", logo: "anilist", handle: "Vireon", href: "https://anilist.co/user/Vireon" },
@@ -64,7 +57,7 @@ const projects = [
     description: "A multi-guild media-discovery and community archive platform.",
     detail: "Connects anime, manga, novels, films, television, and games through Discord discovery, shared metadata, persistent guild boundaries, and dashboard components. The v3 migration is ongoing.",
     tags: ["DISCORD", "MULTI-GUILD", "POSTGRESQL", "V3 MIGRATION"],
-    url: "https://github.com/Kyerstorm/Lemegeton", role: "CO-OWNER · MAJOR CONTRIBUTOR"
+    url: "https://github.com/Kyerstorm/Lemegeton", role: "CO-OWNER / MAJOR CONTRIBUTOR"
   },
   {
     name: "LOOP", index: "02", logo: "loop", mark: "LOOP", type: "SOCIAL PLATFORM",
@@ -344,10 +337,10 @@ const listeningArtist = computed(() => {
 });
 const listeningAlbum = computed(() => spotify.value.album || lastFmAlbum.value || "Album unavailable");
 const listeningStatus = computed(() => {
-  if (spotify.value.configured && spotify.value.track) return spotify.value.isPlaying ? "SPOTIFY · NOW PLAYING" : "SPOTIFY · PAUSED";
-  if (live.value.playing) return "LAST.FM · NOW PLAYING";
+  if (spotify.value.configured && spotify.value.track) return spotify.value.isPlaying ? "SPOTIFY / NOW PLAYING" : "SPOTIFY / PAUSED";
+  if (live.value.playing) return "LAST.FM / NOW PLAYING";
   if (live.value.track || spotify.value.track) return "RECENT TRACK";
-  return spotify.value.configured ? "SPOTIFY · NO ACTIVE TRACK" : "LAST.FM / LISTENING PROFILE";
+  return spotify.value.configured ? "SPOTIFY / NO ACTIVE TRACK" : "LAST.FM / LISTENING PROFILE";
 });
 const listeningArtwork = computed(() => {
   if (spotify.value.albumImage) return spotify.value.albumImage;
@@ -450,9 +443,8 @@ function handleInternalNavigation(event: MouseEvent) {
   if (!destination) return;
 
   event.preventDefault();
-  menuOpen.value = false;
   if (window.location.hash !== href) window.history.pushState(null, "", href);
-  const moved = scrollTo(destination, -104);
+  const moved = scrollTo(destination, -24);
   if (!moved) {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     destination.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
@@ -461,7 +453,6 @@ function handleInternalNavigation(event: MouseEvent) {
 
 function onEscape(event: KeyboardEvent) {
   if (event.key === "Escape") {
-    menuOpen.value = false;
     closeTech();
   }
 }
@@ -495,7 +486,7 @@ onBeforeUnmount(() => {
         </div>
         <span class="intro-loader-edition">PERSONAL PORTFOLIO <i>—</i> MMXXVI</span>
       </header>
-      <div class="intro-loader-side-index"><span>01 / 01</span><span>FORM · SYSTEM · MOTION</span></div>
+      <div class="intro-loader-side-index"><span>01 / 01</span><span>FORM / SYSTEM / MOTION</span></div>
       <main class="intro-loader-stage">
         <div class="intro-loader-signal" aria-hidden="true">
           <div class="intro-loader-signal-bars">
@@ -507,7 +498,7 @@ onBeforeUnmount(() => {
         <div class="intro-loader-title">
           <p class="intro-loader-kicker"><span class="intro-loader-live-dot"></span> A PERSONAL ARCHIVE / SELECTED SYSTEMS</p>
           <h2><span class="intro-loader-title-line">VIREON</span><span class="intro-loader-title-line intro-loader-title-outline">NOCTIS</span></h2>
-          <div class="intro-loader-subline"><span>FORM FOLLOWS FUNCTION</span><span>IRELAND <b>·</b> GLOBAL</span></div>
+          <div class="intro-loader-subline"><span>FORM FOLLOWS FUNCTION</span><span>IRELAND <b>/</b> GLOBAL</span></div>
         </div>
         <div class="intro-loader-progress-number"><strong id="intro-count">00</strong><span>%</span></div>
       </main>
@@ -519,31 +510,21 @@ onBeforeUnmount(() => {
       <div class="intro-loader-wipe" id="intro-wipe" aria-hidden="true"></div>
     </div>
   </Teleport>
-  <main id="main-content" tabindex="-1" @keydown.esc="menuOpen = false" @click.capture="handleInternalNavigation">
+  <main id="main-content" tabindex="-1" @click.capture="handleInternalNavigation">
     <a class="skip-link" href="#profile">Skip to content</a>
     <div class="reading-progress" :style="{ transform: 'scaleX(' + scrollProgress + ')' }" aria-hidden="true"></div>
 
-    <header class="site-header section-shell">
-      <a class="wordmark" href="#top" aria-label="Vireon, home" @click="menuOpen = false">
-        <img src="/brands/vireon-mark.svg" alt="" width="34" height="34" />
-        <span class="wordmark-copy"><strong>VIREON</strong><small>PERSONAL PORTFOLIO</small></span>
-      </a>
-      <nav id="primary-navigation" :class="menuOpen ? 'navigation navigation-open' : 'navigation'" aria-label="Main navigation">
-        <a v-for="item in navigation" :key="item.href" :href="item.href" @click="menuOpen = false">{{ item.label }}</a>
-        <a v-tactile class="nav-contact tactile-surface" href="#elsewhere" @click="menuOpen = false">Find me elsewhere <span aria-hidden="true">↗</span></a>
-      </nav>
-      <button v-tactile class="menu-toggle tactile-surface" type="button" :aria-label="menuOpen ? 'Close navigation' : 'Open navigation'" aria-controls="primary-navigation" :aria-expanded="menuOpen" @click="menuOpen = !menuOpen"><span aria-hidden="true">{{ menuOpen ? "×" : "☰" }}</span></button>
-    </header>
+
 
     <section class="hero section-shell" id="top">
-      <div class="hero-meta"><span>VIREON NOCTIS <i>/</i> PORTFOLIO</span><span>BUSINESS · SOFTWARE · PROPERTY</span></div>
+      <div class="hero-meta"><span>VIREON NOCTIS <i>/</i> PORTFOLIO</span><span>BUSINESS / SOFTWARE / PROPERTY</span></div>
       <div class="hero-art" aria-hidden="true">
         <NothingWebGL />
         <span class="hero-art-caption">LIGHT STUDY / 001 <i>—</i> LIVE WAVE FIELD</span>
       </div>
       <div class="hero-main">
         <div class="hero-copy">
-          <p class="hero-kicker">INDEPENDENT BUILDER · EST. 2026</p>
+          <p class="hero-kicker">INDEPENDENT BUILDER / EST. 2026</p>
           <h1 aria-label="Vireon Noctis"><span class="hero-title-line">VIREON</span><span class="hero-title-line hero-title-outline">NOCTIS</span></h1>
           <div class="hero-intro-row">
             <p>Building businesses, software systems, and considered digital experiences.</p>
@@ -554,13 +535,13 @@ onBeforeUnmount(() => {
           </div>
         </div>
       </div>
-      <div class="hero-foot"><span>INDEPENDENT · DETAIL-LED · SYSTEMS-MINDED</span><span>SCROLL TO EXPLORE <i class="scroll-line" aria-hidden="true"></i></span></div>
+      <div class="hero-foot"><span>INDEPENDENT / DETAIL-LED / SYSTEMS-MINDED</span><span>SCROLL TO EXPLORE <i class="scroll-line" aria-hidden="true"></i></span></div>
     </section>
 
     <div class="marquee" aria-label="Business, software, development, and design"><div class="marquee-track" aria-hidden="true"><span v-for="n in 4" :key="n">BUSINESS <b>—</b> SOFTWARE <b>—</b> DEVELOPMENT <b>—</b> DIGITAL SYSTEMS <b>—</b></span></div></div>
 
     <section class="profile-section section-shell section-space" id="profile" v-reveal>
-      <div class="section-bar"><span>01 / PROFILE</span><span>THREE AREAS · ONE PRACTICE</span></div>
+      <div class="section-bar"><span>01 / PROFILE</span><span>THREE AREAS / ONE PRACTICE</span></div>
       <div class="profile-layout">
         <h2>BUILDING<br />BEYOND <em>CODE.</em></h2>
         <div class="profile-copy">
@@ -649,7 +630,7 @@ onBeforeUnmount(() => {
                 <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
                 <span v-else class="project-language-generic">&lt;/&gt;</span>
               </span>
-              <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
+              <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X / ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile / scan pending" : "Tracked repository data" }}</small></span>
               <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" immediate /></strong><small>LINES</small></span>
               <span class="project-language-arrow" aria-hidden="true">↗</span>
             </button>
@@ -664,7 +645,7 @@ onBeforeUnmount(() => {
       <div class="archive-heading"><h2>MORE THAN<br /><em>WORK.</em></h2><p>Music, media, and the interests that keep the perspective wide.</p></div>
       <div class="archive-grid">
         <article class="archive-card listening-card">
-          <div class="archive-card-top"><span>LISTENING / LIVE</span><span class="archive-live-dot">●</span></div>
+          <div class="archive-card-top"><span>LISTENING / LIVE</span><span class="archive-live-dot" aria-hidden="true"></span></div>
           <div class="listening-main">
             <div class="album-art">
               <Transition name="track-art" mode="out-in">
@@ -705,7 +686,7 @@ onBeforeUnmount(() => {
             </div>
             <div class="spotify-playback-readout">
               <time>{{ spotify.configured && spotify.durationMs ? formatPlaybackTime(spotifyProgressMs) : "LIVE" }}</time>
-              <span>{{ spotify.configured ? (spotify.isPlaying ? "SPOTIFY · PLAYING" : "SPOTIFY · PAUSED") : live.playing ? "LAST.FM · NOW PLAYING" : "LAST.FM · RECENT TRACK" }}</span>
+              <span>{{ spotify.configured ? (spotify.isPlaying ? "SPOTIFY / PLAYING" : "SPOTIFY / PAUSED") : live.playing ? "LAST.FM / NOW PLAYING" : "LAST.FM / RECENT TRACK" }}</span>
               <time>{{ spotify.configured && spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : live.trackDurationMs ? formatPlaybackTime(live.trackDurationMs) : "—" }}</time>
             </div>
             <div v-if="!spotify.configured" class="lastfm-track-stats">
@@ -713,7 +694,7 @@ onBeforeUnmount(() => {
               <span v-if="live.trackListeners !== undefined">{{ formatted(live.trackListeners) }} LISTENERS</span>
               <span v-if="live.trackDurationMs">{{ formatPlaybackTime(live.trackDurationMs) }} DURATION</span>
             </div>
-            <div v-if="!spotify.configured" class="spotify-connection-note">TRACK, ARTWORK & HISTORY VIA LAST.FM · SPOTIFY TIMING REQUIRES PLAYBACK ACCESS</div>
+            <div v-if="!spotify.configured" class="spotify-connection-note">TRACK, ARTWORK & HISTORY VIA LAST.FM / SPOTIFY TIMING REQUIRES PLAYBACK ACCESS</div>
           </div>
           <div class="archive-card-bottom listening-footer">
             <div class="lastfm-scrobbles">
@@ -756,7 +737,7 @@ onBeforeUnmount(() => {
 
     <footer class="site-footer section-shell">
       <a class="footer-mark" href="#top">VIREON<span> / </span>NOCTIS</a>
-      <span>© {{ year }} · ALL RIGHTS RESERVED</span><a class="footer-top" href="#top">BACK TO TOP ↑</a>
+      <span>© {{ year }} / ALL RIGHTS RESERVED</span><a class="footer-top" href="#top">BACK TO TOP ↑</a>
     </footer>
 
     <Teleport to="body">
@@ -766,18 +747,18 @@ onBeforeUnmount(() => {
             <header class="tech-modal-header"><div class="tech-modal-heading"><span class="tech-modal-logo"><img v-if="selectedTech.logo" :class="{ 'is-flight-hidden': techIconFlightActive }" :src="'/brands/tech-' + selectedTech.logo + '.svg'" :alt="selectedTech.name" /><span v-else>&lt;/&gt;</span></span><div><span class="work-live-label">{{ selectedTech.kind }}</span><h2>{{ selectedTech.name }}</h2></div></div><button v-tactile type="button" class="tech-modal-close tactile-surface" aria-label="Close technology details" @click="closeTech">×</button></header>
             <p v-if="selectedTech.learningNote" class="tech-modal-note">{{ selectedTech.learningNote }} <strong>{{ selectedTech.learningStatus }}</strong></p>
             <div class="tech-modal-grid">
-              <div><span>TOTAL LINES</span><strong><AnimatedNumber :value="selectedTotalLines" /></strong></div>
-              <div><span>CHARACTERS</span><strong><AnimatedNumber :value="selectedTotalCharacters" /></strong></div>
-              <div><span>SCANNED FILES</span><strong><AnimatedNumber :value="selectedScannedLanguage?.files ?? 0" /></strong></div>
-              <div><span>WORDS</span><strong><AnimatedNumber :value="selectedScannedLanguage?.words ?? 0" /></strong></div>
+              <div><span>TOTAL LINES</span><strong><AnimatedNumber :value="selectedTotalLines" immediate /></strong></div>
+              <div><span>CHARACTERS</span><strong><AnimatedNumber :value="selectedTotalCharacters" immediate /></strong></div>
+              <div><span>SCANNED FILES</span><strong><AnimatedNumber :value="selectedScannedLanguage?.files ?? 0" immediate /></strong></div>
+              <div><span>WORDS</span><strong><AnimatedNumber :value="selectedScannedLanguage?.words ?? 0" immediate /></strong></div>
             </div>
             <section v-if="selectedEstimateAreas.length" class="tech-modal-section">
               <div class="tech-modal-section-heading"><span>SUPPLIED PROJECT ESTIMATES</span><strong>{{ selectedEstimateAreas.length }} areas</strong></div>
-              <div v-for="entry in selectedEstimateAreas" :key="entry.project.id + '-' + entry.area.name" class="tech-modal-row"><span><strong>{{ entry.project.name }}</strong><small>{{ entry.area.name }} · {{ entry.project.classification }}</small></span><span><strong>{{ formatted(entry.area.lines) }} lines</strong><small>{{ estimateCharacters(entry.area) === null ? "Character estimate unavailable" : "≈ " + formatted(estimateCharacters(entry.area) || 0) + " characters" }}</small></span></div>
+              <div v-for="entry in selectedEstimateAreas" :key="entry.project.id + '-' + entry.area.name" class="tech-modal-row"><span><strong>{{ entry.project.name }}</strong><small>{{ entry.area.name }} / {{ entry.project.classification }}</small></span><span><strong>{{ formatted(entry.area.lines) }} lines</strong><small>{{ estimateCharacters(entry.area) === null ? "Character estimate unavailable" : "≈ " + formatted(estimateCharacters(entry.area) || 0) + " characters" }}</small></span></div>
             </section>
             <section v-if="selectedRepositories.length" class="tech-modal-section">
               <div class="tech-modal-section-heading"><span>REPOSITORY SCAN</span><strong>{{ selectedRepositories.length }} repositories</strong></div>
-              <a v-for="entry in selectedRepositories" :key="entry.project.fullName" class="tech-modal-row" :href="entry.project.url" target="_blank" rel="noreferrer"><span><strong>{{ entry.project.name }}</strong><small>{{ entry.project.role || (entry.project.relationship === "contributor" ? "Major contributor" : "Owned · " + entry.project.branch) }}</small></span><span><strong>{{ formatted(entry.language.lines) }}</strong><small>lines · {{ entry.language.files }} files</small></span></a>
+              <a v-for="entry in selectedRepositories" :key="entry.project.fullName" class="tech-modal-row" :href="entry.project.url" target="_blank" rel="noreferrer"><span><strong>{{ entry.project.name }}</strong><small>{{ entry.project.role || (entry.project.relationship === "contributor" ? "Major contributor" : "Owned / " + entry.project.branch) }}</small></span><span><strong>{{ formatted(entry.language.lines) }}</strong><small>lines / {{ entry.language.files }} files</small></span></a>
             </section>
             <section v-if="selectedFrameworkRepositories.length" class="tech-modal-section">
               <div class="tech-modal-section-heading"><span>FRAMEWORK DETECTION</span><strong>{{ selectedFrameworkRepositories.length }} repositories</strong></div>
