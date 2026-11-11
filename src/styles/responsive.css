@@ -1,0 +1,74 @@
+/* Unified mobile layout refinements; imported after the section styles. */
+html, body, #app { min-width: 320px; max-width: 100%; }
+html, body, #main-content { overflow-x: clip; }
+#main-content { min-width: 0; }
+img, svg, canvas, video { max-width: 100%; }
+
+@media (max-width: 760px) {
+  .hero-intro-row { width: 100%; max-width: none; margin-left: 0; flex-direction: column; align-items: flex-start; gap: 22px; }
+  .hero-intro-row > p { max-width: 42ch; }
+  .hero-actions { width: 100%; flex-wrap: wrap; gap: 10px; }
+  .action-link { min-height: 44px; }
+  .profile-layout { grid-template-columns: minmax(0,1fr); align-items: start; gap: 22px; }
+  .profile-layout h2 { font-size: clamp(48px,12vw,76px); }
+  .profile-copy { max-width: 58ch; }
+  .work-layout { display: grid; grid-template-columns: minmax(0,1fr); gap: 26px; }
+  .work-intro { position: static; max-width: 100%; }
+  .project-stack { padding-bottom: 0; }
+  .project-stack-card { position: relative; top: auto; margin-bottom: 12px; }
+  .project-card-shell { grid-template-columns: minmax(94px,.62fr) minmax(0,1.38fr); min-height: 0; }
+  .stack-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .stack-modules { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .code-counted-heading { align-items: flex-start; flex-direction: column; }
+  .code-counted-totals { display: grid; width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px 14px; }
+  .project-language-tile, .stack-module, .archive-card, .social-row { min-width: 0; }
+  .project-language-copy strong, .project-language-lines strong, .project-card-copy h3, .project-card-description { overflow-wrap: anywhere; }
+  .archive-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
+  .archive-grid { grid-template-columns: minmax(0,1fr); }
+  .listening-main { display: grid; grid-template-columns: minmax(82px,.32fr) minmax(0,1fr); align-items: start; gap: 15px; }
+  .album-art, .listening-copy { width: 100%; min-width: 0; }
+  .listening-edge-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+  .listening-inline-album { min-width: 0; }
+  .media-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .favorites-heading { align-items: flex-start; flex-wrap: wrap; }
+  .favorites-controls { max-width: 100%; flex-wrap: nowrap; overflow-x: auto; overscroll-behavior-inline: contain; scrollbar-width: thin; padding-bottom: 8px; }
+  .favorite-category-button { flex: 0 0 auto; min-height: 40px; white-space: nowrap; }
+  .social-list { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .social-row { overflow-wrap: anywhere; }
+  .site-footer { justify-content: flex-start; flex-wrap: wrap; gap: 12px 20px; }
+  .site-footer > * { min-width: 0; }
+  .tech-modal-backdrop { align-items: start; padding: 12px; }
+  .tech-modal { width: 100%; max-height: calc(100dvh - 24px); margin: auto; padding: clamp(16px,4vw,24px); }
+  .tech-modal-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .tech-modal-row { gap: 10px; flex-wrap: wrap; }
+}
+@media (max-width: 480px) {
+  .section-shell { width: min(var(--page),calc(100% - 30px)); }
+  .hero h1 { font-size: clamp(48px,15vw,72px); }
+  .project-card-shell { grid-template-columns: minmax(78px,.5fr) minmax(0,1.5fr); }
+  .project-card-copy { padding: 14px; }
+  .stack-modules { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .project-language-tile { gap: 10px; }
+  .listening-main { grid-template-columns: minmax(74px,26vw) minmax(0,1fr); gap: 12px; }
+  .listening-edge-stats > div { min-width: 0; }
+  .listening-edge-stats > div > span { font-size: 6px; line-height: 1.4; white-space: normal; }
+  .media-stats { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .lastfm-track-stats { grid-template-columns: repeat(3,minmax(0,1fr)); }
+  .lastfm-track-stats .lastfm-global-track { min-width: 0; padding-inline: 4px; }
+  .lastfm-track-stats .lastfm-global-track > span { white-space: normal; line-height: 1.35; }
+  .lastfm-track-stats .lastfm-global-track > strong { font-size: clamp(15px,4.4vw,19px); }
+  .anilist-favorite-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+  .anilist-favorite-card { grid-column: auto; min-width: 0; }
+  .webnovel-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 14px 9px; }
+  .social-list { grid-template-columns: minmax(0,1fr); }
+  .tech-modal-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .tech-modal-header { align-items: flex-start; gap: 12px; }
+  .tech-modal-heading, .tech-modal-row > span { min-width: 0; overflow-wrap: anywhere; }
+}
+@media (max-width: 360px) {
+  .section-shell { width: min(var(--page),calc(100% - 24px)); }
+  .hero-actions { align-items: stretch; flex-direction: column; }
+  .action-link { width: 100%; justify-content: space-between; }
+  .project-card-shell { grid-template-columns: minmax(66px,.42fr) minmax(0,1.58fr); }
+  .project-card-copy { padding: 11px; }
+}

@@ -1,0 +1,435 @@
+/* Reframed language opening: a beveled glass aperture instead of flat curtains. */
+.tech-glass-opening {
+  position: fixed;
+  z-index: 10020;
+  inset: 0;
+  overflow: hidden;
+  perspective: 1700px;
+  isolation: isolate;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,.055), rgba(0,0,0,.26) 56%, rgba(0,0,0,.1));
+  backdrop-filter: blur(2px);
+  animation: techGlassVeil 1.68s ease-out both;
+}
+.tech-glass-veil {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, transparent 18%, rgba(0,0,0,.2) 64%, rgba(0,0,0,.42));
+  animation: techGlassVeilFade 1.68s ease-out both;
+}
+.tech-glass-leaf {
+  position: absolute;
+  top: 12%;
+  bottom: 12%;
+  width: min(39vw, 590px);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.42);
+  background:
+    linear-gradient(132deg, rgba(255,255,255,.26), transparent 22%, rgba(255,255,255,.055) 44%, transparent 68%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,255,255,.11), transparent 62%),
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(255,255,255,.045) 40px, transparent 41px 80px),
+    linear-gradient(145deg, rgba(34,35,36,.86), rgba(7,7,8,.94) 72%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.08),
+    inset 0 0 62px rgba(255,255,255,.035),
+    0 24px 80px rgba(0,0,0,.4);
+  backdrop-filter: blur(18px) saturate(.68);
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+}
+.tech-glass-leaf-left {
+  left: calc(50% - min(39vw, 590px));
+  transform-origin: 100% 50%;
+  clip-path: polygon(0 0,100% 4%,94% 100%,5% 96%);
+  animation: techGlassApertureLeft 1.58s cubic-bezier(.16,1,.3,1) both;
+}
+.tech-glass-leaf-right {
+  right: calc(50% - min(39vw, 590px));
+  transform-origin: 0% 50%;
+  clip-path: polygon(0 4%,100% 0,95% 96%,6% 100%);
+  animation: techGlassApertureRight 1.58s cubic-bezier(.16,1,.3,1) both;
+}
+.tech-glass-facet {
+  position: absolute;
+  inset: 9% 11%;
+  display: block;
+  border: 1px solid rgba(255,255,255,.17);
+  background:
+    linear-gradient(116deg, rgba(255,255,255,.1), transparent 26% 72%, rgba(255,255,255,.035)),
+    repeating-linear-gradient(90deg, transparent 0 58px, rgba(255,255,255,.035) 59px, transparent 60px 118px);
+  transform: skewY(-4deg);
+}
+.tech-glass-ridge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  display: block;
+  background: linear-gradient(transparent, rgba(255,255,255,.85) 22%, rgba(255,255,255,.16) 78%, transparent);
+  box-shadow: 0 0 18px rgba(255,255,255,.18);
+}
+.tech-glass-index {
+  position: absolute;
+  bottom: 7%;
+  left: 8%;
+  color: rgba(255,255,255,.42);
+  font: 7px var(--mono);
+  letter-spacing: .22em;
+}
+.tech-glass-opening-core {
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: min(32vw, 400px);
+  height: 72vh;
+  opacity: .85;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,.48), rgba(255,255,255,.12) 22%, transparent 70%);
+  filter: blur(28px);
+  transform: translate(-50%,-50%) scale(.7);
+  animation: techGlassCoreBloom 1.5s cubic-bezier(.16,1,.3,1) both;
+}
+.tech-glass-aperture-line {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 11%;
+  height: 78%;
+  width: 1px;
+  background: linear-gradient(transparent, rgba(255,255,255,.9) 28%, rgba(255,255,255,.48) 65%, transparent);
+  box-shadow: 0 0 32px 8px rgba(255,255,255,.18);
+  transform: translateX(-50%);
+  transform-origin: center;
+  animation: techGlassLineOpen 1.58s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes techGlassApertureLeft {
+  0% { transform: translateX(0) rotateY(0deg) rotateZ(0deg); opacity: 1; }
+  100% { transform: translateX(-112%) rotateY(-38deg) rotateZ(-3deg); opacity: 0; }
+}
+@keyframes techGlassApertureRight {
+  0% { transform: translateX(0) rotateY(0deg) rotateZ(0deg); opacity: 1; }
+  100% { transform: translateX(112%) rotateY(38deg) rotateZ(3deg); opacity: 0; }
+}
+@keyframes techGlassCoreBloom {
+  0% { opacity: 0; transform: translate(-50%,-50%) scale(.62); }
+  48% { opacity: .88; }
+  100% { opacity: 0; transform: translate(-50%,-50%) scale(1.12); }
+}
+@keyframes techGlassLineOpen {
+  0% { transform: translateX(-50%) scaleY(.35); opacity: 0; }
+  38% { opacity: .9; }
+  100% { transform: translateX(-50%) scaleY(1); opacity: 0; }
+}
+@keyframes techGlassVeil {
+  0% { opacity: 0; }
+  18% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes techGlassVeilFade {
+  0% { opacity: .16; }
+  35% { opacity: .65; }
+  100% { opacity: 0; }
+}
+@media (max-width: 700px) {
+  .intro-loader-glass {
+    inset: 7% 0 8%;
+    width: 100%;
+    height: 84%;
+  }
+  .intro-loader-glass-leaf { width: 43%; }
+  .intro-loader-glass-leaf-left { left: 3%; }
+  .intro-loader-glass-leaf-right { right: 3%; }
+  .tech-glass-leaf { top: 20%; bottom: 20%; width: 47vw; }
+  .tech-glass-leaf-left { left: calc(50% - 47vw); }
+  .tech-glass-leaf-right { right: calc(50% - 47vw); }
+  .tech-glass-opening-core { width: 48vw; height: 54vh; }
+  .tech-glass-aperture-line { top: 20%; height: 60%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-loader-glass-leaf,
+  .tech-glass-leaf,
+  .tech-glass-opening-core,
+  .tech-glass-aperture-line,
+  .tech-glass-veil {
+    animation: none !important;
+  }
+    .tech-glass-opening { display: none !important; }
+}
+
+
+/* Clear, centered listening metadata and readable playback figures. */
+.listening-copy-main .listening-track-copy p {
+  color: #fff;
+  font-size: clamp(13px, 1.15vw, 15px);
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}
+.listening-artist-stat > strong {
+  color: #fff;
+  font-size: clamp(23px, 2.2vw, 28px);
+  font-weight: 600;
+  line-height: 1;
+}
+.listening-artist-stat > strong .animated-number {
+  color: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.listening-metadata .listening-track-number > strong {
+  color: #fff;
+  font-size: clamp(13px, 1.2vw, 15px);
+  font-weight: 600;
+  letter-spacing: -.025em;
+}
+@media (max-width: 560px) {
+  .listening-copy-main .listening-track-copy p { font-size: 14px; }
+  .listening-artist-stat > strong { font-size: 24px; }
+  .listening-metadata .listening-track-number > strong { font-size: 14px; }
+}
+
+
+/* The loader panels separate on their physical edges, independent of GSAP. */
+.intro-loader-artwork,
+.intro-loader-glass {
+  overflow: visible;
+}
+.intro-loader-glass-leaf {
+  z-index: 2;
+  will-change: left, right, transform;
+}
+.intro-loader-glass-leaf-left {
+  --glass-closed-offset: 7%;
+}
+.intro-loader-glass-leaf-right {
+  --glass-closed-offset: 7%;
+}
+.intro-loader.is-active .intro-loader-glass-leaf-left {
+  animation: portfolioGlassDoorLeft 4.4s cubic-bezier(.16,1,.3,1) .25s infinite alternate;
+}
+.intro-loader.is-active .intro-loader-glass-leaf-right {
+  animation: portfolioGlassDoorRight 4.4s cubic-bezier(.16,1,.3,1) .25s infinite alternate;
+}
+@keyframes portfolioGlassDoorLeft {
+  0%, 14% {
+    left: var(--glass-closed-offset);
+    transform: translate3d(0,0,0) rotateY(0deg) rotateZ(0deg);
+  }
+  72%, 100% {
+    left: calc(var(--glass-closed-offset) - 22%);
+    transform: translate3d(0,-5px,16px) rotateY(-28deg) rotateZ(-6deg);
+  }
+}
+@keyframes portfolioGlassDoorRight {
+  0%, 14% {
+    right: var(--glass-closed-offset);
+    transform: translate3d(0,0,0) rotateY(0deg) rotateZ(0deg);
+  }
+  72%, 100% {
+    right: calc(var(--glass-closed-offset) - 22%);
+    transform: translate3d(0,5px,16px) rotateY(28deg) rotateZ(6deg);
+  }
+}
+@media (max-width: 700px) {
+  .intro-loader-glass-leaf-left,
+  .intro-loader-glass-leaf-right {
+    --glass-closed-offset: 3%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .intro-loader.is-active .intro-loader-glass-leaf-left,
+  .intro-loader.is-active .intro-loader-glass-leaf-right {
+    animation: none;
+  }
+}
+
+
+/* Live listening figures share the same high-contrast Last.fm count treatment. */
+.listening-edge-stats > div > strong {
+  color: #fff;
+  font: 600 clamp(23px, 2.2vw, 28px)/1 var(--sans);
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+}
+.listening-edge-stats > div > strong .animated-number {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.album-art img {
+  filter: none !important;
+}
+.lastfm-track-stats {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px 20px;
+  padding-top: 12px;
+}
+.lastfm-global-track {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  text-align: center;
+}
+.lastfm-global-track > span {
+  color: #aaa9a3;
+  font: 8px var(--mono);
+  letter-spacing: .1em;
+}
+.lastfm-global-track > strong {
+  color: #fff;
+  font: 600 clamp(21px, 2vw, 26px)/1 var(--sans);
+  letter-spacing: -.055em;
+  font-variant-numeric: tabular-nums;
+}
+.lastfm-global-track .animated-number { color: inherit; font: inherit; }
+.lastfm-track-stats > span {
+  color: #aaa9a3;
+  font: 8px var(--mono);
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.genre-list { display: grid; gap: 12px; }
+.genre-row { margin-top: 0; }
+.genre-bar { height: 3px; overflow: hidden; background: #252525; }
+.genre-bar i {
+  width: 0;
+  transition: width 1.15s cubic-bezier(.16, 1, .3, 1);
+}
+.genre-list.is-visible .genre-bar i { width: var(--genre-width); }
+.favorites-section {
+  margin-top: clamp(42px, 6vw, 74px);
+  padding-top: clamp(24px, 3.5vw, 40px);
+  border-top: 1px solid var(--line);
+}
+.favorites-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+}
+.favorites-heading > div > span,
+.favorites-heading > a {
+  color: var(--quiet);
+  font: 8px var(--mono);
+  letter-spacing: .12em;
+}
+.favorites-heading h3 {
+  margin: 10px 0 0;
+  color: var(--paper);
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 500;
+  letter-spacing: -.07em;
+}
+.favorites-heading > a { color: #d7d7d1; white-space: nowrap; }
+.favorites-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 24px 0 15px;
+}
+.favorite-category-button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid rgba(242,241,237,.18);
+  background: transparent;
+  color: #aaa9a3;
+  font: 8px var(--mono);
+  letter-spacing: .08em;
+  cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.favorite-category-button:hover,
+.favorite-category-button.is-active {
+  border-color: #f2f1ed;
+  background: #f2f1ed;
+  color: #080808;
+}
+.anilist-favorite-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+.anilist-favorite-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+  padding: 9px;
+  border: 1px solid rgba(242,241,237,.13);
+  background: #080808;
+  transition: border-color .24s, transform .24s, background .24s;
+}
+.anilist-favorite-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.65);
+  background: #111;
+}
+.anilist-favorite-image {
+  display: grid;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  place-items: center;
+  background: #151515;
+  color: #f2f1ed;
+  font: 600 30px var(--sans);
+}
+.anilist-favorite-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.anilist-favorite-title {
+  min-width: 0;
+  overflow: hidden;
+  color: #e8e8e3;
+  font-size: 10px;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.anilist-favorite-arrow {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity .2s, transform .2s;
+}
+.anilist-favorite-card:hover .anilist-favorite-arrow { opacity: 1; transform: translate(2px, -2px); }
+.favorites-empty {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 20px 0;
+  color: var(--muted);
+  font-size: 12px;
+}
+.favorite-switch-enter-active,
+.favorite-switch-leave-active { transition: opacity .18s, transform .18s; }
+.favorite-switch-enter-from,
+.favorite-switch-leave-to { opacity: 0; transform: translateY(5px); }
+@media (max-width: 800px) {
+  .anilist-favorite-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .lastfm-track-stats { grid-template-columns: 1fr 1fr; }
+  .lastfm-global-track { grid-column: 1 / -1; }
+}
+@media (max-width: 560px) {
+  .listening-edge-stats > div > strong { font-size: 24px; }
+  .lastfm-global-track > strong { font-size: 24px; }
+  .anilist-favorite-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .anilist-favorite-card { padding: 7px; }
+  .favorites-heading { align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genre-bar i { transition: none; }
+  .genre-list .genre-bar i { width: var(--genre-width); }
+  .favorite-switch-enter-active,
+  .favorite-switch-leave-active,
+  .anilist-favorite-card,
+  .favorite-category-button { transition: none; }
+}
+
