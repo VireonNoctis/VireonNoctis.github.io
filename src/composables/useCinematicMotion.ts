@@ -28,7 +28,7 @@ export function useCinematicMotion() {
       if (reducedMotion) finishIntro();
       else {
         introLayer.classList.add("is-active");
-        introFallbackTimer = window.setTimeout(finishIntro, 4200);
+        introFallbackTimer = window.setTimeout(finishIntro, 8200);
       }
     }
     if (reducedMotion) return;
@@ -56,17 +56,17 @@ export function useCinematicMotion() {
         intro
           .to(counter, {
             value: 100,
-            duration: 1.55,
+            duration: 3.35,
             ease: "power2.inOut",
             onUpdate: () => {
               if (readout) readout.textContent = Math.round(counter.value).toString().padStart(2, "0") + "%";
             }
           }, 0)
           .fromTo(".intro-loader-kicker", { autoAlpha: 0, y: 14 }, {
-            autoAlpha: 1, y: 0, duration: 0.65, clearProps: "transform,opacity,visibility"
+            autoAlpha: 1, y: 0, duration: 1.05, clearProps: "transform,opacity,visibility"
           }, 0.12)
           .fromTo(".intro-loader-title-line", { autoAlpha: 0, yPercent: 120 }, {
-            autoAlpha: 1, yPercent: 0, duration: 0.95, stagger: 0.12,
+            autoAlpha: 1, yPercent: 0, duration: 1.35, stagger: 0.18,
             ease: "power4.out", clearProps: "transform,opacity,visibility"
           }, 0.2)
           .to(introLayer, {
@@ -74,9 +74,9 @@ export function useCinematicMotion() {
             y: -18,
             duration: 0.72,
             ease: "power3.inOut"
-          }, 1.72);
+          }, 4.35);
 
-        if (fill) intro.to(fill, { scaleX: 1, duration: 1.55, ease: "power2.inOut" }, 0);
+        if (fill) intro.to(fill, { scaleX: 1, duration: 3.35, ease: "power2.inOut" }, 0);
       }
 
       const heroIntro = gsap.timeline({ delay: 0.18, defaults: { ease: "power4.out" } });
@@ -101,7 +101,7 @@ export function useCinematicMotion() {
 
       const revealSelector = [
         ".profile-layout", ".role-item", ".work-intro", ".stack-module",
-        ".project-card-item", ".project-language-tile", ".archive-card",
+        ".project-stack-card", ".project-language-tile", ".archive-card",
         ".social-row", ".contact-main"
       ].join(", ");
       gsap.utils.toArray<HTMLElement>(revealSelector).forEach((element, index) => {

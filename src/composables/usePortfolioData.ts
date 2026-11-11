@@ -1,8 +1,29 @@
 import { onBeforeUnmount, onMounted, ref } from "vue";
 import type { CodeStats, Live, Repo, SpotifyNowPlaying } from "../types";
 
-const EMPTY_SPOTIFY: SpotifyNowPlaying = {
-  configured: false, isPlaying: false, track: null, artist: null, album: null, albumImage: null, url: null
+type SpotifyPlaybackSnapshot = SpotifyNowPlaying & {
+  progressMs: number | null;
+  durationMs: number | null;
+  updatedAtMs: number | null;
+  albumUrl: string | null;
+  albumReleaseDate: string | null;
+  albumType: string | null;
+  albumTotalTracks: number | null;
+  trackNumber: number | null;
+  discNumber: number | null;
+  explicit: boolean | null;
+  deviceName: string | null;
+  deviceType: string | null;
+  volumePercent: number | null;
+  shuffleState: boolean | null;
+  repeatState: string | null;
+  albumArtists: string | null;
+};
+const EMPTY_SPOTIFY: SpotifyPlaybackSnapshot = {
+  configured: false, isPlaying: false, track: null, artist: null, album: null, albumImage: null, url: null,
+  progressMs: null, durationMs: null, updatedAtMs: null, albumUrl: null, albumReleaseDate: null,
+  albumType: null, albumTotalTracks: null, trackNumber: null, discNumber: null, explicit: null,
+  deviceName: null, deviceType: null, volumePercent: null, shuffleState: null, repeatState: null, albumArtists: null
 };
 const LASTFM_KEY = "8c06a8eea595aa5e4b748ca235fd9dd8";
 
@@ -11,7 +32,8 @@ export function usePortfolioData() {
   const codeStats = ref<CodeStats | null>(null);
   const codeStatsStatus = ref<"loading" | "ready" | "unavailable">("loading");
   const live = ref<Live>({});
-  const spotify = ref<SpotifyNowPlaying>({ ...EMPTY_SPOTIFY });
+  const lastFmAlbum = ref<string | null>(null);
+  const spotify = ref<SpotifyPlaybackSnapshot>({ ...EMPTY_SPOTIFY });
   let controller: AbortController | null = null;
   let spotifyRefresh = 0;
 
@@ -46,15 +68,33 @@ export function usePortfolioData() {
       path.searchParams.set("ts", String(Date.now()));
       const response = await fetch(path, { cache: "no-store", signal });
       if (!response.ok) return;
-      const data = await response.json() as Partial<SpotifyNowPlaying>;
+      const data = await response.json() as Partial<SpotifyPlaybackSnapshot>;
+      const numberOrNull = (value: unknown) => typeof value === "number" && Number.isFinite(value) ? value : null;
+      const stringOrNull = (value: unknown) => typeof value === "string" && value.length > 0 ? value : null;
       spotify.value = {
         configured: data.configured === true,
         isPlaying: data.isPlaying === true,
-        track: typeof data.track === "string" ? data.track : null,
-        artist: typeof data.artist === "string" ? data.artist : null,
-        album: typeof data.album === "string" ? data.album : null,
-        albumImage: typeof data.albumImage === "string" ? data.albumImage : null,
-        url: typeof data.url === "string" ? data.url : null
+        track: stringOrNull(data.track),
+        artist: stringOrNull(data.artist),
+        album: stringOrNull(data.album),
+        albumImage: stringOrNull(data.albumImage),
+        url: stringOrNull(data.url),
+        progressMs: numberOrNull(data.progressMs),
+        durationMs: numberOrNull(data.durationMs),
+        updatedAtMs: numberOrNull(data.updatedAtMs),
+        albumUrl: stringOrNull(data.albumUrl),
+        albumReleaseDate: stringOrNull(data.albumReleaseDate),
+        albumType: stringOrNull(data.albumType),
+        albumTotalTracks: numberOrNull(data.albumTotalTracks),
+        trackNumber: numberOrNull(data.trackNumber),
+        discNumber: numberOrNull(data.discNumber),
+        explicit: typeof data.explicit === "boolean" ? data.explicit : null,
+        deviceName: stringOrNull(data.deviceName),
+        deviceType: stringOrNull(data.deviceType),
+        volumePercent: numberOrNull(data.volumePercent),
+        shuffleState: typeof data.shuffleState === "boolean" ? data.shuffleState : null,
+        repeatState: stringOrNull(data.repeatState),
+        albumArtists: stringOrNull(data.albumArtists)
       };
     } catch { /* Live playback is progressive enhancement. */ }
   }
@@ -128,6 +168,9 @@ export function usePortfolioData() {
       ]);
       const track = recent?.recenttracks?.track?.[0];
       const user = info?.user;
+      if (typeof track?.album?.["#text"] === "string" && track.album["#text"]) {
+        lastFmAlbum.value = track.album["#text"];
+      }
       const trackImages = Array.isArray(track?.image) ? track.image : [];
       const trackImage = [...trackImages].reverse().find((item: any) =>
         typeof item?.["#text"] === "string" && item["#text"].startsWith("http")
@@ -174,5 +217,5 @@ export function usePortfolioData() {
     if (spotifyRefresh) window.clearInterval(spotifyRefresh);
   });
 
-  return { repos, codeStats, codeStatsStatus, live, spotify };
+  return { repos, codeStats, codeStatsStatus, live, spotify, lastFmAlbum };
 }

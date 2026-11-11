@@ -15,7 +15,7 @@ interface TechCard {
   learningStatus?: "IN USE" | "PLANNED";
   learningNote?: string;
 }
-const { codeStats, codeStatsStatus, live, spotify } = usePortfolioData();
+const { codeStats, codeStatsStatus, live, spotify, lastFmAlbum } = usePortfolioData();
 const { scrollTo } = useCinematicMotion();
 
 const menuOpen = ref(false);
@@ -23,6 +23,16 @@ const selectedTech = ref<TechCard | null>(null);
 const scrollProgress = ref(0);
 const year = new Date().getFullYear();
 let scrollFrame = 0;
+const playbackClock = ref(Date.now());
+let playbackClockTimer = 0;
+const playbackWaveBars = Array.from({ length: 64 }, (_, index) => {
+  const envelope = Math.abs(
+    Math.sin(index * 0.61) * 0.34 +
+    Math.sin(index * 0.19 + 1.1) * 0.31 +
+    Math.cos(index * 1.73) * 0.17
+  );
+  return Math.round(16 + envelope * 82);
+});
 
 const navigation = [
   { label: "Profile", href: "#profile" },
@@ -317,27 +327,49 @@ const selectedFrameworkRepositories = computed(() => {
   );
 });
 const listeningTrack = computed(() => {
-  if (spotify.value.isPlaying && spotify.value.track) return spotify.value.track;
+  if (spotify.value.track && (spotify.value.configured || spotify.value.isPlaying)) return spotify.value.track;
   return live.value.track || spotify.value.track || "Listening profile";
 });
 const listeningArtist = computed(() => {
-  if (spotify.value.isPlaying && spotify.value.artist) return spotify.value.artist;
+  if (spotify.value.artist && (spotify.value.configured || spotify.value.isPlaying)) return spotify.value.artist;
   return live.value.artist || spotify.value.artist || "Spotify and Last.fm";
 });
+const listeningAlbum = computed(() => spotify.value.album || lastFmAlbum.value || "Album unavailable");
 const listeningStatus = computed(() => {
-  if (spotify.value.isPlaying) return "SPOTIFY · NOW PLAYING";
+  if (spotify.value.configured && spotify.value.track) return spotify.value.isPlaying ? "SPOTIFY · NOW PLAYING" : "SPOTIFY · PAUSED";
   if (live.value.playing) return "LAST.FM · NOW PLAYING";
   if (live.value.track || spotify.value.track) return "RECENT TRACK";
-  return "LISTENING PROFILE";
+  return spotify.value.configured ? "SPOTIFY · NO ACTIVE TRACK" : "LAST.FM / LISTENING PROFILE";
 });
 const listeningArtwork = computed(() => {
-  if (spotify.value.isPlaying && spotify.value.albumImage) return spotify.value.albumImage;
-  return live.value.trackImage || spotify.value.albumImage || null;
+  if (spotify.value.albumImage) return spotify.value.albumImage;
+  return live.value.trackImage || null;
 });
 const listeningTrackUrl = computed(() => {
-  if (spotify.value.isPlaying && spotify.value.url) return spotify.value.url;
-  return live.value.trackUrl || spotify.value.url || null;
+  if (spotify.value.url) return spotify.value.url;
+  return live.value.trackUrl || null;
 });
+const spotifyProgressMs = computed(() => {
+  const base = Math.max(0, spotify.value.progressMs ?? 0);
+  if (!spotify.value.isPlaying || !spotify.value.updatedAtMs) return base;
+  const elapsed = Math.max(0, playbackClock.value - spotify.value.updatedAtMs);
+  const progress = base + elapsed;
+  return spotify.value.durationMs ? Math.min(progress, spotify.value.durationMs) : progress;
+});
+const spotifyProgressPercent = computed(() => {
+  const duration = spotify.value.durationMs ?? 0;
+  return duration > 0 ? Math.min(100, Math.max(0, (spotifyProgressMs.value / duration) * 100)) : 0;
+});
+function formatPlaybackTime(milliseconds: number | null | undefined): string {
+  if (typeof milliseconds !== "number" || !Number.isFinite(milliseconds) || milliseconds <= 0) return "0:00";
+  const seconds = Math.floor(milliseconds / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const remainder = String(seconds % 60).padStart(2, "0");
+  const hours = Math.floor(minutes / 60);
+  return hours > 0
+    ? hours + ":" + String(minutes % 60).padStart(2, "0") + ":" + remainder
+    : minutes + ":" + remainder;
+}
 function genreWidth(items: GenreItem[] | undefined, count: number): number {
   const max = Math.max(1, ...(items ?? []).map((item) => item.count));
   return Math.max(3, Math.round((count / max) * 100));
@@ -389,12 +421,14 @@ function onEscape(event: KeyboardEvent) {
 }
 onMounted(() => {
   updateProgress();
+  playbackClockTimer = window.setInterval(() => { playbackClock.value = Date.now(); }, 1000);
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", updateProgress, { passive: true });
   window.addEventListener("keydown", onEscape);
 });
 onBeforeUnmount(() => {
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
+  if (playbackClockTimer) window.clearInterval(playbackClockTimer);
   window.removeEventListener("scroll", onScroll);
   window.removeEventListener("resize", updateProgress);
   window.removeEventListener("keydown", onEscape);
@@ -487,8 +521,8 @@ onBeforeUnmount(() => {
             <small v-if="live.followers !== undefined"><AnimatedNumber :value="live.followers" /> followers</small>
           </div>
         </div>
-        <div class="project-gallery">
-          <details v-for="project in projects" :key="project.name" class="project-card-item">
+        <div class="project-stack">
+          <details v-for="(project, index) in projects" :key="project.name" class="project-stack-card" :style="{ '--stack-index': index }">
             <summary v-tactile class="project-card-shell tactile-surface">
               <div class="project-card-visual">
                 <span class="project-card-index">{{ project.index }}</span>
@@ -527,27 +561,30 @@ onBeforeUnmount(() => {
         </article>
       </div>
       <div class="code-counted" aria-label="Code counted language explorer">
-        <div class="code-counted-heading">
-          <div class="code-counted-title">
-            <span class="work-live-label">02 / CODE COUNTED</span><h3>Code, counted.</h3>
-            <p>Tracked source technologies and project estimates, separated by provenance.</p>
+        <div class="code-counted-layout">
+          <div class="code-counted-heading">
+            <div class="code-counted-title">
+              <span class="work-live-label">02 / CODE COUNTED</span>
+              <h3>Code, counted.</h3>
+              <p>Tracked source technologies and project estimates, separated by provenance.</p>
+            </div>
+            <div class="code-counted-totals">
+              <div><strong><AnimatedNumber :value="codeStats?.totals.lines ?? 0" notation="compact" :decimals="1" /></strong><span>SCANNED LINES</span></div>
+              <div><strong><AnimatedNumber :value="codeStats?.totals.repositories ?? 0" /></strong><span>REPOSITORIES</span></div>
+              <div><strong><AnimatedNumber :value="languageCards.length" /></strong><span>LANGUAGE PROFILES</span></div>
+            </div>
           </div>
-          <div class="code-counted-totals">
-            <div><strong><AnimatedNumber :value="codeStats?.totals.lines ?? 0" notation="compact" :decimals="1" /></strong><span>SCANNED LINES</span></div>
-            <div><strong><AnimatedNumber :value="codeStats?.totals.repositories ?? 0" /></strong><span>REPOSITORIES</span></div>
-            <div><strong><AnimatedNumber :value="languageCards.length" /></strong><span>LANGUAGE PROFILES</span></div>
+          <div class="project-language-grid">
+            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-index': index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
+              <span class="project-language-logo">
+                <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
+                <span v-else class="project-language-generic">&lt;/&gt;</span>
+              </span>
+              <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
+              <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" /></strong><small>LINES</small></span>
+              <span class="project-language-arrow" aria-hidden="true">↗</span>
+            </button>
           </div>
-        </div>
-        <div class="project-language-grid">
-          <button v-for="tech in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
-            <span class="project-language-logo">
-              <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
-              <span v-else class="project-language-generic">&lt;/&gt;</span>
-            </span>
-            <span class="project-language-copy"><strong>{{ tech.name }}</strong><small>{{ tech.isEstimated ? "Lunar X · ≈ " + compact(tech.characters) + " estimated characters" : tech.pendingScan ? "Framework profile · scan pending" : "Tracked repository data" }}</small></span>
-            <span class="project-language-lines"><strong><AnimatedNumber :value="tech.lines" /></strong><small>LINES</small></span>
-            <span class="project-language-arrow" aria-hidden="true">↗</span>
-          </button>
         </div>
         <p class="project-language-note">{{ codeStatsStatus === "ready" ? "Snapshot generated " + new Date(codeStats!.generatedAt).toLocaleDateString() + ". Select a profile for its file, character, word, and repository breakdown." : codeStatsStatus === "loading" ? "Repository scan is being loaded." : "The repository snapshot is unavailable right now; the portfolio remains usable." }}</p>
       </div>
@@ -569,6 +606,34 @@ onBeforeUnmount(() => {
               <h3 :title="listeningTrack">{{ listeningTrack }}</h3>
               <p>{{ listeningArtist }}</p>
             </div>
+          </div>
+          <div class="listening-metadata">
+            <div class="listening-album-name">
+              <span>ALBUM</span>
+              <a v-if="spotify.albumUrl" :href="spotify.albumUrl" target="_blank" rel="noreferrer">{{ listeningAlbum }} ↗</a>
+              <strong v-else>{{ listeningAlbum }}</strong>
+            </div>
+            <div v-if="spotify.albumReleaseDate"><span>RELEASED</span><strong>{{ spotify.albumReleaseDate }}</strong></div>
+            <div v-if="spotify.trackNumber"><span>TRACK</span><strong>{{ String(spotify.trackNumber).padStart(2, "0") }}<template v-if="spotify.albumTotalTracks"> / {{ spotify.albumTotalTracks }}</template></strong></div>
+            <div v-if="spotify.deviceName"><span>DEVICE</span><strong>{{ spotify.deviceName }}</strong></div>
+          </div>
+          <div class="spotify-playback-panel">
+            <div class="spotify-wavefield" :class="{ 'is-playing': spotify.isPlaying }" aria-hidden="true">
+              <div class="spotify-wavefield-bars">
+                <i v-for="(height, index) in playbackWaveBars" :key="'base-' + index" :style="{ height: height + '%', '--wave-index': index }"></i>
+              </div>
+              <div class="spotify-wavefield-progress" :style="{ width: spotifyProgressPercent + '%' }">
+                <div class="spotify-wavefield-bars">
+                  <i v-for="(height, index) in playbackWaveBars" :key="'progress-' + index" :style="{ height: height + '%', '--wave-index': index }"></i>
+                </div>
+              </div>
+            </div>
+            <div class="spotify-playback-readout">
+              <time>{{ spotify.durationMs ? formatPlaybackTime(spotifyProgressMs) : "0:00" }}</time>
+              <span>{{ spotify.configured ? (spotify.isPlaying ? "PLAYING" : "PAUSED") : "LAST.FM · LIVE TRACK" }}</span>
+              <time>{{ spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : "--:--" }}</time>
+            </div>
+            <div v-if="!spotify.configured" class="spotify-connection-note">SPOTIFY PLAYBACK NOT CONNECTED · LIVE TRACK VIA LAST.FM</div>
           </div>
           <div class="archive-card-bottom listening-footer">
             <div class="lastfm-scrobbles">
