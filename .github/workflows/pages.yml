@@ -1,4 +1,4 @@
-name: Build and deploy Vireon Noctis
+name: Build and publish Vireon Noctis
 
 on:
   push:
@@ -10,28 +10,25 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: portfolio-pages
+  group: portfolio-static-publish
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 24
-
-      - name: Configure GitHub Pages for workflow deployment
-        uses: actions/configure-pages@v5
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
@@ -39,10 +36,13 @@ jobs:
       - name: Type-check Vue components
         run: npm run typecheck
 
-      - name: Build site
+      - name: Build Vue application
         run: npm run build
 
-      - name: Verify Pages output
+      - name: Inline generated CSS and JavaScript
+        run: node scripts/inline-pages.mjs
+
+      - name: Verify branch deployment output
         run: |
           test -s dist/index.html
           test -f dist/.nojekyll
@@ -51,27 +51,24 @@ jobs:
           test -s dist/sitemap.xml
           test -s dist/spotify-now-playing.json
           test -d dist/brands
-          test -d dist/assets
-          ! grep -q '/src/main.ts\|/main.ts' dist/index.html
-          grep -Eq 'assets/[^"]+\.js' dist/index.html
-          grep -Eq 'assets/[^"]+\.css' dist/index.html
+          test ! -d dist/assets
+          ! grep -Eq '<script[^>]+src="/assets/|<link[^>]+href="/assets/' dist/index.html
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
+      - name: Publish built files to the Pages branch
+        if: github.event_name != 'pull_request'
+        run: |
+          rm -rf assets
+          cp -R dist/. .
+          test -s index.html
+          test -d brands
+          test ! -d assets
 
-  deploy:
-    if: github.event_name != 'pull_request'
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A -- .nojekyll 404.html index.html robots.txt sitemap.xml spotify-now-playing.json brands vireon-mark.svg vireon-preview.svg
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish inline portfolio build [skip ci]"
+            git push origin HEAD:main
+          else
+            echo "The Pages branch already contains this build."
+          fi

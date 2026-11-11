@@ -1,5 +1,11 @@
+/assets/** linguist-generated=true
+/brands/** linguist-detectable=false
 /public/brands/** linguist-detectable=false
 /public/*.svg linguist-detectable=false
 
-# Treat Vue single-file components, including their scoped styles, as Vue.
+# Compiled CSS and the embedded Pages bundle are generated output.
+*.css linguist-generated=true
+index.html linguist-generated=true
+
+# Vue single-file components include the app's authored styles.
 *.vue linguist-language=Vue
