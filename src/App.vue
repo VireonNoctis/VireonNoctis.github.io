@@ -18,6 +18,8 @@ const { codeStats, codeStatsStatus, live, spotify, lastFmAlbum } = usePortfolioD
 const { scrollTo } = useCinematicMotion();
 
 const selectedTech = ref<TechCard | null>(null);
+const techGlassOpening = ref(false);
+let techGlassTimer = 0;
 const scrollProgress = ref(0);
 const year = new Date().getFullYear();
 let scrollFrame = 0;
@@ -330,6 +332,13 @@ const listeningArtist = computed(() => {
   return live.value.artist || spotify.value.artist || "Spotify and Last.fm";
 });
 const listeningAlbum = computed(() => spotify.value.album || lastFmAlbum.value || "Album unavailable");
+const listeningStatsMatch = computed(() => {
+  if (!spotify.value.configured || !spotify.value.track) return true;
+  const sameTrack = spotify.value.track.trim().toLocaleLowerCase() === (live.value.track ?? "").trim().toLocaleLowerCase();
+  const sameArtist = !spotify.value.artist ||
+    spotify.value.artist.trim().toLocaleLowerCase() === (live.value.artist ?? "").trim().toLocaleLowerCase();
+  return sameTrack && sameArtist;
+});
 const listeningStatus = computed(() => {
   if (spotify.value.configured && spotify.value.track) return spotify.value.isPlaying ? "SPOTIFY / NOW PLAYING" : "SPOTIFY / PAUSED";
   if (live.value.playing) return "LAST.FM / NOW PLAYING";
@@ -382,9 +391,21 @@ function clearTechIconFlight() {
   techIconFlight = null;
   techIconFlightActive.value = false;
 }
+function startTechGlassOpening() {
+  if (techGlassTimer) window.clearTimeout(techGlassTimer);
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  techGlassOpening.value = !reducedMotion;
+  if (!reducedMotion) {
+    techGlassTimer = window.setTimeout(() => {
+      techGlassOpening.value = false;
+      techGlassTimer = 0;
+    }, 1450);
+  }
+}
 async function openTech(tech: TechCard, event?: MouseEvent) {
   clearTechIconFlight();
   selectedTech.value = tech;
+  startTechGlassOpening();
   const trigger = event?.currentTarget;
   const sourceImage = trigger instanceof HTMLElement ? trigger.querySelector<HTMLImageElement>(".project-language-logo img") : null;
   if (!sourceImage?.currentSrc || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -434,6 +455,9 @@ async function openTech(tech: TechCard, event?: MouseEvent) {
 }
 function closeTech() {
   clearTechIconFlight();
+  if (techGlassTimer) window.clearTimeout(techGlassTimer);
+  techGlassTimer = 0;
+  techGlassOpening.value = false;
   selectedTech.value = null;
 }
 watch(selectedTech, (value) => {
@@ -482,6 +506,7 @@ onMounted(() => {
 });
 onBeforeUnmount(() => {
   clearTechIconFlight();
+  if (techGlassTimer) window.clearTimeout(techGlassTimer);
   if (scrollFrame) window.cancelAnimationFrame(scrollFrame);
   if (playbackClockTimer) window.clearInterval(playbackClockTimer);
   window.removeEventListener("scroll", onScroll);
@@ -716,21 +741,34 @@ onBeforeUnmount(() => {
               </Transition>
             </div>
             <div class="listening-copy">
-              <span>{{ listeningStatus }}</span>
-              <Transition name="track-copy" mode="out-in">
-                <div :key="listeningTrack + '::' + listeningArtist" class="listening-track-copy">
-                  <h3 :title="listeningTrack">{{ listeningTrack }}</h3>
-                  <p>{{ listeningArtist }}</p>
+              <div class="listening-copy-main">
+                <span>{{ listeningStatus }}</span>
+                <Transition name="track-copy" mode="out-in">
+                  <div :key="listeningTrack + '::' + listeningArtist" class="listening-track-copy">
+                    <h3 :title="listeningTrack">{{ listeningTrack }}</h3>
+                    <p>{{ listeningArtist }}</p>
+                  </div>
+                </Transition>
+              </div>
+              <aside class="listening-edge-stats" aria-label="Personal listening statistics">
+                <div>
+                  <span>ARTIST PLAYS</span>
+                  <strong v-if="listeningStatsMatch && live.artistPlaycount !== undefined"><AnimatedNumber :value="live.artistPlaycount ?? 0" immediate duration="1250" /></strong>
+                  <strong v-else>—</strong>
                 </div>
-              </Transition>
+                <div>
+                  <span>YOUR TRACK PLAYS</span>
+                  <strong v-if="listeningStatsMatch && live.trackUserPlaycount !== undefined"><AnimatedNumber :value="live.trackUserPlaycount ?? 0" immediate duration="1250" /></strong>
+                  <strong v-else>—</strong>
+                </div>
+              </aside>
+              <div class="listening-inline-album">
+                <span>ALBUM</span>
+                <strong :title="listeningAlbum">{{ listeningAlbum }}</strong>
+              </div>
             </div>
           </div>
           <div class="listening-metadata">
-            <div class="listening-album-name">
-              <span>ALBUM</span>
-              <a v-if="spotify.albumUrl" :href="spotify.albumUrl" target="_blank" rel="noreferrer">{{ listeningAlbum }} ↗</a>
-              <strong v-else>{{ listeningAlbum }}</strong>
-            </div>
             <div v-if="spotify.albumReleaseDate"><span>RELEASED</span><strong>{{ spotify.albumReleaseDate }}</strong></div>
             <div v-if="spotify.trackNumber"><span>TRACK</span><strong>{{ String(spotify.trackNumber).padStart(2, "0") }}<template v-if="spotify.albumTotalTracks"> / {{ spotify.albumTotalTracks }}</template></strong></div>
             <div v-if="spotify.deviceName"><span>DEVICE</span><strong>{{ spotify.deviceName }}</strong></div>
@@ -752,7 +790,7 @@ onBeforeUnmount(() => {
               <time>{{ spotify.configured && spotify.durationMs ? formatPlaybackTime(spotify.durationMs) : live.trackDurationMs ? formatPlaybackTime(live.trackDurationMs) : "—" }}</time>
             </div>
             <div v-if="!spotify.configured" class="lastfm-track-stats">
-              <span v-if="live.trackPlaycount !== undefined">{{ formatted(live.trackPlaycount) }} TRACK PLAYS</span>
+              <span v-if="live.trackPlaycount !== undefined">{{ formatted(live.trackPlaycount) }} GLOBAL TRACK PLAYS</span>
               <span v-if="live.trackListeners !== undefined">{{ formatted(live.trackListeners) }} LISTENERS</span>
               <span v-if="live.trackDurationMs">{{ formatPlaybackTime(live.trackDurationMs) }} DURATION</span>
             </div>
@@ -802,6 +840,21 @@ onBeforeUnmount(() => {
     </footer>
 
     <Teleport to="body">
+      <div v-if="techGlassOpening" class="tech-glass-opening" aria-hidden="true">
+        <div class="tech-glass-leaf tech-glass-leaf-left"></div>
+        <div class="tech-glass-leaf tech-glass-leaf-right"></div>
+        <div class="tech-glass-opening-core"></div>
+        <svg class="tech-glass-engraving" viewBox="0 0 1600 900" preserveAspectRatio="none">
+          <g fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1">
+            <path d="M-80 190 C120 60 220 310 430 205 S700 80 820 180" />
+            <path d="M-90 228 C115 100 250 350 450 244 S700 120 820 216" />
+            <path d="M780 190 C960 60 1110 310 1300 205 S1530 80 1680 180" />
+            <path d="M780 228 C960 100 1120 350 1310 244 S1530 120 1690 216" />
+            <path d="M-80 700 C120 570 220 820 430 710 S700 580 820 690" />
+            <path d="M780 700 C960 570 1110 820 1300 710 S1530 580 1680 690" />
+          </g>
+        </svg>
+      </div>
       <Transition name="tech-dialog">
         <div v-if="selectedTech" class="tech-modal-backdrop" role="presentation" @click.self="closeTech">
           <section class="tech-modal" role="dialog" aria-modal="true" :aria-label="selectedTech.name + ' details'">

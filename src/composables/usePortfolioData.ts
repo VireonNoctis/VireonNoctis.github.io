@@ -37,6 +37,7 @@ export function usePortfolioData() {
   let controller: AbortController | null = null;
   let spotifyRefresh = 0;
   let lastFmRefresh = 0;
+  let scrobbleRefresh = 0;
   let lastFmTrackKey = "";
   let artworkLookupKey = "";
   let trackInfoKey = "";
@@ -185,21 +186,44 @@ export function usePortfolioData() {
   }
 
   async function loadLastFmTrackInfo(trackName: string, artistName: string, trackKey: string, signal: AbortSignal) {
-    try {
-      const payload = await requestLastFm("track.getInfo", { track: trackName, artist: artistName }, signal);
-      if (lastFmTrackKey !== trackKey) return;
-      const track = payload?.track;
-      const albumImages = Array.isArray(track?.album?.image) ? track.album.image : [];
-      const albumImage = [...albumImages].reverse().find((item: any) => typeof item?.["#text"] === "string" && item["#text"].startsWith("http"))?.["#text"];
-      const duration = Number(track?.duration), playcount = Number(track?.playcount), listeners = Number(track?.listeners);
-      live.value = {
-        ...live.value,
-        ...(Number.isFinite(duration) && duration > 0 ? { trackDurationMs: duration } : {}),
-        ...(Number.isFinite(playcount) && playcount >= 0 ? { trackPlaycount: playcount } : {}),
-        ...(Number.isFinite(listeners) && listeners >= 0 ? { trackListeners: listeners } : {}),
-        ...(albumImage && !live.value.trackImage ? { trackImage: albumImage.replace(/^http:/, "https:") } : {})
-      };
-    } catch { /* Track enrichment is best-effort. */ }
+    const [trackPayload, artistPayload] = await Promise.all([
+      requestLastFm("track.getInfo", {
+        track: trackName, artist: artistName, username: "reasfeetadmirer"
+      }, signal).catch(() => null),
+      requestLastFm("artist.getInfo", {
+        artist: artistName, username: "reasfeetadmirer"
+      }, signal).catch(() => null)
+    ]);
+    if (lastFmTrackKey !== trackKey) return;
+
+    const track = trackPayload?.track;
+    const albumImages = Array.isArray(track?.album?.image) ? track.album.image : [];
+    const albumImage = [...albumImages].reverse().find((item: any) =>
+      typeof item?.["#text"] === "string" && item["#text"].startsWith("http")
+    )?.["#text"];
+    const count = (value: unknown): number | undefined => {
+      if (value === undefined || value === null || value === "") return undefined;
+      const parsed = Number(value);
+      return Number.isFinite(parsed) && parsed >= 0 ? Math.round(parsed) : undefined;
+    };
+
+    const duration = count(track?.duration);
+    const globalTrackPlays = count(track?.playcount);
+    const personalTrackPlays = count(track?.userplaycount);
+    const listeners = count(track?.listeners);
+    const personalArtistPlays = count(artistPayload?.artist?.stats?.userplaycount);
+    const albumTitle = typeof track?.album?.title === "string" ? track.album.title.trim() : "";
+
+    if (albumTitle) lastFmAlbum.value = albumTitle;
+    live.value = {
+      ...live.value,
+      ...(duration !== undefined && duration > 0 ? { trackDurationMs: duration } : {}),
+      ...(globalTrackPlays !== undefined ? { trackPlaycount: globalTrackPlays } : {}),
+      ...(personalTrackPlays !== undefined ? { trackUserPlaycount: personalTrackPlays } : {}),
+      ...(personalArtistPlays !== undefined ? { artistPlaycount: personalArtistPlays } : {}),
+      ...(listeners !== undefined ? { trackListeners: listeners } : {}),
+      ...(albumImage && !live.value.trackImage ? { trackImage: albumImage.replace(/^http:/, "https:") } : {})
+    };
   }
 
   async function loadLastFmPlayback(signal: AbortSignal) {
@@ -215,7 +239,8 @@ export function usePortfolioData() {
       lastFmTrackKey = trackKey;
       const images = Array.isArray(track.image) ? track.image : [];
       const image = [...images].reverse().find((item: any) => typeof item?.["#text"] === "string" && item["#text"].startsWith("http"))?.["#text"];
-      if (albumName) lastFmAlbum.value = albumName;
+      if (changed) lastFmAlbum.value = albumName || null;
+      else if (albumName) lastFmAlbum.value = albumName;
       live.value = {
         ...live.value,
         track: track.name,
@@ -223,7 +248,13 @@ export function usePortfolioData() {
         trackImage: image ? image.replace(/^http:/, "https:") : changed ? undefined : live.value.trackImage,
         artist: artistName || "Unknown artist",
         playing: track["@attr"]?.nowplaying === "true",
-        ...(changed ? { trackDurationMs: undefined, trackPlaycount: undefined, trackListeners: undefined } : {})
+        ...(changed ? {
+          trackDurationMs: undefined,
+          trackPlaycount: undefined,
+          trackUserPlaycount: undefined,
+          artistPlaycount: undefined,
+          trackListeners: undefined
+        } : {})
       };
       if (changed && artistName && trackInfoKey !== trackKey) {
         trackInfoKey = trackKey;
@@ -234,6 +265,17 @@ export function usePortfolioData() {
         void lookupArtwork(track.name, artistName, trackKey, signal);
       }
     } catch { /* Live listening data never blocks the page. */ }
+  }
+
+
+
+  async function loadLastFmScrobbles(signal: AbortSignal) {
+    try {
+      const payload = await requestLastFm("user.getinfo", {}, signal);
+      const total = Number(payload?.user?.playcount);
+      if (!Number.isFinite(total) || total < 0) return;
+      live.value = { ...live.value, scrobbles: Math.round(total) };
+    } catch { /* The most recent scrobble total remains visible during temporary API errors. */ }
   }
 
   async function loadLastFm(signal: AbortSignal) {
@@ -272,12 +314,16 @@ export function usePortfolioData() {
     lastFmRefresh = window.setInterval(() => {
       if (controller && !controller.signal.aborted) void loadLastFmPlayback(controller.signal);
     }, 20_000);
+    scrobbleRefresh = window.setInterval(() => {
+      if (controller && !controller.signal.aborted) void loadLastFmScrobbles(controller.signal);
+    }, 30_000);
   });
 
   onBeforeUnmount(() => {
     controller?.abort();
     if (spotifyRefresh) window.clearInterval(spotifyRefresh);
     if (lastFmRefresh) window.clearInterval(lastFmRefresh);
+    if (scrobbleRefresh) window.clearInterval(scrobbleRefresh);
   });
 
   return { repos, codeStats, codeStatsStatus, live, spotify, lastFmAlbum };

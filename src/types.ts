@@ -33,6 +33,8 @@ export interface Live {
   playing?: boolean;
   trackDurationMs?: number;
   trackPlaycount?: number;
+  trackUserPlaycount?: number;
+  artistPlaycount?: number;
   trackListeners?: number;
   animeEpisodes?: number;
   animeMinutes?: number;
