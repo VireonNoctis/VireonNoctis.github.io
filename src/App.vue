@@ -375,8 +375,8 @@ onBeforeUnmount(() => {
       </div>
       <div class="intro-loader-bottom">
         <div class="intro-loader-status"><span>INTRO SEQUENCE</span><span>PROJECT SIGNALS / REVEAL</span></div>
-        <div class="intro-loader-progress"><span data-intro-fill></span></div>
-        <div class="intro-loader-readout"><span>PORTFOLIO / 001</span><strong data-intro-count>00%</strong></div>
+        <div class="intro-loader-progress"><span id="intro-fill"></span></div>
+        <div class="intro-loader-readout"><span>PORTFOLIO / 001</span><strong id="intro-count">00%</strong></div>
       </div>
     </div>
     <a class="skip-link" href="#profile">Skip to content</a>

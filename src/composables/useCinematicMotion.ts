@@ -21,8 +21,8 @@ export function useCinematicMotion() {
       const introLayer=document.querySelector<HTMLElement>(".intro-loader");
       if(introLayer){
         const counter={value:0};
-        const readout=introLayer.querySelector<HTMLElement>("[data-intro-count]");
-        const fill=introLayer.querySelector<HTMLElement>("[data-intro-fill]");
+        const readout=introLayer.querySelector<HTMLElement>("#intro-count");
+        const fill=introLayer.querySelector<HTMLElement>("#intro-fill");
         const intro=gsap.timeline({onComplete:()=>introLayer.remove()});
         intro
           .to(".intro-loader-panel",{clipPath:"polygon(0 0,100% 0,100% 100%,0 100%)",duration:.95,stagger:.075,ease:"power4.out"},0)
