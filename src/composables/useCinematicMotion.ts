@@ -55,9 +55,9 @@ export function useCinematicMotion() {
         const wipe = introLayer.querySelector<HTMLElement>("#intro-wipe");
         const intro = gsap.timeline({ onComplete: finishIntro });
         intro
-          .fromTo(".intro-loader-artwork", { autoAlpha:0, y:26, scale:.9, filter:"blur(10px)" }, {
-            autoAlpha:1, y:0, scale:1, filter:"blur(0px)", duration:1.55, ease:"power4.out",
-            clearProps:"transform,opacity,visibility,filter"
+          .fromTo(".intro-loader-artwork", { y:26, scale:.9, filter:"blur(10px)" }, {
+            y:0, scale:1, filter:"blur(0px)", duration:1.55, ease:"power4.out",
+            clearProps:"transform,filter"
           }, .12)
           .to(counter, {
             value: 100, duration: 9.6, ease: "power1.inOut",
@@ -73,18 +73,18 @@ export function useCinematicMotion() {
             autoAlpha:1, y:0, letterSpacing:".2em", duration:1.1, ease:"power3.out",
             clearProps:"transform,opacity,visibility,letterSpacing"
           }, .24)
-          .fromTo(".intro-loader-title-line", { autoAlpha:0, yPercent:115, filter:"blur(12px)" }, {
-            autoAlpha:1, yPercent:0, filter:"blur(0px)", duration:1.35, stagger:.17, ease:"power4.out",
-            clearProps:"transform,opacity,visibility,filter"
+          .fromTo(".intro-loader-title-line", { yPercent:115, filter:"blur(12px)" }, {
+            yPercent:0, filter:"blur(0px)", duration:1.35, stagger:.17, ease:"power4.out",
+            clearProps:"transform,filter"
           }, .48)
           .fromTo(".intro-loader-subline", { autoAlpha:0, y:16 }, {
             autoAlpha:1, y:0, duration:1, ease:"power3.out", clearProps:"transform,opacity,visibility"
           }, 1.15)
-          .fromTo(".intro-loader-bottom", { autoAlpha:0, y:20, filter:"blur(8px)" }, {
-            autoAlpha:1, y:0, filter:"blur(0px)", duration:1.05, ease:"power3.out",
-            clearProps:"transform,opacity,visibility,filter"
+          .fromTo(".intro-loader-bottom", { y:20, filter:"blur(8px)" }, {
+            y:0, filter:"blur(0px)", duration:1.05, ease:"power3.out",
+            clearProps:"transform,filter"
           }, 1.32)
-          .to(introLayer, { autoAlpha:0, duration:.92, ease:"power2.inOut" }, 10.5);
+          .to(introLayer, { autoAlpha:0, duration:1.1, ease:"power2.inOut" }, 12.2);
         if (fill) intro.to(fill, { scaleX:1, duration:9.6, ease:"power1.inOut" }, 0);
         if (wipe) intro.fromTo(wipe, { scaleX:0, autoAlpha:.92 }, { scaleX:1, autoAlpha:1, duration:1.15, ease:"power4.in" }, 9.35);
       }

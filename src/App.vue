@@ -498,7 +498,7 @@ onBeforeUnmount(() => {
       <div class="intro-loader-field-lines"></div>
       <header class="intro-loader-frame">
         <div class="intro-loader-brand">
-          <span class="intro-loader-monogram">V/N</span>
+          <span class="intro-loader-monogram"><img src="/brands/vireon-mark.svg" alt="" width="36" height="36" /></span>
           <span class="intro-loader-brand-copy"><strong>VIREON NOCTIS</strong></span>
         </div>
       </header>
