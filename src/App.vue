@@ -753,12 +753,12 @@ onBeforeUnmount(() => {
               <aside class="listening-edge-stats" aria-label="Personal listening statistics">
                 <div>
                   <span>ARTIST PLAYS</span>
-                  <strong v-if="listeningStatsMatch && live.artistPlaycount !== undefined"><AnimatedNumber :value="live.artistPlaycount ?? 0" immediate duration="1250" /></strong>
+                  <strong v-if="listeningStatsMatch && live.artistPlaycount !== undefined"><AnimatedNumber :value="live.artistPlaycount ?? 0" immediate  :duration="1250" /></strong>
                   <strong v-else>—</strong>
                 </div>
                 <div>
                   <span>YOUR TRACK PLAYS</span>
-                  <strong v-if="listeningStatsMatch && live.trackUserPlaycount !== undefined"><AnimatedNumber :value="live.trackUserPlaycount ?? 0" immediate duration="1250" /></strong>
+                  <strong v-if="listeningStatsMatch && live.trackUserPlaycount !== undefined"><AnimatedNumber :value="live.trackUserPlaycount ?? 0" immediate  :duration="1250" /></strong>
                   <strong v-else>—</strong>
                 </div>
               </aside>
