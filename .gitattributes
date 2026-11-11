@@ -1,7 +1,5 @@
-/assets/** linguist-generated=true
-/brands/** linguist-detectable=false
 /public/brands/** linguist-detectable=false
 /public/*.svg linguist-detectable=false
 
-# Keep Vue single-file components classified as Vue, including embedded style blocks.
+# Treat Vue single-file components, including their scoped styles, as Vue.
 *.vue linguist-language=Vue
