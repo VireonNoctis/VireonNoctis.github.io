@@ -2,3 +2,6 @@
 /brands/** linguist-detectable=false
 /public/brands/** linguist-detectable=false
 /public/*.svg linguist-detectable=false
+
+# Keep Vue single-file components classified as Vue, including embedded style blocks.
+*.vue linguist-language=Vue
