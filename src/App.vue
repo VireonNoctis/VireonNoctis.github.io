@@ -522,7 +522,7 @@ onBeforeUnmount(() => {
           </div>
         </div>
         <div class="project-stack">
-          <details v-for="(project, index) in projects" :key="project.name" class="project-stack-card" :style="{ '--stack-index': index }">
+          <details v-for="(project, index) in projects" :key="project.name" class="project-stack-card" :style="{ '--stack-top': (108 + index * 14) + 'px', zIndex: 10 + index }">
             <summary v-tactile class="project-card-shell tactile-surface">
               <div class="project-card-visual">
                 <span class="project-card-index">{{ project.index }}</span>
@@ -575,7 +575,7 @@ onBeforeUnmount(() => {
             </div>
           </div>
           <div class="project-language-grid">
-            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-index': index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
+            <button v-for="(tech, index) in languageCards" :key="tech.name" v-tactile class="project-language-tile tactile-surface" :style="{ '--stack-top': (108 + index * 6) + 'px', zIndex: 10 + index }" type="button" :aria-label="'Open ' + tech.name + ' statistics, ' + formatted(tech.lines) + ' total lines'" @click="openTech(tech)">
               <span class="project-language-logo">
                 <img v-if="tech.logo" :src="'/brands/tech-' + tech.logo + '.svg'" alt="" loading="lazy" />
                 <span v-else class="project-language-generic">&lt;/&gt;</span>
