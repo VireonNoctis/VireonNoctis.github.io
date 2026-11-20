@@ -103,4 +103,5 @@ const signaturePage = `<!doctype html>
 `;
 
 await writeFile(join(signatureDirectory, "index.html"), signaturePage, "utf8");
+await rm(assetDirectory, { recursive: true, force: true });
 console.log("Generated legacy /signature/ redirect to the standalone React studio.");
