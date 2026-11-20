@@ -55,8 +55,8 @@ jobs:
           test ! -d dist/assets
           ! grep -Eq '<script[^>]+src="/assets/|<link[^>]+href="/assets/' dist/index.html
           ! grep -Eq '<script[^>]+src="/assets/|<link[^>]+href="/assets/' dist/signature/index.html
-          grep -q 'Vireon Signature Studio' dist/signature/index.html
-          grep -q 'Stand out in' dist/signature/index.html
+          grep -q 'Vireon Signature has moved' dist/signature/index.html
+          grep -q 'Vireon-Signature/' dist/signature/index.html
 
       - name: Publish built files to the Pages branch
         if: github.event_name != 'pull_request'

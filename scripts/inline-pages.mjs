@@ -57,37 +57,50 @@ if (html.includes("/assets/")) {
 }
 await writeFile(htmlPath, html, "utf8");
 
-const signatureStaticShell = [
-  '<main aria-labelledby="signature-static-title" style="max-width:900px;margin:0 auto;padding:72px 24px;color:#f2f1ed;font-family:Arial,Helvetica,sans-serif;background:#070707;">',
-  '<p style="font-size:11px;letter-spacing:2px;color:#a9dce3;">VIREON / SIGNATURE STUDIO</p>',
-  '<h1 id="signature-static-title" style="font-size:clamp(42px,8vw,86px);line-height:.95;letter-spacing:-.06em;">Stand out in<br />every inbox.</h1>',
-  '<p style="max-width:540px;color:#a0a09b;font-size:16px;line-height:1.7;">Build a considered email signature, preview it, and export portable HTML for your email client.</p>',
-  '<p style="color:#a0a09b;font-size:12px;">Enable JavaScript to open the interactive signature builder.</p>',
-  '</main>'
-].join("");
-
-let signaturePage = html
-  .replace(/<title>[\s\S]*?<\/title>/i, "<title>Vireon Signature Studio — Email Signature Builder</title>")
-  .replace(/<meta name="description" content="[^"]*"\s*\/>/i, '<meta name="description" content="Design a refined email signature and export email-safe HTML for Gmail, Proton Mail, Outlook, Apple Mail and Cloudflare Email Service." />')
-  .replace(/<meta name="keywords" content="[^"]*"\s*\/>/i, '<meta name="keywords" content="email signature builder, HTML email signature, Proton Mail signature, Outlook signature, Gmail signature" />')
-  .replace(/<link rel="canonical" href="[^"]*"\s*\/>/i, '<link rel="canonical" href="https://vireonnoctis.github.io/signature/" />')
-  .replace(/<meta property="og:url" content="[^"]*"\s*\/>/i, '<meta property="og:url" content="https://vireonnoctis.github.io/signature/" />')
-  .replace(/<meta property="og:title" content="[^"]*"\s*\/>/i, '<meta property="og:title" content="Vireon Signature Studio — Email Signature Builder" />')
-  .replace(/<meta property="og:description" content="[^"]*"\s*\/>/i, '<meta property="og:description" content="Build and export a considered, email-safe HTML signature." />')
-  .replace(/<meta name="twitter:title" content="[^"]*"\s*\/>/i, '<meta name="twitter:title" content="Vireon Signature Studio" />')
-  .replace(/<meta name="twitter:description" content="[^"]*"\s*\/>/i, '<meta name="twitter:description" content="Build and export a considered, email-safe HTML signature." />')
-  .replace('<div id="app"></div>', '<div id="app">' + signatureStaticShell + '</div>');
-
-if (!signaturePage.includes("Vireon Signature Studio") || signaturePage.includes("/assets/")) {
-  throw new Error("The standalone signature page was not generated correctly.");
-}
-
 const signatureDirectory = join(dist, "signature");
 await mkdir(signatureDirectory, { recursive: true });
-await writeFile(join(signatureDirectory, "index.html"), signaturePage, "utf8");
-await rm(assetDirectory, { recursive: true, force: true });
 
-console.log(
-  "Inlined " + javascript.length.toLocaleString() + " JavaScript and " +
-  css.length.toLocaleString() + " CSS characters; generated dist/signature/index.html."
-);
+const signaturePage = `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,follow" />
+    <meta name="theme-color" content="#07090c" />
+    <link rel="canonical" href="https://vireonnoctis.github.io/Vireon-Signature/" />
+    <meta http-equiv="refresh" content="0;url=https://vireonnoctis.github.io/Vireon-Signature/" />
+    <title>Vireon Signature has moved</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        min-height: 100vh; margin: 0; display: grid; place-items: center;
+        padding: 28px; color: #f0f1ef; background: #07090c;
+        font: 14px/1.6 Arial, Helvetica, sans-serif;
+      }
+      main { width: min(620px, 100%); }
+      p { color: #a2a8aa; }
+      small { color: #a2a8aa; letter-spacing: .18em; }
+      h1 { font-size: clamp(42px, 9vw, 76px); line-height: .94; letter-spacing: -.07em; }
+      a {
+        display: inline-flex; align-items: center; gap: 16px; margin-top: 14px;
+        padding: 13px 17px; color: #07090c; background: #e5e9e9;
+        text-decoration: none; font-size: 11px; letter-spacing: .08em;
+      }
+    </style>
+    <script>
+      window.location.replace("https://vireonnoctis.github.io/Vireon-Signature/" + window.location.search + window.location.hash);
+    </script>
+  </head>
+  <body>
+    <main>
+      <small>VIREON / SIGNATURE</small>
+      <h1>Your signature studio has moved.</h1>
+      <p>The redesigned React and Three.js studio now lives in its own project.</p>
+      <a href="https://vireonnoctis.github.io/Vireon-Signature/">OPEN THE NEW STUDIO <span aria-hidden="true">↗</span></a>
+    </main>
+  </body>
+</html>
+`;
+
+await writeFile(join(signatureDirectory, "index.html"), signaturePage, "utf8");
+console.log("Generated legacy /signature/ redirect to the standalone React studio.");
