@@ -4,9 +4,17 @@ Public route: https://vireonnoctis.github.io/signature/
 
 ## Product
 
-A browser-only email signature builder integrated into the existing Vue 3 + Vite portfolio. It uses the portfolio's monochrome Nothing OS design system and does not add a frontend dependency, server, account requirement, analytics endpoint, or remote draft store.
+A browser-only email signature builder integrated into the existing Vue 3 + Vite portfolio. It uses the portfolio's Nothing OS visual language, Pretext for responsive Canvas headline layout, and a small native WebGL2 atmosphere. It adds only the focused Pretext text-layout dependency—no second UI framework, Three.js runtime, server, account requirement, analytics endpoint, or remote draft store.
 
 The editor offers three layouts (portrait, brand mark, minimal), ink and paper signature palettes, an editable accent colour, personal and company details, contact links, optional social links, a tagline, and an optional call-to-action link. The preview renders the exact HTML fragment used for export.
+
+## Motion and visual references
+
+The decorative background is a native WebGL2 shader inspired by ShaderGradient's moving colour fields, density, grain, light and slow motion controls. It is intentionally implemented with the existing canvas/WebGL architecture instead of importing ShaderGradient's Vue/TresJS/Three.js stack. The background provides a pause control, stops when the page is hidden, respects reduced motion, caps pixel density, and has a CSS fallback when WebGL2 is unavailable.
+
+The animated two-line headline uses `@chenglou/pretext` to measure and lay out lines before painting them on Canvas. Its semantic heading remains available to assistive technology. Pretext is used for layout, not as an animation engine; the reveal timing is local and respects reduced motion.
+
+The email signature fragment remains separate from these effects. No canvas, blur, animation, or external font is inserted into the HTML that is copied into email clients.
 
 ## Data handling
 

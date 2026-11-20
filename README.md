@@ -21,7 +21,7 @@ The site is built as a Vue 3 Single-File Component application. Page markup, rea
 - Repository language and project metrics with animated count-up.
 - Live GitHub, AniList, Last.fm, and Spotify profile data.
 - Responsive navigation, keyboard-accessible controls, reduced-motion support, and a custom 404 page.
-- Vireon Signature Studio at https://vireonnoctis.github.io/signature/ for configuring and exporting email-safe HTML signatures.
+- Vireon Signature Studio at https://vireonnoctis.github.io/signature/ for configuring and exporting email-safe HTML signatures, with a Canvas-typed headline and native WebGL2 atmosphere.
 
 ## Local development
 

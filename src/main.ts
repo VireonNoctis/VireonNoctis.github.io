@@ -10,6 +10,7 @@ import "./styles/media-telemetry.css";
 import "./styles/collections.css";
 import "./styles/responsive.css";
 import "./styles/signature-studio.css";
+import "./styles/signature-motion.css";
 
 document.documentElement.dataset.theme = "nothing";
 document.documentElement.style.colorScheme = "dark";

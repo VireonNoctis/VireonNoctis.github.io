@@ -30,7 +30,8 @@ Respect `prefers-reduced-motion`, keyboard interaction, readable focus states, t
 - [Animmaster GitHub](https://github.com/Animmaster): public portfolio references for composition, typography, parallax, and interaction architecture.
 - [pqoqubbw/icons](https://github.com/pqoqubbw/icons): animated SVG icon references; adapt selectively where motion explains a state change.
 - [Liquid Glass JS](https://github.com/dashersw/liquid-glass-js): WebGL refraction experiments. The portfolio deliberately keeps the current monochrome system rather than introducing a liquid-glass theme.
-- [ShaderGradient](https://github.com/ruucm/shadergradient): shader background inspiration. Prefer the existing lean native WebGL2 field over a new dependency.
+- [ShaderGradient](https://github.com/ruucm/shadergradient): moving shader gradients, soft lighting, noise density, grain, colour fields, and motion controls. For this Vue portfolio, prefer the existing native WebGL2 canvas architecture where a focused shader is sufficient; do not add TresJS/Three.js unless a genuine 3D scene needs it.
+- [Pretext](https://github.com/chenglou/pretext): DOM-free text measurement and line layout with Canvas rendering. Use it when measured, responsive canvas typography is useful; keep a semantic DOM heading for accessibility and do not adopt it just to animate ordinary text.
 - [Paper Design Liquid Logo](https://github.com/paper-design/liquid-logo): one-off liquid-metal brand reveal inspiration. Its repository uses PolyForm Shield with a noncompete condition; do not reuse its source unless the terms are reviewed.
 - [React Three Fiber](https://github.com/pmndrs/react-three-fiber), [Drei](https://github.com/pmndrs/drei), and [React Three Next](https://github.com/pmndrs/react-three-next) are React-specific tooling. They are not used in this Vue app; use native WebGL2 or a Vue-compatible Three.js layer only if a real interactive 3D scene is needed.
 

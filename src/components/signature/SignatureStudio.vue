@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, onBeforeUnmount, reactive, ref, watch } from "vue";
+import SignatureAtmosphere from "./SignatureAtmosphere.vue";
+import PretextHeadline from "./PretextHeadline.vue";
 import {
   buildSignatureDocument,
   buildSignatureHtml,
@@ -18,7 +20,8 @@ type PreviewSurface = "light" | "dark";
 const STORAGE_KEY = "vireon.signature-studio.v1";
 const form = reactive<SignatureConfig>(createDefaultSignatureConfig());
 const activeTab = ref<EditorTab>("identity");
-const previewSurface = ref<PreviewSurface>("light");
+const previewSurface = ref<PreviewSurface>("dark");
+const atmospherePaused = ref(false);
 const saveStatus = ref("Saved only on this device");
 const actionStatus = ref("");
 const actionKind = ref<"success" | "error" | "info">("info");
@@ -229,12 +232,16 @@ function exportHtml() {
 
 <template>
   <div class="signature-app">
+    <SignatureAtmosphere :paused="atmospherePaused" />
     <header class="signature-header">
       <a class="signature-wordmark" href="/" aria-label="Vireon Noctis home">
         <img src="/vireon-mark.svg" alt="" width="25" height="25" />
         <span>VIREON <i>/</i> NOCTIS</span>
       </a>
       <div class="signature-header-center">TOOLS <span>/</span> EMAIL IDENTITY</div>
+      <button class="signature-motion-toggle" type="button" :aria-pressed="atmospherePaused" :aria-label="atmospherePaused ? 'Resume background motion' : 'Pause background motion'" @click="atmospherePaused = !atmospherePaused">
+        <i aria-hidden="true"></i><span>{{ atmospherePaused ? "RESUME ATMOSPHERE" : "PAUSE ATMOSPHERE" }}</span>
+      </button>
       <a class="signature-back-link" href="/">PORTFOLIO <span aria-hidden="true">↗</span></a>
     </header>
 
@@ -243,7 +250,7 @@ function exportHtml() {
         <div class="signature-eyebrow"><span class="signature-live-dot"></span> SIGNATURE STUDIO <span class="signature-index">/ 001</span></div>
         <div class="signature-intro-layout">
           <div>
-            <h1>Leave a <span>lasting</span><br />impression.</h1>
+            <PretextHeadline />
             <p class="signature-intro-copy">A considered signature for every message. Shape the details, refine the layout, then export clean HTML made for email.</p>
           </div>
           <div class="signature-intro-aside">

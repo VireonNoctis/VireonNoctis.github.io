@@ -60,7 +60,7 @@ await writeFile(htmlPath, html, "utf8");
 const signatureStaticShell = [
   '<main aria-labelledby="signature-static-title" style="max-width:900px;margin:0 auto;padding:72px 24px;color:#f2f1ed;font-family:Arial,Helvetica,sans-serif;background:#070707;">',
   '<p style="font-size:11px;letter-spacing:2px;color:#a9dce3;">VIREON / SIGNATURE STUDIO</p>',
-  '<h1 id="signature-static-title" style="font-size:clamp(42px,8vw,86px);line-height:.95;letter-spacing:-.06em;">Leave a lasting impression.</h1>',
+  '<h1 id="signature-static-title" style="font-size:clamp(42px,8vw,86px);line-height:.95;letter-spacing:-.06em;">Stand out in<br />every inbox.</h1>',
   '<p style="max-width:540px;color:#a0a09b;font-size:16px;line-height:1.7;">Build a considered email signature, preview it, and export portable HTML for your email client.</p>',
   '<p style="color:#a0a09b;font-size:12px;">Enable JavaScript to open the interactive signature builder.</p>',
   '</main>'
