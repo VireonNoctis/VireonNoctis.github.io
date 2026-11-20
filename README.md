@@ -21,20 +21,23 @@ The site is built as a Vue 3 Single-File Component application. Page markup, rea
 - Repository language and project metrics with animated count-up.
 - Live GitHub, AniList, Last.fm, and Spotify profile data.
 - Responsive navigation, keyboard-accessible controls, reduced-motion support, and a custom 404 page.
+- Vireon Signature Studio at https://vireonnoctis.github.io/signature/ for configuring and exporting email-safe HTML signatures.
 
 ## Local development
 
 Requires Node.js 24+ and npm.
 
-```sh
-npm install
-npm run dev
-npm run typecheck
-npm run build
-```
+    npm install
+    npm run dev
+    npm run typecheck
+    npm run build
 
-The Vite source entry is `src/index.html`. The root `index.html`, `assets/`, and copied `brands/` are generated deployment output; edit `src/` and `public/` instead.
+The Vite source entry is src/index.html. The root index.html, assets/, and copied brands/ are generated deployment output; edit src/ and public/ instead.
+
+## Signature Studio
+
+See [docs/SIGNATURE_STUDIO.md](docs/SIGNATURE_STUDIO.md) for its markup strategy, local data handling, compatibility notes, and deployment route generation.
 
 ## Spotify utilities
 
-The optional Rust tools are under `backend/`. See [backend/README.md](backend/README.md) for OAuth setup and playback snapshot refresh instructions.
+The optional Rust tools are under backend/. See [backend/README.md](backend/README.md) for OAuth setup and playback snapshot refresh instructions.

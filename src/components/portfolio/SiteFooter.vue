@@ -7,6 +7,8 @@ const context = props.context;
 <template>
 <footer class="site-footer section-shell">
       <a class="footer-mark" href="#top">VIREON<span> / </span>NOCTIS</a>
-      <span>© {{ context.year }} / ALL RIGHTS RESERVED</span><a class="footer-top" href="#top">BACK TO TOP ↑</a>
+      <span>© {{ context.year }} / ALL RIGHTS RESERVED</span>
+      <a class="footer-top" href="/signature/">SIGNATURE STUDIO ↗</a>
+      <a class="footer-top" href="#top">BACK TO TOP ↑</a>
     </footer>
 </template>
