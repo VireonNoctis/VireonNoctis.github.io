@@ -44,19 +44,37 @@ jobs:
 
       - name: Verify branch deployment output
         run: |
-          test -s dist/index.html
-          test -s dist/signature/index.html
-          test -f dist/.nojekyll
-          test -s dist/404.html
-          test -s dist/robots.txt
-          test -s dist/sitemap.xml
-          test -s dist/spotify-now-playing.json
-          test -d dist/brands
-          test ! -d dist/assets
-          ! grep -Eq '<script[^>]+src="/assets/|<link[^>]+href="/assets/' dist/index.html
-          ! grep -Eq '<script[^>]+src="/assets/|<link[^>]+href="/assets/' dist/signature/index.html
-          grep -q 'Vireon Signature has moved' dist/signature/index.html
-          grep -q 'Vireon-Signature/' dist/signature/index.html
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          import sys
+
+          checks = {
+              "dist/index.html": Path("dist/index.html").is_file() and Path("dist/index.html").stat().st_size > 0,
+              "dist/signature/index.html": Path("dist/signature/index.html").is_file() and Path("dist/signature/index.html").stat().st_size > 0,
+              "dist/.nojekyll": Path("dist/.nojekyll").is_file(),
+              "dist/404.html": Path("dist/404.html").is_file() and Path("dist/404.html").stat().st_size > 0,
+              "dist/robots.txt": Path("dist/robots.txt").is_file() and Path("dist/robots.txt").stat().st_size > 0,
+              "dist/sitemap.xml": Path("dist/sitemap.xml").is_file() and Path("dist/sitemap.xml").stat().st_size > 0,
+              "dist/spotify-now-playing.json": Path("dist/spotify-now-playing.json").is_file(),
+              "dist/brands": Path("dist/brands").is_dir(),
+              "no generated assets directory": not Path("dist/assets").exists(),
+          }
+
+          root = Path("dist/index.html").read_text() if Path("dist/index.html").exists() else ""
+          legacy = Path("dist/signature/index.html").read_text() if Path("dist/signature/index.html").exists() else ""
+          checks["root page has no external Vite assets"] = not re.search(r'<script[^>]+src="/assets/|<link[^>]+href="/assets/', root)
+          checks["legacy page has no external Vite assets"] = not re.search(r'<script[^>]+src="/assets/|<link[^>]+href="/assets/', legacy)
+          checks["legacy page identifies redirect"] = "Vireon Signature has moved" in legacy
+          checks["legacy page targets standalone project"] = "Vireon-Signature/" in legacy
+          checks["legacy page redirects automatically"] = "location.replace" in legacy
+
+          for name, passed in checks.items():
+              print(("PASS" if passed else "FAIL") + "  " + name)
+
+          if not all(checks.values()):
+              sys.exit(1)
+          PY
 
       - name: Publish built files to the Pages branch
         if: github.event_name != 'pull_request'
