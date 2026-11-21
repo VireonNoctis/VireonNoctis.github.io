@@ -209,6 +209,14 @@ export function usePortfolioPage() {
       detail: "A theme collection spanning space, stained-glass, character-inspired, and other visual treatments, maintained as reusable CSS files.",
       tags: ["CSS", "THEME COLLECTION", "LUNAR MARKETPLACE"],
       url: "https://github.com/VireonNoctis/Lunar-Css", role: "INTERFACE DESIGN"
+    },
+    {
+      name: "Vireon Signature", index: "15", logo: "", mark: "V / S", type: "IDENTITY / PRODUCTIVITY",
+      subtitle: "One signature. Your whole team.",
+      description: "An email-signature studio with live preview and email-safe HTML export.",
+      detail: "A standalone React 19 and Three.js workspace with editable identity and brand details, eleven signature finishes, local browser drafts, formatted signature copy, raw HTML copy, standalone export, and email-client insertion guidance.",
+      tags: ["REACT 19", "THREE.JS", "VITE", "EMAIL HTML"],
+      url: "https://vireonnoctis.github.io/Vireon-Signature/", role: "PRODUCT DESIGN / DEVELOPMENT"
     }
   ];
   
