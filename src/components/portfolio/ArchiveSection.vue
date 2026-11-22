@@ -112,7 +112,7 @@ const context = props.context;
         <div class="favorites-heading">
           <div><span>ANILIST / COLLECTION</span><h3>FAVOURITES</h3></div>
           <a v-if="context.selectedFavoriteCategory !== 'webnovels'" href="https://anilist.co/user/Vireon/favourites" target="_blank" rel="noreferrer">VIEW ALL ↗</a>
-          <span v-else>05 TITLES</span>
+          <span v-else>{{ String(context.favoriteItems.length).padStart(2, "0") }} TITLES</span>
         </div>
         <div class="favorites-controls" role="group" aria-label="Favourite category">
           <button v-for="category in context.favoriteCategories" :key="category.key" type="button" class="favorite-category-button" :class="{ 'is-active': context.selectedFavoriteCategory === category.key }" :aria-pressed="context.selectedFavoriteCategory === category.key" @click="context.selectFavoriteCategory(category.key)">{{ category.label }}</button>
